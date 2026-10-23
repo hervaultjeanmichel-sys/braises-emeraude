@@ -40,6 +40,12 @@
 - `php artisan braises:import-wordpress [--dry-run] [--only=products] [--force] [--no-images]` — API REST WP + Store API WooCommerce, images → WebP q82, Yoast → seo_title/description, ne remplit que les champs vides
 - `php artisan braises:check-urls https://… [--user= --pass=]` — teste `database/data/legacy-urls.txt` (149 URLs)
 
+## Installation préprod (23/10/2026) — notes
+- Clé SSH dédiée sur le serveur : `~/.ssh/id_braises` + alias `github-braises` dans ~/.ssh/config (clé de déploiement lecture seule du dépôt). Remote : `git@github-braises:hervaultjeanmichel-sys/braises-emeraude.git`
+- Laravel 11 bloqué par les alertes de sécurité Composer → passage en Laravel 12 (`composer update` sur le serveur, composer.lock créé côté serveur, non versionné pour l'instant)
+- Mots de passe du .env : utiliser `read -rsp` (getpass dans un heredoc ne lit rien → valeur vide)
+- SSL : cPanel › Lets Encrypt™ SSL › Issue sur braises.comabord.com
+
 ## Points d'attention
 - **Ne jamais utiliser `redirect('/x/')` pour une URL publique** : le générateur d'URL Laravel retire le slash final → boucle avec LegacyUrls. Utiliser `new RedirectResponse('/x/')`
 - Code écrit sans `composer install` (Packagist inaccessible depuis l'espace de travail de Claude) → premier `migrate --seed` à surveiller : `php artisan log:clear` puis lire `storage/logs/laravel.log`
@@ -51,7 +57,7 @@
 
 ## Avancement (6 étapes du cahier des charges)
 1. Cadrage — en attente des réponses client (OpenFire, coordonnées, gaz, labels)
-2. **BDD + admin — fait (23/10/2026), à installer sur la préprod**
+2. **BDD + admin — fait et installé sur la préprod (23/10/2026)** : migrate --seed OK du premier coup, accueil rendu en 200
 3. **Front Contrastes — fait (23/10/2026)** : accueil Groupe (blocs Builder), magasins, catalogue filtré, fiches, Mon projet, devis 8 étapes, contact
 4. Reprise contenus/URLs — seeders + import WP prêts
 5. Connexions — colonnes prêtes (openfire_id, google_calendar_id, ai_*), code à faire
