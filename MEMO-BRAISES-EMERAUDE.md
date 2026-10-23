@@ -7,7 +7,7 @@
 - Site actuel : WordPress + WooCommerce (catalogue), https://www.braisesemeraude.com
 - Stack : Laravel 11, Filament v3.2, MySQL, PHP 8.3, O2Switch
 - Maquette retenue pour démarrer : **Contrastes** (noir à reflet vert, émeraude `#34e3a5`, braise `#ff7b30`, DM Serif Display + Manrope + Caveat)
-- Dépôt GitHub : **à créer** (`comabord/braises-emeraude`, privé)
+- Dépôt GitHub : `hervaultjeanmichel-sys/braises-emeraude` (privé, branche main)
 - BDD prévue : `nafa4741_braises`
 
 ## Architecture
