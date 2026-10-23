@@ -8,7 +8,13 @@
 - Stack : Laravel 11, Filament v3.2, MySQL, PHP 8.3, O2Switch
 - Maquette retenue pour démarrer : **Contrastes** (noir à reflet vert, émeraude `#34e3a5`, braise `#ff7b30`, DM Serif Display + Manrope + Caveat)
 - Dépôt GitHub : `hervaultjeanmichel-sys/braises-emeraude` (privé, branche main)
-- BDD prévue : `nafa4741_braises`
+
+## Git & environnements
+- Dépôt GitHub      : git@github.com:hervaultjeanmichel-sys/braises-emeraude.git (privé)
+- Stack             : Laravel+Filament
+- Préprod (develop) : https://braises.comabord.com — /home/nafa4741/preprod/braises/ (docroot : …/braises/public) — BDD nafa4741_braises_preprod — verrou PREPROD_USER/PREPROD_PASSWORD dans le .env
+- Prod (main)       : https://www.braisesemeraude.com — à définir — BDD nafa4741_braises
+- Dernier tag livré : —
 
 ## Architecture
 - Tables : stores, brands, brand_store, product_categories (path calculé), products, pages (sections JSON = Builder Filament), posts, cities, aid_topics, settings (colonne `key`), event_banners, redirects, form_options, leads, lead_notes ; users + `store_id`, `is_admin`
