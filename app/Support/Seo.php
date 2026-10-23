@@ -65,7 +65,7 @@ final class Seo
             'name' => Setting::get('group.name', 'Braises Émeraude'),
             'legalName' => Setting::get('group.legal_name', 'La Soleillade'),
             'url' => $base,
-            'logo' => $this->absolute(Setting::get('group.logo', '/img/logo.webp')),
+            'logo' => $this->absolute(media(Setting::get('group.logo') ?: '/img/logo.webp') ?? '/img/logo.webp'),
             'slogan' => Setting::get('group.slogan'),
             'subOrganization' => $stores->map(fn ($s) => ['@id' => $base.'#magasin-'.$s->id])->all(),
         ]];

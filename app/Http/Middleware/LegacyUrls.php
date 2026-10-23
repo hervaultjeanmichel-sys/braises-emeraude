@@ -6,6 +6,7 @@ namespace App\Http\Middleware;
 
 use App\Models\Redirect;
 use Closure;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -43,12 +44,13 @@ class LegacyUrls
                 abort(410);
             }
 
-            return redirect($redirect->to_path, $redirect->status_code);
+            // RedirectResponse direct : redirect() passe par le générateur d'URL, qui retire le slash final
+            return new RedirectResponse($redirect->to_path, $redirect->status_code);
         }
 
         // 2. Slash final
         if ($path !== '/' && ! str_ends_with($path, '/')) {
-            return redirect($path.'/'.($qs ? '?'.$qs : ''), 301);
+            return new RedirectResponse($path.'/'.($qs ? '?'.$qs : ''), 301);
         }
 
         return $next($request);

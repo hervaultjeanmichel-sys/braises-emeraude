@@ -35,6 +35,7 @@
 - `php artisan braises:check-urls https://… [--user= --pass=]` — teste `database/data/legacy-urls.txt` (149 URLs)
 
 ## Points d'attention
+- **Ne jamais utiliser `redirect('/x/')` pour une URL publique** : le générateur d'URL Laravel retire le slash final → boucle avec LegacyUrls. Utiliser `new RedirectResponse('/x/')`
 - Code écrit sans `composer install` (Packagist inaccessible depuis l'espace de travail de Claude) → premier `migrate --seed` à surveiller : `php artisan log:clear` puis lire `storage/logs/laravel.log`
 - Inventaire : 107 slugs produits listés (et non 106 comme indiqué dans la synthèse)
 - 3 slugs produits nettoyés + 301 : jazz-mural-turbo-fonte(-copie), club-comfort-air-12-m2(-copie), cuisiniere-riz(z)oli-serie-m

@@ -8,5 +8,5 @@
             <div class="ctas"><a class="btn btn-main" href="/" data-hover>{{ s('devis.thanks_home', 'Retour à l\'accueil') }}</a><a class="btn btn-ghost" href="/chauffage/" data-hover>{{ s('devis.thanks_catalogue', 'Continuer la visite') }}</a></div>
         </div>
     </section>
-    <script>try{localStorage.removeItem('be_project')}catch(e){}</script>
+    @if(session('lead_type') === 'devis')<script>try{localStorage.removeItem('be_project')}catch(e){}</script>@endif
 @endsection

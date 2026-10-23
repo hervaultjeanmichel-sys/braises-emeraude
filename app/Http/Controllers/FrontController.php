@@ -89,7 +89,7 @@ class FrontController extends Controller
             '@type' => 'Product',
             'name' => $product->name,
             'description' => $product->metaDescription(),
-            'image' => $product->images ? array_map(fn ($i) => $seo->absolute('/storage/'.$i), $product->images) : null,
+            'image' => $product->images ? array_map(fn ($i) => $seo->absolute((string) media($i)), $product->images) : null,
             'brand' => $product->brand ? ['@type' => 'Brand', 'name' => $product->brand->name] : null,
             'category' => $product->category?->name,
         ]);
@@ -163,7 +163,7 @@ class FrontController extends Controller
     public function post(string $year, string $month, string $day, string $slug): View
     {
         $date = Carbon::createFromFormat('Y-m-d', "$year-$month-$day")->startOfDay();
-        $post = Post::published()->where('slug', $slug)
+        $post = Post::published()->where('slug', $slug)->where('published_at', '<=', now())
             ->whereBetween('published_at', [$date, $date->copy()->endOfDay()])
             ->firstOrFail();
 
@@ -174,7 +174,7 @@ class FrontController extends Controller
             'headline' => $post->h1 ?: $post->title,
             'datePublished' => $post->published_at->toAtomString(),
             'dateModified' => $post->updated_at?->toAtomString(),
-            'image' => $post->image ? $seo->absolute('/storage/'.$post->image) : null,
+            'image' => $post->image ? $seo->absolute((string) media($post->image)) : null,
             'publisher' => ['@id' => $seo->absolute('/').'#groupe'],
         ]);
         $seo->schemas[] = Seo::faqSchema($post->faq);

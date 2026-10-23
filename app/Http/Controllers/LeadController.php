@@ -57,7 +57,7 @@ class LeadController extends Controller
     public function storeQuote(Request $request): RedirectResponse
     {
         if (filled($request->input('website'))) { // pot de miel anti-robots
-            return redirect('/devis/merci/');
+            return new RedirectResponse('/devis/merci/');
         }
 
         $opt = fn (string $list) => ['nullable', Rule::in(array_keys(FormOption::listFor($list)))];
@@ -90,7 +90,7 @@ class LeadController extends Controller
     public function storeContact(Request $request): RedirectResponse
     {
         if (filled($request->input('website'))) {
-            return redirect('/devis/merci/');
+            return new RedirectResponse('/devis/merci/');
         }
         $data = $request->validate([
             'name' => ['required', 'string', 'max:120'],
@@ -146,7 +146,7 @@ class LeadController extends Controller
 
         $this->notify($lead);
 
-        return redirect('/devis/merci/')->with('lead_type', $type);
+        return (new RedirectResponse('/devis/merci/'))->with('lead_type', $type);
     }
 
     private function source(array $utm, string $referer): string

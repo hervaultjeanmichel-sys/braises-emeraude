@@ -17,7 +17,7 @@
     <meta property="og:title" content="{{ $seo->fullTitle() }}">
     @if($seo->description)<meta property="og:description" content="{{ $seo->description }}">@endif
     <meta property="og:url" content="{{ $seo->absolute($seo->canonical) }}">
-    <meta property="og:image" content="{{ $seo->absolute(media($seo->image ?: s('seo.og_image', '/img/campagne-chien.webp'))) }}">
+    <meta property="og:image" content="{{ $seo->absolute(media($seo->image ?: (s('seo.og_image') ?: '/img/campagne-chien.webp'))) }}">
     <meta name="theme-color" content="#060908">
     <link rel="icon" href="{{ s('group.favicon', '/favicon.ico') }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
