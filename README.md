@@ -1,6 +1,6 @@
 # Braises Émeraude — refonte Laravel
 
-Laravel 11 + Filament v3 · MySQL · O2Switch · URLs WordPress conservées à l'identique.
+Laravel 12 + Filament v3 · MySQL · O2Switch · URLs WordPress conservées à l'identique.
 
 ## Mise en place sur la préprod O2Switch
 
