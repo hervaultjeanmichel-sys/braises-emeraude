@@ -50,6 +50,18 @@ class ProductCategory extends Model
         return $this->hasMany(Product::class);
     }
 
+    /** Ligne de marques de la carte « univers » : saisie dans l'admin, sinon calculée. */
+    public function brandsLine(int $max = 5): string
+    {
+        if ($this->brands_line) {
+            return $this->brands_line;
+        }
+
+        return Brand::published()
+            ->whereHas('products', fn ($q) => $q->published()->whereIn('product_category_id', $this->selfAndChildrenIds()))
+            ->orderBy('sort')->limit($max)->pluck('name')->implode(' · ');
+    }
+
     /** Ids de la catégorie et de ses sous-catégories (2 niveaux). */
     public function selfAndChildrenIds(): array
     {

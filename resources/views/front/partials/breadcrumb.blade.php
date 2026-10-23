@@ -1,5 +1,5 @@
 @if(!empty($seo->breadcrumb))
-<nav class="crumbs wrap" aria-label="{{ s('breadcrumb.aria', 'Fil d\'Ariane') }}">
+<nav class="crumbs" aria-label="{{ s('breadcrumb.aria', 'Fil d\'Ariane') }}">
     <a href="/">{{ s('breadcrumb.home', 'Accueil') }}</a>
     @foreach($seo->breadcrumb as $crumb)
         <span aria-hidden="true">›</span>

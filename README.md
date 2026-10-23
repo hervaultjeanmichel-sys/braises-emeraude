@@ -42,7 +42,23 @@ php artisan braises:check-urls https://ADRESSE-PREPROD --user=USER_HTPASSWD --pa
 
 Le document root du sous-domaine de préprod doit pointer sur `PREPROD/public`.
 
-## Ce qui est en place (étape 2 du cahier des charges)
+## Ce qui est en place
+
+### Étape 3 — Front « Contrastes » (23/10/2026)
+
+| Page | Contenu |
+|---|---|
+| Accueil Groupe | Bandeau cinéma 3 épisodes (scènes animées ou vidéo), 3 cartes magasins (ouvert/fermé en temps réel), univers, signature de campagne en parallaxe, bandeau marques, méthode, aides, texte SEO + FAQ, appel final — **chaque bloc est éditable et réordonnable** dans Pages › Accueil |
+| Magasins | Page complète : texte local, horaires (jour en cours surligné), itinéraire, photos, équipe, marques exposées, communes |
+| Catalogue | Catégories avec filtres marque / énergie (noindex sur les listes filtrées), fiches produits avec galerie, chiffres clés, caractéristiques |
+| Mon projet | Bouton « Ajouter à mon projet » partout, compteur dans l'en-tête, page /mon-projet/ avec remarques, envoi au devis |
+| Devis | /devis/ en 8 étapes (barre de progression, étape « remplacement » conditionnelle, magasin proposé selon le code postal, photos), fonctionne aussi sans JavaScript |
+| Demandes | Enregistrées en base (source Google / réseaux / campagne Rennes), e-mail au magasin, anti-robots, 6 envois/min max |
+
+Textes : **147 libellés** (menus, boutons, étapes du devis…) dans Réglages › Textes du site. Titres : `*mot*` = mot en émeraude.
+Contrôle des gabarits sur le serveur : `php artisan view:cache` (compile toutes les vues).
+
+### Étape 2 — BDD et admin
 
 | Domaine | Contenu |
 |---|---|
@@ -58,5 +74,4 @@ Page CMS → page magasin → page ville → 404. Les redirections de la table `
 
 ## Prochaines étapes
 
-3. Front complet sur la maquette Contrastes (accueil Groupe, pages magasins, catalogue, liste « Mon projet », formulaire de devis en 8 étapes).
 5. Connexions : OpenFire (API ou CSV), Google Agenda par magasin, IA Claude dans l'admin.

@@ -33,7 +33,8 @@ class SettingResource extends Resource
             Forms\Components\Section::make('Réglage')->schema([
                 Forms\Components\TextInput::make('key')->label('Clé')->required()->unique(ignoreRecord: true)->disabledOn('edit'),
                 Forms\Components\Select::make('group')->label('Groupe')->options(['general' => 'Général', 'header' => 'En-tête', 'footer' => 'Pied de page', 'seo' => 'SEO', 'devis' => 'Formulaire de devis', 'social' => 'Réseaux sociaux'])->default('general'),
-                Forms\Components\Textarea::make('value')->label('Valeur')->rows(4),
+                Forms\Components\Textarea::make('value')->label('Valeur')->rows(4)
+                    ->helperText('Titres : *mot* = mot en couleur. Menus : une ligne « Libellé|/adresse/ » par entrée.'),
             ]),
         ]);
     }

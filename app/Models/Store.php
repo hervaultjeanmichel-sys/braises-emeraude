@@ -72,6 +72,51 @@ class Store extends Model
         return false;
     }
 
+    /** Adresse courte façon maquette : « La Hertaudière, 35120 », « Pleurtuit (35730) », « Rennes Métropole ». */
+    public function addressLine(): string
+    {
+        if ($this->address) {
+            return trim($this->address.', '.$this->postal_code, ', ');
+        }
+        if ($this->postal_code) {
+            return trim($this->city.' ('.$this->postal_code.')');
+        }
+
+        return (string) ($this->area_label ?: $this->city);
+    }
+
+    /** Résumé lisible des horaires : ["Lun–ven 9h–12h · 14h–18h", "Sam 9h–12h30"]. */
+    public function hoursSummary(): array
+    {
+        $days = [1 => 'lun', 2 => 'mar', 3 => 'mer', 4 => 'jeu', 5 => 'ven', 6 => 'sam', 7 => 'dim'];
+        $fmt = function (string $t): string {
+            [$h, $m] = array_pad(explode(':', $t), 2, '00');
+
+            return ((int) $h).'h'.($m === '00' ? '' : $m);
+        };
+        $byDay = [];
+        foreach ($this->opening_hours ?? [] as $slot) {
+            $byDay[(int) $slot['day']][] = $fmt($slot['opens']).'–'.$fmt($slot['closes']);
+        }
+        ksort($byDay);
+        $groups = [];
+        foreach ($byDay as $day => $slots) {
+            $key = implode(' · ', $slots);
+            $last = array_key_last($groups);
+            if ($last !== null && $groups[$last]['key'] === $key && $groups[$last]['to'] === $day - 1) {
+                $groups[$last]['to'] = $day;
+            } else {
+                $groups[] = ['from' => $day, 'to' => $day, 'key' => $key];
+            }
+        }
+
+        return array_map(function ($g) use ($days) {
+            $label = ucfirst($days[$g['from']]).($g['to'] > $g['from'] ? '–'.$days[$g['to']] : '');
+
+            return $label.' '.$g['key'];
+        }, $groups);
+    }
+
     /** Magasin destinataire selon le code postal (repli : département 35 → Saint-Malo). */
     public static function forPostalCode(?string $cp): ?self
     {

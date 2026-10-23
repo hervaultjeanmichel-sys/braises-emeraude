@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Http\Controllers\FrontController;
+use App\Http\Controllers\LeadController;
 use App\Http\Controllers\SitemapController;
 use Illuminate\Support\Facades\Route;
 
@@ -15,6 +16,13 @@ Route::get('/sitemap.xml', SitemapController::class)->name('sitemap');
 Route::get('/robots.txt', [SitemapController::class, 'robots'])->name('robots');
 
 Route::get('/', [FrontController::class, 'home'])->name('home');
+
+// Demandes (formulaires) — avant la résolution générique /{slug}/
+Route::get('/devis', [LeadController::class, 'quote'])->name('quote');
+Route::post('/devis', [LeadController::class, 'storeQuote'])->middleware('throttle:6,1')->name('quote.store');
+Route::get('/devis/merci', [LeadController::class, 'thanks'])->name('quote.thanks');
+Route::post('/contact', [LeadController::class, 'storeContact'])->middleware('throttle:6,1')->name('contact.store');
+Route::get('/mon-projet', [LeadController::class, 'project'])->name('project');
 
 Route::get('/produit/{slug}', [FrontController::class, 'product'])->name('product');
 Route::get('/categorie-produit/{path}', [FrontController::class, 'category'])->where('path', '[a-z0-9\-/]+')->name('category');

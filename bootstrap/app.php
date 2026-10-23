@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Middleware\LegacyUrls;
+use App\Http\Middleware\TrackSource;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -14,6 +15,8 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware) {
         // Avant le routage : redirections 301 + slash final
         $middleware->prepend(LegacyUrls::class);
+        // Provenance des visiteurs (UTM, référent) pour qualifier les demandes
+        $middleware->web(append: [TrackSource::class]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //

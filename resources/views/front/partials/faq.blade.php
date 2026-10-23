@@ -1,8 +1,8 @@
 @if(!empty($faq))
-<section class="sec faq wrap">
-    <h2>{{ s('faq.title', 'Questions fréquentes') }}</h2>
+<div class="faq reveal">
+    <h2 style="font-size:1.9rem;margin-bottom:.6rem">{{ $title ?? s('faq.title', 'Vos questions') }}</h2>
     @foreach($faq as $q)
-        <details><summary>{{ $q['question'] ?? '' }}</summary><p>{{ $q['answer'] ?? '' }}</p></details>
+        <details @if($loop->first) open @endif><summary>{{ $q['question'] ?? '' }}</summary><p>{{ $q['answer'] ?? '' }}</p></details>
     @endforeach
-</section>
+</div>
 @endif

@@ -41,57 +41,83 @@ class PageResource extends Resource
                 Forms\Components\Toggle::make('in_sitemap')->label('Dans le sitemap')->default(true),
                 Forms\Components\FileUpload::make('hero_image')->label('Image d\'en-tête')->image()->directory('pages'),
             ]),
-            Forms\Components\Section::make('Contenu')->schema([...SeoFields::content(), Forms\Components\Builder::make('sections')->label('Sections de la page')->columnSpanFull()->collapsible()->blocks([
-                Forms\Components\Builder\Block::make('hero')->label('Bandeau d\'accueil')->schema([
+            Forms\Components\Section::make('Contenu')->schema([...SeoFields::content(), Forms\Components\Builder::make('sections')->label('Sections de la page')->columnSpanFull()->collapsible()->collapsed()
+                ->helperText('Astuce titres : entourez un mot d\'astérisques (*une seule*) pour le mettre en couleur émeraude.')
+                ->blocks([
+                Forms\Components\Builder\Block::make('saga')->label('Bandeau cinéma (épisodes)')->icon('heroicon-o-film')->schema([
+                    Forms\Components\TextInput::make('kicker')->label('Mention en haut à gauche')->default('Braises Émeraude présente'),
+                    Forms\Components\Repeater::make('episodes')->label('Épisodes')->schema([
+                        Forms\Components\TextInput::make('label')->label('Numéro')->placeholder('Épisode I'),
+                        Forms\Components\TextInput::make('title')->label('Titre')->required(),
+                        Forms\Components\Textarea::make('tagline')->label('Accroche')->rows(2),
+                        Forms\Components\TextInput::make('rating')->label('Pastille')->placeholder('Énergie 100 % renouvelable'),
+                        Forms\Components\Select::make('scene')->label('Décor')->options(['fire' => 'Feu animé', 'stove' => 'Poêle animé', 'forest' => 'Forêt animée', 'video' => 'Vidéo'])->default('fire')->live(),
+                        Forms\Components\FileUpload::make('video')->label('Vidéo (webm/mp4, sans son, compressée)')->directory('accueil')->acceptedFileTypes(['video/mp4', 'video/webm'])->maxSize(12000)->visible(fn (Forms\Get $get) => $get('scene') === 'video'),
+                        Forms\Components\FileUpload::make('poster')->label('Image d\'attente de la vidéo')->image()->directory('accueil')->visible(fn (Forms\Get $get) => $get('scene') === 'video'),
+                        Forms\Components\TextInput::make('temp')->label('Température affichée (vidéo)')->placeholder('21°')->visible(fn (Forms\Get $get) => $get('scene') === 'video'),
+                    ])->columns(2)->collapsed()->itemLabel(fn (array $state) => $state['title'] ?? null)->maxItems(5),
+                    Forms\Components\TextInput::make('h1')->label('Titre H1 (bas du bandeau)')->required(),
+                    Forms\Components\Textarea::make('billing')->label('Générique (texte sous le H1)')->rows(2)->helperText('*mot* = gras.'),
+                    Forms\Components\TextInput::make('cta_label')->label('Bouton'),
+                    Forms\Components\TextInput::make('cta_url')->label('Lien du bouton')->default('/devis/'),
+                ]),
+                Forms\Components\Builder\Block::make('stores')->label('Les magasins (cartes dynamiques)')->icon('heroicon-o-building-storefront')->schema([
                     Forms\Components\TextInput::make('eyebrow')->label('Sur-titre'),
-                    Forms\Components\TextInput::make('title')->label('Titre')->required(),
-                    Forms\Components\TextInput::make('title_accent')->label('Fin du titre en couleur'),
-                    Forms\Components\Textarea::make('lead')->label('Accroche')->rows(3),
+                    Forms\Components\TextInput::make('title')->label('Titre H2')->required(),
+                    Forms\Components\Textarea::make('text')->label('Texte')->rows(3),
+                    Forms\Components\TextInput::make('link_label')->label('Lien des cartes')->default('Voir le magasin de :magasin')->helperText(':magasin est remplacé par le nom court.'),
+                ]),
+                Forms\Components\Builder\Block::make('categories')->label('Univers produits (cartes dynamiques)')->icon('heroicon-o-squares-2x2')->schema([
+                    Forms\Components\TextInput::make('eyebrow')->label('Sur-titre'),
+                    Forms\Components\TextInput::make('title')->label('Titre H2')->required(),
+                    Forms\Components\TextInput::make('more_label')->label('Lien des cartes')->default('Découvrir →'),
+                    Forms\Components\Toggle::make('light')->label('Fond clair')->default(true),
+                ]),
+                Forms\Components\Builder\Block::make('quote')->label('Signature de campagne (parallaxe)')->icon('heroicon-o-megaphone')->schema([
+                    Forms\Components\TextInput::make('big')->label('Phrase principale')->required(),
+                    Forms\Components\TextInput::make('small')->label('Phrase secondaire'),
+                    Forms\Components\TextInput::make('hand')->label('Mot manuscrit'),
+                    Forms\Components\FileUpload::make('image')->label('Image de fond (WebP)')->image()->directory('accueil'),
+                    Forms\Components\TextInput::make('image_alt')->label('Description de l\'image'),
+                ]),
+                Forms\Components\Builder\Block::make('marquee')->label('Bandeau des marques (dynamique)')->icon('heroicon-o-tag')->schema([
+                    Forms\Components\TextInput::make('aria')->label('Libellé accessibilité')->default('Nos marques'),
+                ]),
+                Forms\Components\Builder\Block::make('steps')->label('Étapes / méthode')->icon('heroicon-o-list-bullet')->schema([
+                    Forms\Components\TextInput::make('eyebrow')->label('Sur-titre'),
+                    Forms\Components\TextInput::make('title')->label('Titre H2')->required(),
+                    Forms\Components\Repeater::make('items')->label('Étapes')->schema([
+                        Forms\Components\TextInput::make('title')->label('Titre H3')->required(),
+                        Forms\Components\Textarea::make('text')->label('Texte')->rows(2),
+                    ])->columns(2)->defaultItems(0)->collapsed()->itemLabel(fn (array $state) => $state['title'] ?? null),
+                ]),
+                Forms\Components\Builder\Block::make('aids')->label('Encart aides & financement')->icon('heroicon-o-banknotes')->schema([
+                    Forms\Components\TextInput::make('eyebrow')->label('Sur-titre'),
+                    Forms\Components\TextInput::make('title')->label('Titre H2')->required(),
+                    Forms\Components\Textarea::make('text')->label('Texte')->rows(3),
+                    Forms\Components\TextInput::make('cta_label')->label('Bouton'),
+                    Forms\Components\TextInput::make('cta_url')->label('Lien'),
+                    Forms\Components\TagsInput::make('bullets')->label('Points listés'),
+                ]),
+                Forms\Components\Builder\Block::make('seo_faq')->label('Texte SEO + FAQ de la page')->icon('heroicon-o-document-text')->schema([
+                    Forms\Components\TextInput::make('eyebrow')->label('Sur-titre'),
+                    Forms\Components\TextInput::make('title')->label('Titre H2')->required(),
+                    Forms\Components\RichEditor::make('body')->label('Texte (H3, gras, liens)')->toolbarButtons(['h3', 'bold', 'italic', 'bulletList', 'link']),
+                    Forms\Components\TextInput::make('faq_title')->label('Titre de la FAQ')->default('Vos questions'),
+                ]),
+                Forms\Components\Builder\Block::make('final')->label('Appel final (fond braise)')->icon('heroicon-o-fire')->schema([
+                    Forms\Components\TextInput::make('hand')->label('Mot manuscrit'),
+                    Forms\Components\TextInput::make('title')->label('Titre H2')->required(),
                     Forms\Components\TextInput::make('cta_label')->label('Bouton principal'),
-                    Forms\Components\TextInput::make('cta_url')->label('Lien du bouton'),
-                    Forms\Components\TextInput::make('sticker')->label('Pastille manuscrite'),
-                    Forms\Components\Repeater::make('trust')->label('Chiffres clés')->schema([
-                        Forms\Components\TextInput::make('value')->label('Valeur')->required(),
-                        Forms\Components\TextInput::make('label')->label('Libellé')->required(),
-                    ])->columns(2)->defaultItems(0),
-                    Forms\Components\Repeater::make('slides')->label('Diaporama')->schema([
-                        Forms\Components\FileUpload::make('image')->image()->directory('accueil')->required(),
-                        Forms\Components\TextInput::make('caption')->label('Légende'),
-                    ])->columns(2)->defaultItems(0),
+                    Forms\Components\TextInput::make('cta_url')->label('Lien principal')->default('/devis/'),
+                    Forms\Components\TextInput::make('cta2_label')->label('Bouton secondaire'),
+                    Forms\Components\TextInput::make('cta2_url')->label('Lien secondaire'),
                 ]),
-                Forms\Components\Builder\Block::make('stores')->label('Les 3 magasins (dynamique)')->schema([
-                    Forms\Components\TextInput::make('eyebrow')->label('Sur-titre'),
-                    Forms\Components\TextInput::make('title')->label('Titre H2')->required(),
-                    Forms\Components\Textarea::make('text')->label('Texte')->rows(3),
-                ]),
-                Forms\Components\Builder\Block::make('categories')->label('Univers produits (dynamique)')->schema([
-                    Forms\Components\TextInput::make('eyebrow')->label('Sur-titre'),
-                    Forms\Components\TextInput::make('title')->label('Titre H2')->required(),
-                    Forms\Components\Textarea::make('text')->label('Texte')->rows(3),
-                ]),
-                Forms\Components\Builder\Block::make('brands')->label('Marques (dynamique)')->schema([
-                    Forms\Components\TextInput::make('eyebrow')->label('Sur-titre'),
-                    Forms\Components\TextInput::make('title')->label('Titre H2')->required(),
-                ]),
-                Forms\Components\Builder\Block::make('text')->label('Texte libre')->schema([
+                Forms\Components\Builder\Block::make('text')->label('Texte libre')->icon('heroicon-o-pencil')->schema([
                     Forms\Components\TextInput::make('eyebrow')->label('Sur-titre'),
                     Forms\Components\TextInput::make('title')->label('Titre H2'),
                     Forms\Components\RichEditor::make('body')->label('Texte')->toolbarButtons(['h3', 'bold', 'italic', 'bulletList', 'link']),
                     Forms\Components\FileUpload::make('image')->image()->directory('pages'),
-                ]),
-                Forms\Components\Builder\Block::make('steps')->label('Étapes / arguments')->schema([
-                    Forms\Components\TextInput::make('eyebrow')->label('Sur-titre'),
-                    Forms\Components\TextInput::make('title')->label('Titre H2')->required(),
-                    Forms\Components\Repeater::make('items')->label('Éléments')->schema([
-                        Forms\Components\TextInput::make('title')->label('Titre H3')->required(),
-                        Forms\Components\Textarea::make('text')->label('Texte')->rows(2),
-                    ])->columns(2)->defaultItems(0),
-                ]),
-                Forms\Components\Builder\Block::make('cta')->label('Appel à l\'action')->schema([
-                    Forms\Components\TextInput::make('title')->label('Titre')->required(),
-                    Forms\Components\Textarea::make('text')->label('Texte')->rows(2),
-                    Forms\Components\TextInput::make('button_label')->label('Bouton'),
-                    Forms\Components\TextInput::make('button_url')->label('Lien'),
                 ]),
             ]), SeoFields::faq()]),
             SeoFields::section(),

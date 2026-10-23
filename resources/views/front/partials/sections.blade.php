@@ -1,69 +1,207 @@
-{{-- Rendu des sections éditables (Builder Filament). Le gabarit est un moteur de rendu, jamais un contenu. --}}
+{{-- Rendu des sections éditables (Builder Filament) — balisage repris de la maquette Contrastes.
+     Le gabarit est un moteur de rendu : tous les textes viennent de $sections, des magasins, catégories et marques en base. --}}
+@php($stores = $stores ?? \App\Models\Store::published()->orderBy('sort')->get())
+@php($categories = $categories ?? \App\Models\ProductCategory::published()->whereNull('parent_id')->orderBy('sort')->get())
+@php($brands = $brands ?? \App\Models\Brand::published()->orderBy('sort')->get())
+@php($page = $page ?? null)
+@php($romans = ['I', 'II', 'III', 'IV', 'V'])
+
 @foreach($sections ?? [] as $block)
     @php($d = $block['data'] ?? [])
+    @php($sid = 'sec-'.$loop->index)
     @switch($block['type'] ?? '')
-        @case('hero')
-            <section class="hero"><div class="wrap">
-                <div class="hero-text">
-                    @if(!empty($d['eyebrow']))<span class="eyebrow">{{ $d['eyebrow'] }}</span>@endif
-                    <h1>{{ $d['title'] ?? '' }} @if(!empty($d['title_accent']))<span class="loc">{{ $d['title_accent'] }}</span>@endif</h1>
-                    @if(!empty($d['lead']))<p class="lead">{{ $d['lead'] }}</p>@endif
-                    @if(!empty($d['cta_url']))<div class="ctas"><a class="btn btn-main" href="{{ $d['cta_url'] }}">{{ $d['cta_label'] ?? '' }}</a></div>@endif
-                    @if(!empty($d['trust']))<div class="trust">@foreach($d['trust'] as $t)<div><b>{{ $t['value'] }}</b><span>{{ $t['label'] }}</span></div>@endforeach</div>@endif
+
+        {{-- Bandeau cinéma --}}
+        @case('saga')
+            @php($eps = array_values($d['episodes'] ?? []))
+            <section class="saga" id="saga" aria-labelledby="{{ $sid }}" aria-roledescription="carrousel">
+                <div class="bar bar-top" aria-hidden="true"><span>{{ $d['kicker'] ?? '' }}</span><span id="ep-count">01 / {{ str_pad((string) max(1, count($eps)), 2, '0', STR_PAD_LEFT) }}</span></div>
+                @foreach($eps as $i => $ep)
+                    <article class="act @if($i === 0) on @endif" data-act="{{ $i }}">
+                        @if(($ep['scene'] ?? 'fire') === 'video' && !empty($ep['video']))
+                            <video class="scene scene-video" @if($i === 0) autoplay @endif muted loop playsinline preload="{{ $i === 0 ? 'metadata' : 'none' }}" @if(!empty($ep['poster'])) poster="{{ media($ep['poster']) }}" @endif aria-hidden="true">
+                                <source src="{{ media($ep['video']) }}" type="{{ str_ends_with($ep['video'], '.webm') ? 'video/webm' : 'video/mp4' }}">
+                            </video>
+                            @if(!empty($ep['temp']))<div class="temp" aria-hidden="true"><b>{{ $ep['temp'] }}</b><span>{{ s('saga.inside', 'dedans') }}</span></div>@endif
+                        @else
+                            <canvas class="scene" data-scene="{{ in_array($ep['scene'] ?? 'fire', ['fire', 'stove', 'forest'], true) ? $ep['scene'] : 'fire' }}" aria-hidden="true"></canvas>
+                        @endif
+                        <div class="act-inner wrap">
+                            <div class="act-text">
+                                <span class="ep">{{ $ep['label'] ?? s('saga.episode', 'Épisode').' '.($romans[$i] ?? $i + 1) }}</span>
+                                <p class="act-title" data-split>{{ $ep['title'] ?? '' }}</p>
+                                @if(!empty($ep['tagline']))<p class="act-tag">{{ $ep['tagline'] }}</p>@endif
+                                @if(!empty($ep['rating']))<p class="rating">@include('front.partials.icon', ['name' => 'leaf']) {{ $ep['rating'] }}</p>@endif
+                            </div>
+                        </div>
+                    </article>
+                @endforeach
+                <div class="bar bar-bottom">
+                    <div class="wrap credits">
+                        <div class="credits-text">
+                            <h1 id="{{ $sid }}">{{ $d['h1'] ?? $page?->h1 }}</h1>
+                            @if(!empty($d['billing']))<p class="billing">{!! preg_replace('/\*(.+?)\*/u', '<b>$1</b>', e($d['billing'])) !!}</p>@endif
+                        </div>
+                        <div class="credits-ui">
+                            @if(!empty($d['cta_url']))<a class="btn btn-main" href="{{ $d['cta_url'] }}" data-hover>{{ $d['cta_label'] ?? '' }}</a>@endif
+                            @if(count($eps) > 1)
+                            <div class="saga-nav">
+                                <button class="arrow" id="s-prev" type="button" aria-label="{{ s('saga.prev', 'Épisode précédent') }}" data-hover>@include('front.partials.icon', ['name' => 'prev'])</button>
+                                <div class="reel" id="reel">@foreach($eps as $i => $ep)<button type="button" @if($i === 0) class="on" @endif aria-label="{{ $ep['label'] ?? s('saga.episode', 'Épisode').' '.($romans[$i] ?? $i + 1) }}"></button>@endforeach</div>
+                                <button class="arrow" id="s-next" type="button" aria-label="{{ s('saga.next', 'Épisode suivant') }}" data-hover>@include('front.partials.icon', ['name' => 'next'])</button>
+                            </div>
+                            @endif
+                        </div>
+                    </div>
                 </div>
-                @if(!empty($d['slides']))
-                <div class="slider">@foreach($d['slides'] as $slide)
-                    <figure class="slide @if($loop->first) on @endif"><img src="{{ media($slide['image']) }}" alt="{{ $slide['caption'] ?? '' }}" width="470" height="627" @unless($loop->first) loading="lazy" @endunless><figcaption>{{ $slide['caption'] ?? '' }}</figcaption></figure>
-                @endforeach</div>
-                @endif
-            </div></section>
+            </section>
             @break
+
+        {{-- Les magasins --}}
         @case('stores')
-            <section class="sec groupe"><div class="wrap">
-                <div class="sec-head">@if(!empty($d['eyebrow']))<span class="eyebrow">{{ $d['eyebrow'] }}</span>@endif<h2>{{ $d['title'] ?? '' }}</h2>@if(!empty($d['text']))<p>{{ $d['text'] }}</p>@endif</div>
-                <div class="stores">@foreach($stores as $store)
-                    <a class="store" href="{{ $store->url() }}">
-                        <div class="store-top"><span class="store-num">{{ str_pad((string) $loop->iteration, 2, '0', STR_PAD_LEFT) }}</span>
-                            @if($store->is_new)<span class="badge new">{{ $store->badge_label ?: s('label.new', 'Nouveau') }}</span>@endif</div>
-                        <h3><small>{{ $store->area_label }}</small>{{ $store->short_name }}</h3>
-                        <span class="open-now @unless($store->isOpenNow()) closed @endunless">{{ $store->isOpenNow() ? s('label.open', 'Ouvert maintenant') : s('label.closed', 'Fermé') }}</span>
-                        <p class="desc">{{ $store->intro }}</p>
-                        <span class="go">{{ s('label.see_store', 'Voir le magasin') }} <span class="ar">→</span></span>
-                    </a>
-                @endforeach</div>
-            </div></section>
+            <section class="sec groupe bg-emerald" id="groupe" aria-labelledby="{{ $sid }}">
+                <div class="wrap">
+                    <div class="sec-head reveal">
+                        @if(!empty($d['eyebrow']))<span class="eyebrow">{{ $d['eyebrow'] }}</span>@endif
+                        <h2 id="{{ $sid }}">{!! em($d['title'] ?? '') !!}</h2>
+                        @if(!empty($d['text']))<p>{{ $d['text'] }}</p>@endif
+                    </div>
+                    <div class="stores">
+                        @foreach($stores as $store)
+                            @include('front.partials.store-card', ['store' => $store, 'num' => $loop->iteration, 'linkLabel' => $d['link_label'] ?? null])
+                        @endforeach
+                    </div>
+                </div>
+            </section>
             @break
+
+        {{-- Univers produits --}}
         @case('categories')
-            <section class="sec"><div class="wrap">
-                <div class="sec-head">@if(!empty($d['eyebrow']))<span class="eyebrow">{{ $d['eyebrow'] }}</span>@endif<h2>{{ $d['title'] ?? '' }}</h2>@if(!empty($d['text']))<p>{{ $d['text'] }}</p>@endif</div>
-                <div class="univers">@foreach($categories as $cat)
-                    <a class="uni" href="{{ $cat->url() }}"><h3>{{ $cat->name }}</h3><p>{{ $cat->intro }}</p></a>
-                @endforeach</div>
-            </div></section>
-            @break
-        @case('brands')
-            <section class="sec"><div class="wrap">
-                <div class="sec-head">@if(!empty($d['eyebrow']))<span class="eyebrow">{{ $d['eyebrow'] }}</span>@endif<h2>{{ $d['title'] ?? '' }}</h2></div>
-                <ul class="brands">@foreach($brands as $brand)<li><a href="{{ $brand->url() }}">{{ $brand->name }}</a></li>@endforeach</ul>
-            </div></section>
-            @break
-        @case('text')
-            <section class="sec wrap prose">
-                @if(!empty($d['eyebrow']))<span class="eyebrow">{{ $d['eyebrow'] }}</span>@endif
-                @if(!empty($d['title']))<h2>{{ $d['title'] }}</h2>@endif
-                {!! $d['body'] ?? '' !!}
+            <section class="sec {{ ($d['light'] ?? true) ? 'bg-light slant-top' : 'bg-mesh' }}" id="univers" aria-labelledby="{{ $sid }}">
+                <div class="wrap">
+                    <div class="sec-head reveal">
+                        @if(!empty($d['eyebrow']))<span class="eyebrow">{{ $d['eyebrow'] }}</span>@endif
+                        <h2 id="{{ $sid }}">{!! em($d['title'] ?? '') !!}</h2>
+                    </div>
+                    <div class="univers reveal">
+                        @foreach($categories as $cat)
+                            <a class="uni" href="{{ $cat->url() }}" data-hover>
+                                <span class="ico">@include('front.partials.icon', ['name' => $cat->icon ?: 'bois'])</span>
+                                <h3>{{ $cat->name }}</h3>
+                                @if($cat->card_text ?: $cat->intro)<p>{{ $cat->card_text ?: \Illuminate\Support\Str::limit((string) $cat->intro, 140) }}</p>@endif
+                                @if($line = $cat->brandsLine())<span class="brands">{{ $line }}</span>@endif
+                                <span class="more">{{ $d['more_label'] ?? s('label.discover', 'Découvrir →') }}</span>
+                            </a>
+                        @endforeach
+                    </div>
+                </div>
             </section>
             @break
+
+        {{-- Signature de campagne --}}
+        @case('quote')
+            <section class="parallax" aria-label="{{ s('quote.aria', 'Signature de campagne') }}">
+                <div class="bgimg" data-parallax style="background-image:url('{{ media($d['image'] ?? '/img/campagne-chien.webp') }}')" role="img" aria-label="{{ $d['image_alt'] ?? '' }}"></div>
+                <div class="wrap">
+                    <blockquote class="reveal">
+                        <p class="big">{!! em($d['big'] ?? '') !!}</p>
+                        @if(!empty($d['small']))<p class="small">{{ $d['small'] }}</p>@endif
+                        @if(!empty($d['hand']))<span class="hand">{{ $d['hand'] }}</span>@include('front.partials.icon', ['name' => 'scribble'])@endif
+                    </blockquote>
+                </div>
+            </section>
+            @break
+
+        {{-- Bandeau marques --}}
+        @case('marquee')
+            @if($brands->isNotEmpty())
+            <div class="marquee bg-bar" aria-label="{{ $d['aria'] ?? s('brands.aria', 'Nos marques') }}">
+                <div class="track">
+                    @foreach([false, true] as $dup)
+                        @foreach($brands as $brand)<a href="{{ $brand->url() }}" @if($dup) aria-hidden="true" tabindex="-1" @endif><span>{{ $brand->name }}</span></a><i>✦</i>@endforeach
+                    @endforeach
+                </div>
+            </div>
+            @endif
+            @break
+
+        {{-- Méthode --}}
         @case('steps')
-            <section class="sec wrap">
-                @if(!empty($d['eyebrow']))<span class="eyebrow">{{ $d['eyebrow'] }}</span>@endif
-                <h2>{{ $d['title'] ?? '' }}</h2>
-                <div class="steps">@foreach($d['items'] ?? [] as $item)<div><h3>{{ $item['title'] }}</h3><p>{{ $item['text'] ?? '' }}</p></div>@endforeach</div>
+            <section class="sec bg-grain" id="methode" aria-labelledby="{{ $sid }}">
+                <div class="wrap">
+                    <div class="sec-head reveal">
+                        @if(!empty($d['eyebrow']))<span class="eyebrow">{{ $d['eyebrow'] }}</span>@endif
+                        <h2 id="{{ $sid }}">{!! em($d['title'] ?? '') !!}</h2>
+                    </div>
+                    <ol class="steps" style="list-style:none;margin:0;padding:0">
+                        @foreach($d['items'] ?? [] as $item)
+                            <li class="step reveal"><h3>{{ $item['title'] ?? '' }}</h3>@if(!empty($item['text']))<p>{{ $item['text'] }}</p>@endif</li>
+                        @endforeach
+                    </ol>
+                </div>
             </section>
             @break
-        @case('cta')
-            <section class="sec cta wrap"><h2>{{ $d['title'] ?? '' }}</h2><p>{{ $d['text'] ?? '' }}</p>
-                @if(!empty($d['button_url']))<a class="btn btn-main" href="{{ $d['button_url'] }}">{{ $d['button_label'] ?? '' }}</a>@endif</section>
+
+        {{-- Aides --}}
+        @case('aids')
+            <section class="sec bg-light slant-both" id="aides" aria-labelledby="{{ $sid }}">
+                <div class="wrap">
+                    <div class="aides reveal">
+                        <div style="display:grid;gap:1.1rem">
+                            @if(!empty($d['eyebrow']))<span class="eyebrow">{{ $d['eyebrow'] }}</span>@endif
+                            <h2 id="{{ $sid }}">{!! em($d['title'] ?? '') !!}</h2>
+                            @if(!empty($d['text']))<p>{{ $d['text'] }}</p>@endif
+                            @if(!empty($d['cta_url']))<div class="ctas"><a class="btn btn-main" href="{{ $d['cta_url'] }}" data-hover>{{ $d['cta_label'] ?? '' }}</a></div>@endif
+                        </div>
+                        @if(!empty($d['bullets']))
+                        <ul>@foreach($d['bullets'] as $b)<li>@include('front.partials.icon', ['name' => 'check'])<span>{{ $b }}</span></li>@endforeach</ul>
+                        @endif
+                    </div>
+                </div>
+            </section>
             @break
+
+        {{-- Texte SEO + FAQ --}}
+        @case('seo_faq')
+            <section class="sec bg-mesh" id="faq" aria-labelledby="{{ $sid }}">
+                <div class="wrap seo-grid">
+                    <div class="prose reveal">
+                        @if(!empty($d['eyebrow']))<span class="eyebrow">{{ $d['eyebrow'] }}</span>@endif
+                        <h2 id="{{ $sid }}">{!! em($d['title'] ?? '') !!}</h2>
+                        {!! $d['body'] ?? '' !!}
+                    </div>
+                    @include('front.partials.faq', ['faq' => $page?->faq, 'title' => $d['faq_title'] ?? null])
+                </div>
+            </section>
+            @break
+
+        {{-- Appel final --}}
+        @case('final')
+            <section class="sec bg-ember" id="contact" aria-labelledby="{{ $sid }}">
+                <div class="wrap final reveal">
+                    @if(!empty($d['hand']))<span class="hand">{{ $d['hand'] }}</span>@endif
+                    <h2 id="{{ $sid }}">{!! em($d['title'] ?? '') !!}</h2>
+                    <div class="ctas">
+                        @if(!empty($d['cta_url']))<a class="btn btn-main" href="{{ $d['cta_url'] }}" data-hover>{{ $d['cta_label'] ?? '' }}</a>@endif
+                        @if(!empty($d['cta2_url']))<a class="btn btn-ghost" href="{{ $d['cta2_url'] }}" data-hover>{{ $d['cta2_label'] ?? '' }}</a>@endif
+                    </div>
+                </div>
+            </section>
+            @break
+
+        {{-- Texte libre --}}
+        @case('text')
+            <section class="sec" aria-labelledby="{{ $sid }}">
+                <div class="wrap two-col">
+                    <div class="prose-page reveal">
+                        @if(!empty($d['eyebrow']))<span class="eyebrow">{{ $d['eyebrow'] }}</span>@endif
+                        @if(!empty($d['title']))<h2 id="{{ $sid }}">{!! em($d['title']) !!}</h2>@endif
+                        {!! $d['body'] ?? '' !!}
+                    </div>
+                    @if(!empty($d['image']))<img class="reveal" src="{{ media($d['image']) }}" alt="{{ $d['title'] ?? '' }}" width="600" height="450" loading="lazy" style="border-radius:22px">@endif
+                </div>
+            </section>
+            @break
+
     @endswitch
 @endforeach

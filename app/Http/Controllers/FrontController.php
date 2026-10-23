@@ -14,6 +14,7 @@ use App\Models\ProductCategory;
 use App\Models\Store;
 use App\Support\Seo;
 use Illuminate\Contracts\View\View;
+use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 
 /**
@@ -100,7 +101,7 @@ class FrontController extends Controller
         return view('front.product', compact('product', 'seo', 'related'));
     }
 
-    public function category(string $path): View
+    public function category(Request $request, string $path): View
     {
         $category = ProductCategory::published()->where('path', trim($path, '/'))->with('parent', 'children')->firstOrFail();
         $crumbs = [];
@@ -108,12 +109,34 @@ class FrontController extends Controller
             $crumbs[] = ['label' => $category->parent->name, 'url' => $category->parent->url()];
         }
         $crumbs[] = ['label' => $category->name, 'url' => $category->url()];
+        $seo = Seo::for($category, $crumbs);
+
+        $base = Product::published()->whereIn('product_category_id', $category->selfAndChildrenIds());
+        $brandIds = (clone $base)->whereNotNull('brand_id')->distinct()->pluck('brand_id');
+        $energies = (clone $base)->whereNotNull('energy')->distinct()->pluck('energy');
+
+        $query = (clone $base)->with('brand');
+        $brand = $request->string('marque')->toString();
+        $energy = $request->string('energie')->toString();
+        if ($brand !== '') {
+            $query->whereHas('brand', fn ($q) => $q->where('slug', $brand));
+        }
+        if ($energy !== '') {
+            $query->where('energy', $energy);
+        }
+        // Une liste filtrée n'est pas une page à indexer : la canonique reste la catégorie
+        if ($brand !== '' || $energy !== '' || $request->integer('page') > 1) {
+            $seo->robots = 'noindex,follow';
+        }
 
         return view('front.category', [
             'category' => $category,
-            'seo' => Seo::for($category, $crumbs),
-            'products' => Product::published()->whereIn('product_category_id', $category->selfAndChildrenIds())
-                ->with('brand')->orderBy('name')->paginate(24)->withPath($category->url()),
+            'seo' => $seo,
+            'brands' => Brand::whereIn('id', $brandIds)->orderBy('name')->get(),
+            'energies' => $energies,
+            'activeBrand' => $brand,
+            'activeEnergy' => $energy,
+            'products' => $query->orderByDesc('is_featured')->orderBy('name')->paginate(24)->withPath($category->url())->withQueryString(),
         ]);
     }
 

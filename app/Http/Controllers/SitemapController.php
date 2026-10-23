@@ -39,6 +39,8 @@ class SitemapController extends Controller
         $add(AidTopic::published()->get());
         $add(Post::published()->where('published_at', '<=', now())->get());
 
+        $urls->push(['loc' => $base.'/devis/', 'lastmod' => null]); // page devis indexable
+
         $xml = view('front.sitemap', ['urls' => $urls->unique('loc')])->render();
 
         return response($xml, 200, ['Content-Type' => 'application/xml; charset=UTF-8']);
