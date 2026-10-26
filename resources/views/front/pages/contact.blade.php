@@ -25,5 +25,8 @@
             <div class="prose-page">{!! $page->content !!}</div>
         </div>
     </section>
-    <section class="sec groupe bg-emerald"><div class="wrap"><div class="stores">@foreach($stores as $store)@include('front.partials.store-card', ['store' => $store, 'num' => $loop->iteration])@endforeach</div></div></section>
+    <section class="sec groupe bg-emerald" id="magasins"><div class="wrap">
+        <div class="stores">@foreach($stores as $store)@include('front.partials.store-card', ['store' => $store, 'num' => $loop->iteration])@endforeach</div>
+        <div class="groupe-map">@include('front.partials.store-map', ['mapStores' => $stores])</div>
+    </div></section>
 @endsection
