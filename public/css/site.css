@@ -44,7 +44,7 @@ em{font-style:italic;color:var(--emerald)}
 .btn svg{width:18px;height:18px}
 
 /* ---------- Header ---------- */
-.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:50;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);background:rgba(6,9,8,.72);border-bottom:1px solid transparent;transition:border-color .3s}
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:50;background:rgba(6,9,8,.94);border-bottom:1px solid transparent;transition:border-color .3s}
 .top.scrolled{border-bottom-color:var(--line)}
 .top .wrap{display:flex;align-items:center;justify-content:space-between;gap:1.5rem;padding-block:.85rem}
 .logo img{height:44px;width:auto}
@@ -232,8 +232,8 @@ footer{border-top:1px solid var(--line);padding-block:3.5rem 2rem;color:var(--mu
 .act-text{display:grid;gap:1.2rem;min-width:0;max-width:40rem}
 .ep{font-size:.75rem;font-weight:700;letter-spacing:.5em;text-transform:uppercase;color:var(--emerald)}
 .act-title{font-family:var(--f-display);font-size:clamp(3rem,9vw,7rem);line-height:.92;letter-spacing:-.01em;text-wrap:balance}
-.act-title .ch{display:inline-block;opacity:0;transform:translateY(.4em) scale(1.3);filter:blur(10px);transition:opacity .7s,transform .9s cubic-bezier(.2,.7,.2,1),filter .7s}
-.act.on .act-title .ch{opacity:1;transform:none;filter:none}
+.act-title .ch{display:inline-block;opacity:0;transform:translateY(.4em) scale(1.3);transition:opacity .7s,transform .9s cubic-bezier(.2,.7,.2,1)}
+.act.on .act-title .ch{opacity:1;transform:none}
 .act-title .w{display:inline-block;white-space:nowrap}
 .act-tag{font-size:1.1rem;color:rgba(238,244,241,.8);max-width:32rem}
 .rating{display:inline-flex;align-items:center;gap:.6rem;justify-self:start;font-size:.78rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:.45rem .9rem .45rem .5rem;border:1px solid rgba(52,227,165,.5);border-radius:6px;color:var(--emerald)}
@@ -320,8 +320,7 @@ footer{background:#000}
 .flame.big{width:40px;height:56px;margin:-52px 0 0 -20px}
 .flame.big .core{fill:var(--emerald)}
 @keyframes flicker{0%{transform:scale(1,1) skewX(0)}50%{transform:scale(.94,1.06) skewX(-3deg)}100%{transform:scale(1.04,.95) skewX(3deg)}}
-.spark{width:4px;height:4px;border-radius:50%;background:var(--ember);margin:-2px 0 0 -2px;animation:sparkUp .7s ease-out forwards}
-@keyframes sparkUp{to{transform:translate(var(--dx),-34px) scale(.2);opacity:0}}
+.spark{display:block;width:4px;height:4px;border-radius:50%;background:var(--ember);margin:-2px 0 0 -2px;will-change:transform,opacity}
 @media(pointer:fine){.cur,.flame{display:block}body,body a,body button,body summary{cursor:none}}
 
 
