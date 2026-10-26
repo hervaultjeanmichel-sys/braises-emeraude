@@ -369,7 +369,8 @@ footer{background:#000}
 .prose-page strong{color:var(--fg)}
 .prose-page a{color:var(--emerald);text-decoration:underline;text-underline-offset:3px}
 .prose-page ul,.prose-page ol{padding-left:1.2rem;display:grid;gap:.4rem}
-.prose-page img{border-radius:16px}
+.prose-page img{border-radius:16px;max-width:100%;height:auto;display:block}
+.prose-page p:has(> img:only-child){margin:.6rem 0}
 .two-col{display:grid;gap:3rem}
 @media(min-width:960px){.two-col{grid-template-columns:1.5fr 1fr;align-items:start}}
 .card{padding:1.8rem;border-radius:22px;background:var(--bg-2);border:1px solid var(--line);display:grid;gap:1rem;align-content:start}
