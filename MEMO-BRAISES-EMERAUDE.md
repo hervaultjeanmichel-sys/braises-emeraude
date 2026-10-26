@@ -26,7 +26,7 @@
 - Client : La Soleillade (SARL) — marque Braises Émeraude, 3 magasins (Dinard·Pleurtuit, Saint-Malo·Baguer-Pican, Rennes nouveau)
 - Site actuel : WordPress + WooCommerce (catalogue), https://www.braisesemeraude.com
 - Stack : Laravel 12, Filament v3.3, MySQL, PHP 8.3, O2Switch
-- Maquette retenue : **Contrastes** (noir à reflet vert, émeraude `#34e3a5`, braise `#ff7b30`, DM Serif Display + Manrope + Caveat)
+- Maquette retenue : **Contrastes** (noir à reflet vert, émeraude `#34e3d3` (bleu-vert du logo, depuis le 26/10 ; variante sections claires `#06756d`), braise `#ff7b30`, DM Serif Display + Manrope + Caveat)
 - Dépôt GitHub : `hervaultjeanmichel-sys/braises-emeraude` (privé) — **on travaille sur `develop`** (= préprod) ; `main` = future prod
 
 ## Git & environnements

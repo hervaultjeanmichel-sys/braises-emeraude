@@ -98,8 +98,8 @@ if(cv&&!reduce){
   (function tick(){
     if(vis){ctx.clearRect(0,0,W,H);
       for(const p of parts){p.y-=p.v;p.w+=.02;p.x+=Math.sin(p.w)*.35;const life=Math.max(0,Math.min(1,p.y/H));
-        ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,7);ctx.fillStyle=p.g?`rgba(52,227,165,${p.a*life})`:`rgba(255,${120+Math.round(60*life)},48,${p.a*life})`;
-        ctx.shadowBlur=8;ctx.shadowColor=p.g?'rgba(52,227,165,.8)':'rgba(255,123,48,.8)';ctx.fill();
+        ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,7);ctx.fillStyle=p.g?`rgba(52,227,211,${p.a*life})`:`rgba(255,${120+Math.round(60*life)},48,${p.a*life})`;
+        ctx.shadowBlur=8;ctx.shadowColor=p.g?'rgba(52,227,211,.8)':'rgba(255,123,48,.8)';ctx.fill();
         if(p.y<-10)Object.assign(p,mk());}
       ctx.shadowBlur=0;}
     requestAnimationFrame(tick)})();
@@ -133,7 +133,7 @@ const FL=Array.from({length:20},(_,k)=>{const life=(k+.5)/20;return sprite(64,(c
 const flame=(ctx,x,y,r,life)=>{const s=FL[Math.max(0,Math.min(19,Math.floor(life*20)))];ctx.drawImage(s,x-r,y-r,r*2,r*2)};
 /* Point lumineux (remplace shadowBlur) */
 const dot=col=>sprite(32,(c,h)=>{const g=c.createRadialGradient(h,h,0,h,h,h);g.addColorStop(0,`rgba(${col},1)`);g.addColorStop(.18,`rgba(${col},.95)`);g.addColorStop(.4,`rgba(${col},.35)`);g.addColorStop(1,`rgba(${col},0)`);c.fillStyle=g;c.fillRect(0,0,32,32)});
-const DOT_G=dot('52,227,165'),DOT_O=dot('255,140,55');
+const DOT_G=dot('52,227,211'),DOT_O=dot('255,140,55');
 const glow=(ctx,img,x,y,r,a)=>{ctx.globalAlpha=a;ctx.drawImage(img,x-r*4,y-r*4,r*8,r*8);ctx.globalAlpha=1};
 
 function setup(cv){
@@ -200,8 +200,8 @@ function stove(s){
     ctx.fillStyle='#2e3532';ctx.fillRect(fx+sw*.38,wy+wh*.35,5*sc,wh*.3);
     const tx=Math.min(W<900?fx+sw*.55:fx+sw*.75,W-90*sc);
     ctx.font=`${Math.round(64*sc)}px "DM Serif Display",Georgia,serif`;ctx.textAlign='left';
-    ctx.fillStyle='rgba(52,227,165,.18)';ctx.fillText('21°',tx-1,top+sh*.32+1);ctx.fillText('21°',tx+1,top+sh*.32-1);
-    ctx.fillStyle='rgba(52,227,165,.9)';ctx.fillText('21°',tx,top+sh*.32);
+    ctx.fillStyle='rgba(52,227,211,.18)';ctx.fillText('21°',tx-1,top+sh*.32+1);ctx.fillText('21°',tx+1,top+sh*.32-1);
+    ctx.fillStyle='rgba(52,227,211,.9)';ctx.fillText('21°',tx,top+sh*.32);
     ctx.font=`600 ${Math.round(11*sc)}px Manrope,system-ui,sans-serif`;ctx.fillStyle='rgba(238,244,241,.55)';
     ctx.fillText('DEDANS',tx+4,top+sh*.32+20*sc);
   };
@@ -229,7 +229,7 @@ function forest(s){
     for(let b=0;b<3;b++){ctx.beginPath();const y0=H*(.18+b*.07);ctx.moveTo(0,y0);
       for(let x=0;x<=W;x+=40)ctx.lineTo(x,y0+Math.sin(x*.004+t*.6+b)*40+Math.sin(x*.011+t*.3)*18);
       ctx.lineTo(W,y0+160);ctx.lineTo(0,y0+160);ctx.closePath();
-      const ag=ctx.createLinearGradient(0,y0-40,0,y0+160);ag.addColorStop(0,'rgba(52,227,165,0)');ag.addColorStop(.3,`rgba(52,227,165,${.10-b*.025})`);ag.addColorStop(1,'rgba(52,227,165,0)');ctx.fillStyle=ag;ctx.fill()}
+      const ag=ctx.createLinearGradient(0,y0-40,0,y0+160);ag.addColorStop(0,'rgba(52,227,211,0)');ag.addColorStop(.3,`rgba(52,227,211,${.10-b*.025})`);ag.addColorStop(1,'rgba(52,227,211,0)');ctx.fillStyle=ag;ctx.fill()}
     ctx.globalCompositeOperation='source-over';
     for(const L of s.layers)ctx.drawImage(L.c,-L.pad+(mouseX-.5)*L.amp,0);
     ctx.fillStyle='#020806';ctx.fillRect(0,H*.98,W,H*.02);
@@ -238,7 +238,7 @@ function forest(s){
     ctx.globalCompositeOperation='lighter';
     for(const p of s.parts){p.x+=p.vx+Math.sin(t*2+p.y*.02)*.5;p.y+=p.vy;p.rot+=p.vr;
       const k=Math.min(1,Math.max(0,(H*.75-p.y)/(H*.4)));
-      if(k<1){ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.rot);ctx.fillStyle=`rgba(52,227,165,${.75*(1-k)})`;ctx.beginPath();ctx.ellipse(0,0,p.sz,p.sz*.45,0,0,7);ctx.fill();ctx.restore()}
+      if(k<1){ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.rot);ctx.fillStyle=`rgba(52,227,211,${.75*(1-k)})`;ctx.beginPath();ctx.ellipse(0,0,p.sz,p.sz*.45,0,0,7);ctx.fill();ctx.restore()}
       if(k>0)glow(ctx,DOT_O,p.x,p.y,1.2+1.6*k,.9*k*Math.max(0,Math.min(1,p.y/H+.2)))}
     ctx.globalCompositeOperation='source-over';
   };
