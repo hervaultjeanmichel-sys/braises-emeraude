@@ -1,11 +1,12 @@
 # MEMO technique — Braises Émeraude (refonte Laravel)
 
-*Mis à jour le 26/10/2026 (10h40)*
+*Mis à jour le 26/10/2026 (11h45)*
 
 ## 📍 Reste à faire (au 26/10/2026)
 1. **Prise de RDV Google Agenda** (étape 5, prioritaire) — pas commencée
 2. **Fiches produits** : 99/107 sous 300 mots (une description courte chacune) → lot de contenu produits
-3. **Page /chauffage/** : revoir la mise en page avec le contenu nettoyé ; message de JM coupé (« remettre les marques et… ») → à clarifier
+3. **Page /chauffage/** : revoir la mise en page avec le contenu nettoyé (marques et produits remis le 26/10) ; message de JM coupé (« remettre les marques et… ») → à clarifier
+3 bis. **Réalisations** : associer magasin + appareil + vrais avis clients (avec accord) aux 24 chantiers ; Plouasne à saisir sur le Gaio Glass
 4. **Pages courtes** : cuisson, chauffage-mixte, boutique, réalisations, showroom, contact, politique de confidentialité (vide)
 5. **Pages villes** : seule Cancale existe (Dinard, Dol, Pleurtuit, Combourg… à créer)
 6. Vidéo d'accueil : montage MCZ possible si JM fournit les rushes (espace revendeur MCZ)
@@ -20,7 +21,13 @@
 - **Aides 2026** (`braises:fix-aides`, `database/data/content-aides.php`) : MaPrimeRénov' par geste ne finance plus les poêles depuis le 01/09/2026 (economie.gouv.fr, 28/08/2026) → /aides-financement/ réécrite + 4 fiches /aides/{maprimerenov-poele, prime-cee-poele, tva-5-5-poele, eco-ptz-poele}/ (verified_on 26/10/2026) + 6 anciens textes corrigés
 - **Nettoyage HTML WordPress** (`braises:clean-html`, `App\Support\HtmlCleaner`) : Divi/WPBakery retirés (1,08 M → 174 k caractères), 1 636 images rapatriées en WebP dans `storage/wp/`, liens internes relatifs, encart « L'expertise Braise Emeraude » dupliqué retiré, tableaux techniques → `products.specs` + `power_kw` (105 fiches)
 - **Pages univers** : grille des marques (avec nb de modèles) + sélection de produits sur /chauffage/
-- ASSET_VERSION = 0.5
+- **Accueil** : l'ancien texte WordPress de la page / n'est plus affiché sous le bloc final (rendu seulement si aucun bloc)
+- **Couleur** : émeraude alignée sur le logo `#34e3d3` (sections claires `#06756d`), admin Filament aussi
+- **Cartes OpenStreetMap / Leaflet 1.9.4** (`public/js/map.js`, SRI vérifiés, chargées à l'approche, sans cookie) : page magasin, accueil (#groupe, interrupteur `show_map` du bloc magasins), page contact. `Store::mapMarker()`, `directionsUrl()` ; `addressLine()` inclut maintenant la ville
+- **Coordonnées GPS** : `braises:geocode-stores [--apply] [--force]` (lien Google Business → sinon Nominatim). Les liens share.google mènent à une fiche de recherche, sans coordonnées → géocodage par adresse. Enregistrées le 26/10
+- **Réalisations** : table `realisations`, admin Contenus › Réalisations (avis affiché seulement si `review_consent`), photos → WebP (`App\Support\WebpImage`), gabarit `pages/realisations` (filtres, visionneuse). `braises:realisations-from-page --publish-titled [--apply]` : 24 chantiers créés depuis l'ancienne page (légendes d'origine, commune + énergie déduites)
+- **SSH GitHub** : port 22 refusé depuis O2Switch le 26/10 → alias `github-braises` passé sur `ssh.github.com:443` dans ~/.ssh/config
+- ASSET_VERSION = 0.9
 
 ## Identité
 - Client : La Soleillade (SARL) — marque Braises Émeraude, 3 magasins (Dinard·Pleurtuit, Saint-Malo·Baguer-Pican, Rennes nouveau)
@@ -75,6 +82,8 @@
 - **Ne jamais utiliser `redirect('/x/')` pour une URL publique** : utiliser `new RedirectResponse('/x/')`
 - Le serveur préprod suit **develop** : toujours pousser sur develop puis `git pull --ff-only origin develop`
 - Commit 118f54d avec l'e-mail de JM (« Unverified » sur GitHub) : volontairement non réécrit, déjà déployé
+- **Blade** : jamais de directive collée à une lettre ou un chiffre (`/5@endif` → non reconnu → erreur 500). Mettre un espace : `/5 @endif`
+- Avis clients : uniquement de vrais avis, publiés avec l'accord du client (case dans l'admin) — jamais rédigés à sa place
 - Copier-coller depuis le terminal SSH : les espaces disparaissent aux retours à la ligne (« plusl’installation ») → ce n'est pas un bug
 - Le client affirme être « RGE et Qualibois » (texte de sa page Saint-Malo) : validité à confirmer
 - Contenus : aucun fait non vérifié (pas de label, prix, origine incertaine de marque). Origine affichée seulement pour Austroflamm, Romotop, Dovre, Brunner, MCZ, Rizzoli
