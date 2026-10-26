@@ -248,7 +248,8 @@ HTML,
     ['/Cette prime de l.État finance une partie des travaux[^.<]*\.\s*/u', ''],
     ['/Le montant varie[^.<\[]*(?:\.|\[…\]|…)\s*/u', ''],
     ['/<(h[2-4])([^>]*)>(?:(?!<\/\1>).)*?(?:ma ?prime ?r[ée]nov|cr[ée]dit d.imp[ôo]t)(?:(?!<\/\1>).)*?<\/\1>/isu', '<$1$2>Les aides en vigueur</$1><p>«R»</p>'],
-    ['/[^.!?<>|]*(?:ma ?prime ?r[ée]nov|cr[ée]dit d.imp[ôo]t)[^.!?<>]*[.!?]?/iu', '«R»'],
+    // phrase complète, y compris les mots en gras/italique/lien à l'intérieur
+    ['/(?:[^.!?<>|]|<\/?(?:strong|b|em|i|span|a)\b[^>]*>)*(?:ma ?prime ?r[ée]nov|cr[ée]dit d.imp[ôo]t)(?:[^.!?<>]|<\/?(?:strong|b|em|i|span|a)\b[^>]*>)*[.!?]?/iu', '«R»'],
 ],
 
 ];
