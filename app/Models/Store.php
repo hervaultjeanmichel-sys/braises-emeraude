@@ -76,7 +76,7 @@ class Store extends Model
     public function addressLine(): string
     {
         if ($this->address) {
-            return trim($this->address.', '.$this->postal_code, ', ');
+            return trim($this->address.', '.trim($this->postal_code.' '.$this->city), ', ');
         }
         if ($this->postal_code) {
             return trim($this->city.' ('.$this->postal_code.')');
