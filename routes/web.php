@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Http\Controllers\AppointmentController;
 use App\Http\Controllers\FrontController;
 use App\Http\Controllers\LeadController;
 use App\Http\Controllers\SitemapController;
@@ -23,6 +24,12 @@ Route::post('/devis', [LeadController::class, 'storeQuote'])->middleware('thrott
 Route::get('/devis/merci', [LeadController::class, 'thanks'])->name('quote.thanks');
 Route::post('/contact', [LeadController::class, 'storeContact'])->middleware('throttle:6,1')->name('contact.store');
 Route::get('/mon-projet', [LeadController::class, 'project'])->name('project');
+
+// Prise de rendez-vous (validation par l'équipe du magasin)
+Route::get('/rendez-vous', [AppointmentController::class, 'show'])->name('booking');
+Route::get('/rendez-vous/creneaux', [AppointmentController::class, 'slots'])->middleware('throttle:60,1')->name('booking.slots');
+Route::post('/rendez-vous', [AppointmentController::class, 'store'])->middleware('throttle:6,1')->name('booking.store');
+Route::get('/rendez-vous/merci', [AppointmentController::class, 'thanks'])->name('booking.thanks');
 
 Route::get('/produit/{slug}', [FrontController::class, 'product'])->name('product');
 Route::get('/categorie-produit/{path}', [FrontController::class, 'category'])->where('path', '[a-z0-9\-/]+')->name('category');

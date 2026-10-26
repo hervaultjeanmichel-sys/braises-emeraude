@@ -76,17 +76,35 @@ class StoreResource extends Resource
                     Forms\Components\CheckboxList::make('brands')->label('Marques exposées')->relationship('brands', 'name')->columns(3),
                 ]),
                 Forms\Components\Tabs\Tab::make('Rendez-vous')->schema([
-                    Forms\Components\Toggle::make('booking_enabled')->label('Prise de rendez-vous en ligne active'),
-                    Forms\Components\TextInput::make('google_calendar_id')->label('Identifiant Google Agenda du magasin'),
+                    Forms\Components\Toggle::make('booking_enabled')->label('Prise de rendez-vous en ligne active')
+                        ->helperText('Les demandes arrivent « en attente » dans Demandes › Rendez-vous : l’équipe confirme ou refuse, le client est prévenu par e-mail.'),
                     Forms\Components\Group::make([
-                    Forms\Components\TextInput::make('min_delay_hours')->label('Délai minimum avant un RDV (heures)')->numeric()->default(48),
-                    Forms\Components\Repeater::make('types')->label('Types de rendez-vous')->schema([
-                        Forms\Components\TextInput::make('label')->label('Libellé')->required(),
-                        Forms\Components\TextInput::make('duration')->label('Durée (min)')->numeric()->required(),
-                        Forms\Components\Toggle::make('at_home')->label('À domicile'),
-                    ])->columns(3)->defaultItems(0),
-                    Forms\Components\TagsInput::make('home_postcodes')->label('Codes postaux couverts pour les visites à domicile'),
+                        Forms\Components\Repeater::make('types')->label('Types de rendez-vous proposés')->schema([
+                            Forms\Components\TextInput::make('label')->label('Libellé affiché')->required()->columnSpan(2),
+                            Forms\Components\TextInput::make('duration')->label('Durée (min)')->numeric()->required()->default(60),
+                            Forms\Components\Toggle::make('at_home')->label('À domicile'),
+                            Forms\Components\Toggle::make('enabled')->label('Proposé')->default(true),
+                            Forms\Components\Hidden::make('key'),
+                        ])->columns(5)->default(\App\Support\Booking::DEFAULT_TYPES)->reorderable()
+                            ->itemLabel(fn (array $state) => $state['label'] ?? null)
+                            ->helperText('Vide = types par défaut : nouveau projet au showroom (1 h), visite technique à domicile (1 h 30), ramonage à domicile (1 h).'),
+                        Forms\Components\Repeater::make('hours')->label('Plages de rendez-vous')->schema([
+                            Forms\Components\Select::make('day')->label('Jour')->options([1 => 'Lundi', 2 => 'Mardi', 3 => 'Mercredi', 4 => 'Jeudi', 5 => 'Vendredi', 6 => 'Samedi', 7 => 'Dimanche'])->required(),
+                            Forms\Components\TimePicker::make('opens')->label('De')->seconds(false)->required(),
+                            Forms\Components\TimePicker::make('closes')->label('À')->seconds(false)->required(),
+                        ])->columns(3)->defaultItems(0)->collapsed()
+                            ->helperText('Vide = horaires d’ouverture du magasin (ou lun–ven 9h–12h / 14h–18h et sam 9h–12h s’ils ne sont pas renseignés).'),
+                        Forms\Components\Grid::make(3)->schema([
+                            Forms\Components\TextInput::make('min_delay_hours')->label('Délai minimum (heures)')->numeric()->default(24),
+                            Forms\Components\TextInput::make('max_days')->label('Réservable jusqu’à (jours)')->numeric()->default(45),
+                            Forms\Components\Select::make('step')->label('Pas entre deux créneaux')->options([15 => '15 min', 30 => '30 min', 60 => '1 h'])->default(30),
+                            Forms\Components\TextInput::make('capacity_showroom')->label('RDV simultanés au showroom')->numeric()->default(1),
+                            Forms\Components\TextInput::make('capacity_home')->label('Visites simultanées à domicile')->numeric()->default(1),
+                            Forms\Components\DatePicker::make('showroom_from')->label('RDV au showroom à partir du')->helperText('Pour un magasin pas encore ouvert.'),
+                        ]),
+                        Forms\Components\TagsInput::make('home_postcodes')->label('Codes postaux couverts pour les visites à domicile')->helperText('Vide = pas de contrôle.'),
                     ])->statePath('booking_settings'),
+                    Forms\Components\TextInput::make('google_calendar_id')->label('Identifiant Google Agenda du magasin')->helperText('Branchement Google Agenda : étape suivante.'),
                 ]),
                 Forms\Components\Tabs\Tab::make('SEO')->schema([SeoFields::section()]),
             ]),

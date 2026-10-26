@@ -36,6 +36,7 @@
                     <p>{{ $store->announcement }}</p>
                 @endif
                 <div class="ctas">
+                    @if(\App\Support\Booking::for($store)->isEnabled())<a class="btn btn-main" href="/rendez-vous/?magasin={{ $store->id }}" data-hover>{{ s('booking.cta', 'Prendre rendez-vous') }}</a>@endif
                     <a class="btn btn-ghost" href="{{ $mapUrl }}" target="_blank" rel="noopener">{{ s('store.directions', 'Itinéraire') }}</a>
                     @if($store->google_business_url)<a class="btn btn-ghost" href="{{ $store->google_business_url }}" target="_blank" rel="noopener">{{ s('store.reviews', 'Avis Google') }}</a>@endif
                 </div>

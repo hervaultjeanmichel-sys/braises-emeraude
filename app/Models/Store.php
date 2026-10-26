@@ -49,6 +49,11 @@ class Store extends Model
         return $this->hasMany(City::class);
     }
 
+    public function appointments(): HasMany
+    {
+        return $this->hasMany(Appointment::class);
+    }
+
     public function leads(): HasMany
     {
         return $this->hasMany(Lead::class);
