@@ -30,7 +30,10 @@ final class HtmlCleaner
     /** @var callable(string): ?string  url d'image distante → url locale (ou null pour garder) */
     private $imageResolver;
 
-    public array $stats = ['images' => 0, 'images_ok' => 0, 'links' => 0];
+    public array $stats = ['images' => 0, 'images_ok' => 0, 'links' => 0, 'pdf' => 0];
+
+    /** Caractéristiques extraites du tableau technique WooCommerce : [{label, value}] */
+    public array $specs = [];
 
     public function __construct(private string $oldHost = 'braisesemeraude.com', ?callable $imageResolver = null)
     {
@@ -52,6 +55,8 @@ final class HtmlCleaner
         }
 
         $this->walk($root);
+        $this->extractSpecs($root);
+        $this->dropBoilerplate($root);
         $this->wrapLooseInline($root);
         $this->removeEmpty($root);
         $this->dropLeadingTitle($root, $title);
@@ -124,6 +129,19 @@ final class HtmlCleaner
         }
         if ($el->tagName === 'a') {
             $href = $el->getAttribute('href');
+            if (preg_match('#\.(png|jpe?g|gif|webp)(\?.*)?$#i', $href)) {
+                $el->removeAttribute('href');
+                $el->setAttribute('data-unwrap', '1');
+
+                return;
+            }
+            if (preg_match('#^https?://(www\.)?'.preg_quote($this->oldHost, '#').'/wp-content/.+\.pdf$#i', $href)) {
+                $this->stats['pdf']++;
+                if ($local = ($this->imageResolver)($href)) {
+                    $el->setAttribute('href', $local);
+                    $href = $local;
+                }
+            }
             $rel = preg_replace('#^https?://(www\.)?'.preg_quote($this->oldHost, '#').'#i', '', $href);
             if ($rel !== $href) {
                 $el->setAttribute('href', $rel === '' ? '/' : $rel);
@@ -161,7 +179,7 @@ final class HtmlCleaner
     private function unwrap(DOMElement $el): void
     {
         $parent = $el->parentNode;
-        $isBlock = ! in_array($el->tagName, ['span', 'font', 'u', 'small', 'big', 'sup', 'sub', 'label'], true);
+        $isBlock = ! in_array($el->tagName, ['span', 'font', 'u', 'small', 'big', 'sup', 'sub', 'label', 'strong', 'em', 'a', 'b', 'i'], true);
         if ($isBlock) {
             $parent->insertBefore($el->ownerDocument->createTextNode(' '), $el);
         }
@@ -221,6 +239,66 @@ final class HtmlCleaner
             }
             while ($p->lastChild && ($p->lastChild instanceof DOMElement && $p->lastChild->tagName === 'br' || ($p->lastChild instanceof DOMText && trim($p->lastChild->nodeValue) === ''))) {
                 $p->removeChild($p->lastChild);
+            }
+        }
+    }
+
+    /** Tableau « picto | libellé | valeur » → $this->specs, puis retrait du tableau. */
+    private function extractSpecs(DOMElement $root): void
+    {
+        $xp = new DOMXPath($root->ownerDocument);
+        foreach (iterator_to_array($xp->query('.//table', $root)) as $table) {
+            $specs = [];
+            foreach ($xp->query('.//tr', $table) as $tr) {
+                $cells = [];
+                foreach ($tr->childNodes as $c) {
+                    if ($c instanceof DOMElement && in_array($c->tagName, ['th', 'td'], true) && trim($c->textContent) !== '') {
+                        $cells[] = trim(preg_replace('/\s+/u', ' ', $c->textContent));
+                    }
+                }
+                if (count($cells) === 2) {
+                    $label = rtrim($cells[0], " :\u{00A0}");
+                    $value = $cells[1];
+                    if (! preg_match('/^NC\b/i', $value)) {
+                        $specs[] = ['label' => $label, 'value' => $value];
+                    }
+                }
+            }
+            if (count($specs) >= 3) {
+                $this->specs = array_merge($this->specs, $specs);
+                $table->parentNode->removeChild($table);
+            }
+        }
+        // liens d'images démontés
+        foreach (iterator_to_array($xp->query('.//a[@data-unwrap]', $root)) as $a) {
+            $this->unwrap($a);
+        }
+        // titres : pas de gras/italique à l'intérieur
+        foreach (iterator_to_array($xp->query('.//h2/strong|.//h3/strong|.//h4/strong|.//h2/em|.//h3/em', $root)) as $el) {
+            $this->unwrap($el);
+        }
+    }
+
+    /** Retire les blocs répétés de WordPress : grilles de produits WooCommerce, encart « L'expertise Braises Émeraude ». */
+    private function dropBoilerplate(DOMElement $root): void
+    {
+        $xp = new DOMXPath($root->ownerDocument);
+        foreach (iterator_to_array($xp->query('.//ul', $root)) as $ul) {
+            $lis = $xp->query('./li', $ul);
+            $cards = $xp->query('./li[.//a[starts-with(@href, "/produit/")] and .//img]', $ul);
+            if ($lis->length > 0 && $cards->length === $lis->length) {
+                $ul->parentNode->removeChild($ul);
+            }
+        }
+        foreach (iterator_to_array($xp->query('.//h2|.//h3', $root)) as $h) {
+            if ($h->parentNode && preg_match('/expertise braises? [ée]meraude/iu', $h->textContent)) {
+                $next = $h->nextSibling;
+                $h->parentNode->removeChild($h);
+                while ($next && ! ($next instanceof DOMElement && in_array($next->tagName, ['h2', 'h3'], true))) {
+                    $after = $next->nextSibling;
+                    $next->parentNode->removeChild($next);
+                    $next = $after;
+                }
             }
         }
     }

@@ -36,7 +36,7 @@ class CleanImportedHtml extends Command
         $this->info($apply ? 'MODE ÉCRITURE' : 'SIMULATION (rien n’est écrit) — relancer avec --apply');
 
         $rows = [];
-        $tot = ['records' => 0, 'before' => 0, 'after' => 0, 'images' => 0, 'images_ok' => 0, 'links' => 0];
+        $tot = ['records' => 0, 'before' => 0, 'after' => 0, 'images' => 0, 'images_ok' => 0, 'links' => 0, 'pdf' => 0, 'specs' => 0];
 
         foreach (self::TABLES as $table => $key) {
             if (! Schema::hasTable($table) || ! Schema::hasColumn($table, 'content')) {
@@ -48,32 +48,48 @@ class CleanImportedHtml extends Command
                 if (! preg_match(self::MARKERS, $html)) {
                     continue;
                 }
-                $cleaner = new HtmlCleaner('braisesemeraude.com', fn (string $url) => $apply ? $this->image($url) : '/storage/wp/'.$this->imageName($url));
+                $cleaner = new HtmlCleaner('braisesemeraude.com', fn (string $url) => $apply ? $this->image($url) : (preg_match('/\.pdf$/i', $url) ? '/storage/wp/pdf/…' : '/storage/wp/'.$this->imageName($url)));
                 $new = $cleaner->clean($html, $titleCol ? $row->{$titleCol} : null);
 
                 $tot['records']++;
                 $tot['before'] += strlen($html);
                 $tot['after'] += strlen($new);
-                foreach (['images', 'images_ok', 'links'] as $k) {
+                foreach (['images', 'images_ok', 'links', 'pdf'] as $k) {
                     $tot[$k] += $cleaner->stats[$k];
                 }
-                $rows[] = [$table, $row->{$key}, number_format(strlen($html), 0, ',', ' '), number_format(strlen($new), 0, ',', ' '), $cleaner->stats['images'].($apply ? ' ('.$cleaner->stats['images_ok'].' ok)' : ''), $cleaner->stats['links']];
+                $rows[] = [$table, $row->{$key}, number_format(strlen($html), 0, ',', ' '), number_format(strlen($new), 0, ',', ' '), $cleaner->stats['images'].($apply ? ' ('.$cleaner->stats['images_ok'].' ok)' : ''), $cleaner->stats['links'], count($cleaner->specs)];
 
                 if ($this->option('show') === $row->{$key}) {
                     $this->newLine();
                     $this->comment("===== Aperçu {$table} / {$row->{$key}}");
                     $this->line($new);
                 }
-                if ($apply && $new !== $html) {
-                    DB::table($table)->where('id', $row->id)->update(['content' => $new, 'updated_at' => now()]);
+                $update = $new !== $html ? ['content' => $new] : [];
+                // fiches produits : tableau technique → champs specs / power_kw (s'ils sont vides)
+                if ($table === 'products' && $cleaner->specs) {
+                    $tot['specs']++;
+                    if (blank($row->specs) || $row->specs === '[]') {
+                        $update['specs'] = json_encode($cleaner->specs, JSON_UNESCAPED_UNICODE);
+                    }
+                    if (blank($row->power_kw)) {
+                        foreach ($cleaner->specs as $sp) {
+                            if (preg_match('/puissance/i', $sp['label']) && preg_match('/(\d+(?:[.,]\d+)?)\s*kW/i', $sp['value'], $m)) {
+                                $update['power_kw'] = (float) str_replace(',', '.', $m[1]);
+                                break;
+                            }
+                        }
+                    }
+                }
+                if ($apply && $update) {
+                    DB::table($table)->where('id', $row->id)->update($update + ['updated_at' => now()]);
                 }
             }
         }
 
-        $this->table(['Table', 'Fiche', 'Avant (car.)', 'Après (car.)', 'Images', 'Liens relatifs'], $rows);
-        $this->info(sprintf('Terminé : %d fiche(s), %s → %s caractères, %d image(s)%s, %d lien(s) rendus relatifs%s',
+        $this->table(['Table', 'Fiche', 'Avant (car.)', 'Après (car.)', 'Images', 'Liens relatifs', 'Caract.'], $rows);
+        $this->info(sprintf('Terminé : %d fiche(s), %s → %s caractères, %d image(s)%s, %d PDF, %d lien(s) rendus relatifs, %d fiche(s) produit avec caractéristiques extraites%s',
             $tot['records'], number_format($tot['before'], 0, ',', ' '), number_format($tot['after'], 0, ',', ' '),
-            $tot['images'], $apply ? " dont {$tot['images_ok']} rapatriée(s)" : '', $tot['links'], $apply ? '' : ' (simulation)'));
+            $tot['images'], $apply ? " dont {$tot['images_ok']} rapatriée(s)" : '', $tot['pdf'], $tot['links'], $tot['specs'], $apply ? '' : ' (simulation)'));
 
         if ($apply) {
             Cache::flush();
@@ -94,6 +110,20 @@ class CleanImportedHtml extends Command
     /** Télécharge l'image (version originale si possible), redimensionne à 1600 px max, WebP q80. */
     private function image(string $url): ?string
     {
+        if (preg_match('/\.pdf$/i', $url)) {
+            $name = 'wp/pdf/'.Str::slug(pathinfo((string) parse_url($url, PHP_URL_PATH), PATHINFO_FILENAME)).'.pdf';
+            if (! Storage::disk('public')->exists($name)) {
+                $res = Http::timeout(60)->get($url);
+                if (! $res->ok() || ! str_starts_with($res->body(), '%PDF')) {
+                    $this->warn("  PDF non rapatrié : {$url}");
+
+                    return null;
+                }
+                Storage::disk('public')->put($name, $res->body());
+            }
+
+            return '/storage/'.$name;
+        }
         $name = 'wp/'.$this->imageName($url);
         if (Storage::disk('public')->exists($name)) {
             return '/storage/'.$name;
