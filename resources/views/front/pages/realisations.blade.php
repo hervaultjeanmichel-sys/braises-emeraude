@@ -69,8 +69,10 @@
         @push('scripts')<script src="/js/realisations.js?v={{ config('braises.asset_version') }}" defer></script>@endpush
     @endif
 
-    @if($page->content)
-        <section class="content"><div class="wrap prose-page">{!! $page->content !!}</div></section>
+    {{-- Texte de la page ; ses anciennes photos sont retirées quand la galerie existe (elles y sont reprises). --}}
+    @php($pageText = $reals->isNotEmpty() ? preg_replace(['/<figure\b[^>]*>.*?<\/figure>/is', '/<img\b[^>]*>/i', '/<p>\s*<\/p>/'], '', (string) $page->content) : $page->content)
+    @if(trim(strip_tags((string) $pageText)) !== '')
+        <section class="content"><div class="wrap prose-page">{!! $pageText !!}</div></section>
     @endif
     @include('front.partials.sections', ['sections' => $page->sections])
     @include('front.partials.final-cta')

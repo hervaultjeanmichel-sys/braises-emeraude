@@ -17,7 +17,7 @@ use Illuminate\Console\Command;
  */
 class RealisationsFromPage extends Command
 {
-    protected $signature = 'braises:realisations-from-page {--apply} {--min=300 : largeur minimale (px) pour ignorer les pictos}';
+    protected $signature = 'braises:realisations-from-page {--apply} {--publish-titled : publie celles qui ont une vraie légende} {--min=300 : largeur minimale (px) pour ignorer les pictos}';
 
     protected $description = 'Photos de l’ancienne page Réalisations → réalisations en brouillon';
 
@@ -46,15 +46,41 @@ class RealisationsFromPage extends Command
             }
             $existing[] = $path;
             $n++;
-            $title = trim(html_entity_decode($alt[1] ?? ''));
-            $title = $title !== '' && mb_strlen($title) < 90 ? $title : 'Réalisation n° '.$n.' (à compléter)';
-            $this->line("  + {$title}  ←  {$url}");
+            $legend = trim(html_entity_decode($alt[1] ?? '', ENT_QUOTES | ENT_HTML5));
+            $titled = $legend !== '' && mb_strlen($legend) < 120;
+            $title = $titled ? rtrim(mb_strtoupper(mb_substr($legend, 0, 1)).mb_substr($legend, 1), ' .!') : 'Réalisation n° '.$n.' (à compléter)';
+            $city = $this->city($legend);
+            $energy = $this->energy($legend);
+            $publish = $titled && $this->option('publish-titled');
+            $this->line(sprintf('  + %s%s%s%s', $title, $city ? "  [commune : {$city}]" : '', $energy ? "  [énergie : {$energy}]" : '', $publish ? '  [publiée]' : '  [brouillon]'));
             if ($this->option('apply')) {
-                Realisation::create(['title' => $title, 'photos' => [$path], 'is_published' => false, 'sort' => $n]);
+                Realisation::create(['title' => $title, 'city' => $city, 'energy' => $energy, 'photos' => [$path], 'is_published' => $publish, 'sort' => $n]);
             }
         }
-        $this->info("{$n} réalisation(s) en brouillon".($this->option('apply') ? ' créée(s)' : ' (simulation)').' — à compléter dans Admin › Réalisations');
+        $this->info("{$n} réalisation(s)".($this->option('apply') ? ' créée(s)' : ' (simulation)').' — à compléter dans Admin › Réalisations');
 
         return self::SUCCESS;
+    }
+
+    /** Commune citée dans la légende : « … à Lancieux », « … à Mesnil-Roc'h », « région de Dinard ». */
+    private function city(string $t): ?string
+    {
+        if (preg_match("/\\b(?:à|a|région de|sur)\\s+((?:Saint|Sainte|La|Le|Les|Mesnil|Pleurtuit|Dinard|Dinan|Lancieux|Cancale|Rennes|Dol|Combourg|Pleslin|Ploubalay|Beaussais|Pleudihen|Châteauneuf|Miniac|Plerguer|Tinténiac)[\\p{L}'’\\- ]{0,30}?)(?:\\s*\\(\\d{2}\\))?(?=[.,!;]|\\s*$)/u", $t, $m)) {
+            return trim($m[1]);
+        }
+
+        return null;
+    }
+
+    private function energy(string $t): ?string
+    {
+        $t = mb_strtolower($t);
+
+        return match (true) {
+            str_contains($t, 'mixte') || str_contains($t, 'duo') => 'mixte',
+            str_contains($t, 'granul') || str_contains($t, 'pellet') => 'granules',
+            str_contains($t, ' bois') || str_contains($t, 'foyer') || str_contains($t, 'insert 3 faces') => 'bois',
+            default => null,
+        };
     }
 }
