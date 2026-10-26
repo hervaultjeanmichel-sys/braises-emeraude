@@ -68,6 +68,7 @@ class PageResource extends Resource
                     Forms\Components\TextInput::make('title')->label('Titre H2')->required(),
                     Forms\Components\Textarea::make('text')->label('Texte')->rows(3),
                     Forms\Components\TextInput::make('link_label')->label('Lien des cartes')->default('Voir le magasin de :magasin')->helperText(':magasin est remplacé par le nom court.'),
+                    Forms\Components\Toggle::make('show_map')->label('Afficher la carte des magasins')->default(true)->helperText('Carte OpenStreetMap des magasins dont la latitude / longitude est renseignée.'),
                 ]),
                 Forms\Components\Builder\Block::make('categories')->label('Univers produits (cartes dynamiques)')->icon('heroicon-o-squares-2x2')->schema([
                     Forms\Components\TextInput::make('eyebrow')->label('Sur-titre'),

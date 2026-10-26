@@ -77,6 +77,9 @@
                             @include('front.partials.store-card', ['store' => $store, 'num' => $loop->iteration, 'linkLabel' => $d['link_label'] ?? null])
                         @endforeach
                     </div>
+                    @if($d['show_map'] ?? true)
+                        <div class="groupe-map reveal">@include('front.partials.store-map', ['mapStores' => $stores])</div>
+                    @endif
                 </div>
             </section>
             @break

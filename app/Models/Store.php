@@ -73,6 +73,25 @@ class Store extends Model
     }
 
     /** Adresse courte façon maquette : « La Hertaudière, 35120 », « Pleurtuit (35730) », « Rennes Métropole ». */
+    /** Lien d'itinéraire Google Maps (coordonnées si connues, sinon nom + adresse). */
+    public function directionsUrl(): string
+    {
+        return 'https://www.google.com/maps/search/?api=1&query='.($this->latitude
+            ? $this->latitude.','.$this->longitude
+            : urlencode($this->name.' '.$this->addressLine()));
+    }
+
+    /** Repère pour les cartes (public/js/map.js). */
+    public function mapMarker(): array
+    {
+        return [
+            'lat' => (float) $this->latitude, 'lng' => (float) $this->longitude,
+            'name' => $this->name, 'short' => $this->short_name,
+            'address' => $this->addressLine(), 'phone' => $this->phone,
+            'url' => $this->url(), 'directions' => $this->directionsUrl(), 'isNew' => (bool) $this->is_new,
+        ];
+    }
+
     public function addressLine(): string
     {
         if ($this->address) {

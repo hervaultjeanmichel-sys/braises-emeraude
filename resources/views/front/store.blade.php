@@ -1,7 +1,7 @@
 @extends('layouts.front')
 @php($open = $store->isOpenNow())
 @php($today = now('Europe/Paris')->dayOfWeekIso)
-@php($mapUrl = $store->latitude ? 'https://www.google.com/maps/search/?api=1&query='.$store->latitude.','.$store->longitude : 'https://www.google.com/maps/search/?api=1&query='.urlencode($store->name.' '.$store->addressLine()))
+@php($mapUrl = $store->directionsUrl())
 @section('content')
     @include('front.partials.hero', [
         'eyebrow' => $store->eyebrow ?: ($store->region_label ?: $store->area_label),
@@ -43,7 +43,17 @@
         </div>
     </section>
 
-    @include('front.partials.store-map')
+    @if($store->latitude && $store->longitude)
+        <section class="sec bg-mesh" id="carte" aria-labelledby="carte-title">
+            <div class="wrap">
+                <div class="sec-head">
+                    <span class="eyebrow">{{ s('store.map_eyebrow', 'Nous trouver') }}</span>
+                    <h2 id="carte-title">{!! em(s('store.map_title', 'Venez voir *le feu* en vrai')) !!}</h2>
+                </div>
+                @include('front.partials.store-map', ['mapStores' => [$store], 'currentPage' => true])
+            </div>
+        </section>
+    @endif
 
     @if($store->photos)
         <section class="sec bg-mesh"><div class="wrap">
