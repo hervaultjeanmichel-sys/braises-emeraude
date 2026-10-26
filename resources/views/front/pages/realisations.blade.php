@@ -18,7 +18,7 @@
                     <span class="eyebrow">{{ s('real.eyebrow', 'Nos chantiers') }}</span>
                     <h2 id="chantiers-title">{!! em(s('real.title', 'Ils se chauffent *avec nous*')) !!}</h2>
                     @if($reviews->isNotEmpty())
-                        <p>{{ trans_choice(s('real.reviews_count', ':count avis client|:count avis clients'), $reviews->count(), ['count' => $reviews->count()]) }}@if($avg) · {{ s('real.avg', 'note moyenne') }} {{ str_replace('.', ',', (string) $avg) }}/5@endif</p>
+                        <p>{{ trans_choice(s('real.reviews_count', ':count avis client|:count avis clients'), $reviews->count(), ['count' => $reviews->count()]) }}@if($avg) · {{ s('real.avg', 'note moyenne') }} {{ str_replace('.', ',', (string) $avg) }}/5 @endif</p>
                     @endif
                 </div>
 
