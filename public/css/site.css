@@ -471,3 +471,12 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--emerald)
 .selection{display:grid;gap:.4rem;padding:1rem 1.2rem;border-radius:16px;border:1px solid rgba(52,227,165,.35);background:rgba(52,227,165,.06);font-size:.92rem}
 .thanks{display:grid;gap:1.2rem;justify-items:start;max-width:40rem}
 .js .progress.js-only{display:grid}
+
+/* Grille des marques (pages univers) */
+.brand-grid{display:grid;gap:1px;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));background:var(--line);border:1px solid var(--line);border-radius:18px;overflow:hidden}
+.brand-card{display:grid;gap:.35rem;align-content:center;justify-items:start;padding:1.4rem 1.3rem;background:var(--bg);transition:background .3s}
+.brand-card strong{font-family:var(--f-display);font-weight:400;font-size:1.45rem;line-height:1.1}
+.brand-card img{height:40px;width:auto;max-width:100%;object-fit:contain}
+.brand-card span{font-size:.8rem;color:var(--muted)}
+.brand-card:hover{background:var(--emerald-deep)}
+.brand-card:hover strong{color:var(--emerald)}
