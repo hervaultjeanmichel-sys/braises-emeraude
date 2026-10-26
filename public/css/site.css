@@ -481,3 +481,18 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--emerald)
 .brand-card span{font-size:.8rem;color:var(--muted)}
 .brand-card:hover{background:var(--emerald-deep)}
 .brand-card:hover strong{color:var(--emerald)}
+
+/* Carte magasin (Leaflet + OpenStreetMap, rendu sombre) */
+.store-map{position:relative;height:clamp(320px,52vh,480px);border-radius:22px;overflow:hidden;border:1px solid var(--line);background:#0b1210;display:grid;place-items:center;isolation:isolate}
+.store-map-fallback{color:var(--emerald);font-weight:600}
+.store-map .leaflet-tile-pane{filter:invert(1) hue-rotate(180deg) brightness(.92) contrast(.88) saturate(.5)}
+.store-map.leaflet-container{background:#0b1210}
+.store-map.leaflet-container .leaflet-control-attribution{background:rgba(6,9,8,.75);color:var(--muted);font-size:.68rem}
+.store-map.leaflet-container .leaflet-control-attribution a{color:var(--muted)}
+.store-map .leaflet-bar a{background:#0b1210;color:var(--fg);border-color:var(--line)}
+.store-map .leaflet-popup-content-wrapper,.store-map .leaflet-popup-tip{background:#0b1210;color:var(--fg);border:1px solid var(--line)}
+.store-map .leaflet-popup-content{font-family:var(--f-body);font-size:.9rem;line-height:1.5}
+.store-map .leaflet-popup-content a{color:var(--emerald)}
+.map-pin span{display:block;width:26px;height:26px;border-radius:50%;background:var(--emerald);border:4px solid #060908;box-shadow:0 0 0 0 rgba(52,227,211,.6);animation:pin 2.2s infinite}
+@keyframes pin{70%{box-shadow:0 0 0 18px rgba(52,227,211,0)}100%{box-shadow:0 0 0 0 rgba(52,227,211,0)}}
+@media(prefers-reduced-motion:reduce){.map-pin span{animation:none}}

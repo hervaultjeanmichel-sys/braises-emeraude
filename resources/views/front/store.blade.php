@@ -43,6 +43,8 @@
         </div>
     </section>
 
+    @include('front.partials.store-map')
+
     @if($store->photos)
         <section class="sec bg-mesh"><div class="wrap">
             <div class="sec-head"><span class="eyebrow">{{ s('store.photos_eyebrow', 'Le showroom') }}</span><h2>{!! em(s('store.photos_title', 'Des poêles *en fonctionnement*')) !!}</h2></div>

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 return [
     // Incrémenter à chaque modification de CSS/JS (?v=X.X)
-    'asset_version' => env('ASSET_VERSION', '0.6'),
+    'asset_version' => env('ASSET_VERSION', '0.7'),
 
     // URL du site WordPress actuel, source de l'import des contenus
     'wordpress_url' => env('WORDPRESS_URL', 'https://www.braisesemeraude.com'),
