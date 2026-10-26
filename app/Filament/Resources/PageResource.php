@@ -46,6 +46,8 @@ class PageResource extends Resource
                 ->blocks([
                 Forms\Components\Builder\Block::make('saga')->label('Bandeau cinéma (épisodes)')->icon('heroicon-o-film')->schema([
                     Forms\Components\TextInput::make('kicker')->label('Mention en haut à gauche')->default('Braises Émeraude présente'),
+                    Forms\Components\FileUpload::make('bg_video')->label('Vidéo de fond commune (optionnelle)')->helperText('Une seule vidéo derrière tous les épisodes : remplace les décors animés. MP4/WebM sans son, 20 Mo max. Chargée après l\'affichage de la page.')->directory('accueil')->acceptedFileTypes(['video/mp4', 'video/webm'])->maxSize(20000),
+                    Forms\Components\FileUpload::make('bg_poster')->label('Image d\'attente de la vidéo commune')->helperText('Affichée pendant le chargement et pour les visiteurs en économie de données. WebP conseillé.')->image()->directory('accueil'),
                     Forms\Components\Repeater::make('episodes')->label('Épisodes')->schema([
                         Forms\Components\TextInput::make('label')->label('Numéro')->placeholder('Épisode I'),
                         Forms\Components\TextInput::make('title')->label('Titre')->required(),

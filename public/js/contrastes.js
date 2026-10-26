@@ -45,6 +45,14 @@ if(saga){
   go(0);
 }
 
+/* Vidéo de fond commune de la Saga : chargée après l'affichage, jamais en économie de données */
+const sv=document.querySelector('.saga-video');
+if(sv&&!reduce&&!(navigator.connection&&navigator.connection.saveData)){
+  const load=()=>{const so=document.createElement('source');so.src=sv.dataset.src;so.type=sv.dataset.type;sv.appendChild(so);sv.load();sv.play().catch(()=>{})};
+  if(document.readyState==='complete')setTimeout(load,300);else addEventListener('load',()=>setTimeout(load,300),{once:true});
+  new IntersectionObserver(e=>{if(!sv.firstChild)return;e[0].isIntersecting?sv.play().catch(()=>{}):sv.pause()}).observe(sv);
+}
+
 /* Halo qui suit la souris sur les magasins */
 document.querySelectorAll('.store').forEach(c=>c.addEventListener('mousemove',e=>{const r=c.getBoundingClientRect();c.style.setProperty('--mx',(e.clientX-r.left)+'px');c.style.setProperty('--my',(e.clientY-r.top)+'px')}));
 

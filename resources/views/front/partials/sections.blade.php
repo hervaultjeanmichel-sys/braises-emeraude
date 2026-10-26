@@ -15,10 +15,16 @@
         @case('saga')
             @php($eps = array_values($d['episodes'] ?? []))
             <section class="saga" id="saga" aria-labelledby="{{ $sid }}" aria-roledescription="carrousel">
+                @php($bgVideo = $d['bg_video'] ?? null)
+                @if($bgVideo)
+                    <video class="saga-video" muted loop playsinline preload="none" @if(!empty($d['bg_poster'])) poster="{{ media($d['bg_poster']) }}" @endif data-src="{{ media($bgVideo) }}" data-type="{{ str_ends_with($bgVideo, '.webm') ? 'video/webm' : 'video/mp4' }}" aria-hidden="true"></video>
+                @endif
                 <div class="bar bar-top" aria-hidden="true"><span>{{ $d['kicker'] ?? '' }}</span><span id="ep-count">01 / {{ str_pad((string) max(1, count($eps)), 2, '0', STR_PAD_LEFT) }}</span></div>
                 @foreach($eps as $i => $ep)
                     <article class="act @if($i === 0) on @endif" data-act="{{ $i }}">
-                        @if(($ep['scene'] ?? 'fire') === 'video' && !empty($ep['video']))
+                        @if($bgVideo)
+                            {{-- décor commun : la vidéo de fond --}}
+                        @elseif(($ep['scene'] ?? 'fire') === 'video' && !empty($ep['video']))
                             <video class="scene scene-video" @if($i === 0) autoplay @endif muted loop playsinline preload="{{ $i === 0 ? 'metadata' : 'none' }}" @if(!empty($ep['poster'])) poster="{{ media($ep['poster']) }}" @endif aria-hidden="true">
                                 <source src="{{ media($ep['video']) }}" type="{{ str_ends_with($ep['video'], '.webm') ? 'video/webm' : 'video/mp4' }}">
                             </video>
