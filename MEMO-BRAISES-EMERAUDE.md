@@ -1,9 +1,9 @@
 # MEMO technique — Braises Émeraude (refonte Laravel)
 
-*Mis à jour le 26/10/2026 (11h45)*
+*Mis à jour le 27/10/2026 (8h40)*
 
 ## 📍 Reste à faire (au 26/10/2026)
-1. **Prise de RDV Google Agenda** (étape 5, prioritaire) — pas commencée
+1. **Prise de RDV** : module fait et actif pour Rennes (27/10). Reste : vraie adresse e-mail de Rennes (provisoirement celle de JM), activer Dinard / Saint-Malo, branchement Google Agenda (compte de service)
 2. **Fiches produits** : 99/107 sous 300 mots (une description courte chacune) → lot de contenu produits
 3. **Page /chauffage/** : revoir la mise en page avec le contenu nettoyé (marques et produits remis le 26/10) ; message de JM coupé (« remettre les marques et… ») → à clarifier
 3 bis. **Réalisations** : associer magasin + appareil + vrais avis clients (avec accord) aux 24 chantiers ; Plouasne à saisir sur le Gaio Glass
@@ -28,6 +28,17 @@
 - **Réalisations** : table `realisations`, admin Contenus › Réalisations (avis affiché seulement si `review_consent`), photos → WebP (`App\Support\WebpImage`), gabarit `pages/realisations` (filtres, visionneuse). `braises:realisations-from-page --publish-titled [--apply]` : 24 chantiers créés depuis l'ancienne page (légendes d'origine, commune + énergie déduites)
 - **SSH GitHub** : port 22 refusé depuis O2Switch le 26/10 → alias `github-braises` passé sur `ssh.github.com:443` dans ~/.ssh/config
 - ASSET_VERSION = 0.9
+
+## Session du 27/10/2026 — prise de rendez-vous
+- **Tables** : `appointments` (en_attente → confirme / refuse / annule) ; réglages par magasin dans `stores.booking_settings`
+- **Réglages par magasin** (onglet Rendez-vous) : interrupteur général `booking_enabled` ; catégories ouvertes `allow_showroom` / `allow_home` / `allow_sweep` ; `home_radius_km` ; types `{label, kind: showroom|domicile|ramonage, duration, enabled}` ; plages `hours` (sinon horaires du magasin) ; `start_from` (calendrier), `showroom_from`, `min_delay_hours`, `max_days`, `step`, capacités
+- **Calcul des créneaux** : `App\Support\Booking` (fuseau Europe/Paris, APP_TIMEZONE ajouté au .env) ; rayon via `App\Support\Geo` (Nominatim, cache 30 j, haversine) — adresse non localisée = acceptée avec « distance non vérifiée »
+- **Parcours** : /rendez-vous/ (4 étapes, `public/js/booking.js`), /rendez-vous/creneaux (JSON), /rendez-vous/zone (JSON), /rendez-vous/merci/ ; bouton « Prendre rendez-vous » sur la page magasin
+- **Validation** : admin Demandes › Rendez-vous, boutons Confirmer / Refuser → e-mails `App\Support\BookingMailer` (alerte magasin, accusé client, confirmation + .ics, refus)
+- **Commande** : `php artisan braises:booking {magasin} [--enable] [--disable] [--from=] [--showroom-from=] [--radius=] [--showroom=on|off] [--home=on|off] [--sweep=on|off] [--email=] [--add-types]` (affiche aussi le diagnostic des créneaux)
+- **Rennes (27/10)** : active, calendrier à partir du 15/11 (1er créneau 17/11), showroom + domicile + ramonage, rayon 25 km, types « En Magasin » 15 min (saisi par JM), visite technique 90 min, ramonage 60 min
+- **Bug corrigé** : `(new RedirectResponse(...))->with()` → erreur 500 (pas de session) sur devis / contact / RDV → `session()->flash()` puis `new RedirectResponse`
+- ASSET_VERSION = 1.1
 
 ## Identité
 - Client : La Soleillade (SARL) — marque Braises Émeraude, 3 magasins (Dinard·Pleurtuit, Saint-Malo·Baguer-Pican, Rennes nouveau)
@@ -83,6 +94,7 @@
 - Le serveur préprod suit **develop** : toujours pousser sur develop puis `git pull --ff-only origin develop`
 - Commit 118f54d avec l'e-mail de JM (« Unverified » sur GitHub) : volontairement non réécrit, déjà déployé
 - **Blade** : jamais de directive collée à une lettre ou un chiffre (`/5@endif` → non reconnu → erreur 500). Mettre un espace : `/5 @endif`
+- **Redirections** : ne jamais chaîner `->with()` sur `new RedirectResponse()` ; passer par `session()->flash()`
 - Avis clients : uniquement de vrais avis, publiés avec l'accord du client (case dans l'admin) — jamais rédigés à sa place
 - Copier-coller depuis le terminal SSH : les espaces disparaissent aux retours à la ligne (« plusl’installation ») → ce n'est pas un bug
 - Le client affirme être « RGE et Qualibois » (texte de sa page Saint-Malo) : validité à confirmer
