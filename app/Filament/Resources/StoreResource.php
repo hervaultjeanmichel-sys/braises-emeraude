@@ -46,6 +46,7 @@ class StoreResource extends Resource
                         Forms\Components\TextInput::make('phone')->label('Téléphone')->tel(),
                         Forms\Components\TextInput::make('email')->label('E-mail de réception des demandes')->email(),
                         Forms\Components\TextInput::make('google_business_url')->label('Fiche Google Business')->url(),
+                        Forms\Components\TextInput::make('google_place_id')->label('Identifiant Google (Place ID)')->helperText('Pour afficher les avis Google. Trouvé automatiquement par : php artisan braises:google-reviews {magasin} --find'),
                         Forms\Components\TextInput::make('latitude')->label('Latitude')->numeric()->helperText('Pour la carte : clic droit sur le magasin dans Google Maps, puis cliquer sur les coordonnées pour les copier (ex. 48.6107).'),
                         Forms\Components\TextInput::make('longitude')->label('Longitude')->numeric()->helperText('Ex. -2.0546 (négatif à l\'ouest de Greenwich).'),
                         Forms\Components\Toggle::make('is_new')->label('Badge « Nouveau »'),

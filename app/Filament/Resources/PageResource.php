@@ -112,6 +112,11 @@ class PageResource extends Resource
                     Forms\Components\RichEditor::make('body')->label('Texte (H3, gras, liens)')->toolbarButtons(['h3', 'bold', 'italic', 'bulletList', 'link']),
                     Forms\Components\TextInput::make('faq_title')->label('Titre de la FAQ')->default('Vos questions'),
                 ]),
+                Forms\Components\Builder\Block::make('google_reviews')->label('Avis Google (note + avis choisis)')->icon('heroicon-o-star')->schema([
+                    Forms\Components\TextInput::make('eyebrow')->label('Sur-titre')->default('Avis clients'),
+                    Forms\Components\TextInput::make('title')->label('Titre H2')->default('Ils nous ont *fait confiance*'),
+                    Forms\Components\Select::make('limit')->label('Nombre d’avis affichés')->options([3 => 3, 6 => 6, 9 => 9, 15 => 15])->default(6),
+                ]),
                 Forms\Components\Builder\Block::make('final')->label('Appel final (fond braise)')->icon('heroicon-o-fire')->schema([
                     Forms\Components\TextInput::make('hand')->label('Mot manuscrit'),
                     Forms\Components\TextInput::make('title')->label('Titre H2')->required(),

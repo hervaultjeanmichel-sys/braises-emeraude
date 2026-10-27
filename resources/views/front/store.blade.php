@@ -112,5 +112,7 @@
         </div></section>
     @endif
 
+    @include('front.partials.google-reviews', ['grStores' => [$store], 'grTitle' => s('reviews.store_title', 'Ce que disent *nos clients*'), 'grLimit' => 5])
+
     @include('front.partials.final-cta', ['url' => '/devis/?magasin='.$store->id])
 @endsection

@@ -198,6 +198,11 @@
             </section>
             @break
 
+        {{-- Avis Google --}}
+        @case('google_reviews')
+            @include('front.partials.google-reviews', ['grStores' => $stores, 'grTitle' => $d['title'] ?? null, 'grEyebrow' => $d['eyebrow'] ?? null, 'grLimit' => $d['limit'] ?? 6])
+            @break
+
         {{-- Texte libre --}}
         @case('text')
             <section class="sec @if($d['emblem'] ?? false) has-emblem @endif" aria-labelledby="{{ $sid }}">

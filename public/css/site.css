@@ -606,3 +606,30 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--emerald)
 .fx-canvas{position:fixed;inset:0;width:100vw;height:100vh;z-index:90;pointer-events:none}
 .fx-toggle{position:fixed;left:14px;bottom:14px;z-index:95;font:600 .75rem var(--f-body);padding:.45rem .75rem;border-radius:999px;border:1px solid var(--line);background:rgba(6,9,8,.78);color:var(--fg);cursor:pointer;opacity:.75;transition:opacity .2s}
 .fx-toggle:hover{opacity:1}
+
+/* Avis Google */
+.gr-grid{display:grid;gap:1.6rem;grid-template-columns:minmax(260px,340px) 1fr;align-items:start}
+@media(max-width:900px){.gr-grid{grid-template-columns:1fr}}
+.gr-score{position:sticky;top:6rem;padding:2rem;border-radius:22px;background:var(--bg-2);border:1px solid var(--line);display:grid;gap:.6rem}
+.gr-big{font-family:var(--f-display);font-size:clamp(4.5rem,9vw,6.5rem);line-height:.9;color:var(--emerald)}
+.gr-big small{font-size:.35em;color:var(--muted);margin-left:.15em}
+.gr-stars{position:relative;display:inline-block;font-size:1.6rem;letter-spacing:.12em;color:rgba(238,244,241,.18);line-height:1}
+.gr-stars span{position:absolute;inset:0 auto 0 0;overflow:hidden;white-space:nowrap;color:#ffc24b}
+.gr-count{color:var(--muted)}
+.gr-count strong{color:var(--fg)}
+.gr-stores{list-style:none;padding:0;margin:.6rem 0 0;display:grid;gap:.5rem;border-top:1px solid var(--line);padding-top:.9rem}
+.gr-stores li{display:flex;justify-content:space-between;gap:1rem;font-size:.9rem}
+.gr-stores a{color:var(--fg);text-decoration:underline;text-underline-offset:3px}
+.gr-stores span{color:var(--muted);white-space:nowrap}
+.gr-list{display:grid;gap:1rem;grid-template-columns:repeat(auto-fill,minmax(260px,1fr))}
+.gr-card{display:grid;gap:.7rem;align-content:start;padding:1.3rem;border-radius:18px;background:var(--bg-2);border:1px solid var(--line)}
+.gr-card header{display:flex;gap:.75rem;align-items:center}
+.gr-card header img{width:40px;height:40px;border-radius:50%}
+.gr-card header a{color:var(--fg)}
+.gr-meta{display:block;font-size:.8rem;color:var(--muted)}
+.gr-s{color:#ffc24b;letter-spacing:.08em}
+.gr-s i{font-style:normal;color:rgba(238,244,241,.2)}
+.gr-text{font-size:.94rem;line-height:1.55;display:-webkit-box;-webkit-line-clamp:7;-webkit-box-orient:vertical;overflow:hidden}
+.gr-card footer{all:unset;display:flex;flex-wrap:wrap;gap:.4rem .9rem;font-size:.75rem;color:var(--muted)}
+.gr-card footer a{color:var(--muted);text-decoration:underline;text-underline-offset:2px}
+.gr-notice{margin-top:1.4rem;font-size:.78rem;color:var(--muted);max-width:60rem}

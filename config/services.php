@@ -35,4 +35,10 @@ return [
         ],
     ],
 
+    // Avis Google (Places API « New ») : clé limitée à Places API + au domaine du serveur
+    'google_places' => [
+        'key' => env('GOOGLE_PLACES_KEY'),
+        'cache_minutes' => (int) env('GOOGLE_REVIEWS_CACHE_MINUTES', 60),
+    ],
+
 ];
