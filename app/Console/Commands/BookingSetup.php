@@ -17,11 +17,12 @@ use Illuminate\Console\Command;
  *   php artisan braises:booking rennes --from=2026-11-15             → aucun RDV avant cette date
  *   php artisan braises:booking rennes --showroom-from=2026-11-16
  *   php artisan braises:booking rennes --radius=25 --home=on --sweep=off
+ *   php artisan braises:booking rennes --email=rennes@exemple.fr --add-types
  *   php artisan braises:booking rennes --disable
  */
 class BookingSetup extends Command
 {
-    protected $signature = 'braises:booking {store : slug, nom court ou id} {--enable} {--disable} {--showroom-from= : AAAA-MM-JJ} {--from= : début du calendrier, tous types (AAAA-MM-JJ)} {--radius= : rayon d’intervention à domicile en km} {--showroom= : on|off} {--home= : on|off} {--sweep= : on|off}';
+    protected $signature = 'braises:booking {store : slug, nom court ou id} {--enable} {--disable} {--showroom-from= : AAAA-MM-JJ} {--from= : début du calendrier, tous types (AAAA-MM-JJ)} {--radius= : rayon d’intervention à domicile en km} {--showroom= : on|off} {--home= : on|off} {--sweep= : on|off} {--email= : adresse qui reçoit les demandes} {--add-types : ajoute les types domicile et ramonage manquants}';
 
     protected $description = 'Active / diagnostique la prise de rendez-vous d’un magasin';
 
@@ -51,6 +52,25 @@ class BookingSetup extends Command
         if ($d = $this->option('showroom-from')) {
             $settings['showroom_from'] = CarbonImmutable::parse($d)->toDateString();
         }
+        if ($e = $this->option('email')) {
+            if (! filter_var($e, FILTER_VALIDATE_EMAIL)) {
+                $this->error("Adresse e-mail invalide : {$e}");
+
+                return self::FAILURE;
+            }
+            $store->email = $e;
+        }
+        if ($this->option('add-types')) {
+            $types = array_values((array) ($settings['types'] ?? []));
+            $kinds = array_map(fn ($t) => Booking::kindOf($t), $types);
+            foreach (Booking::DEFAULT_TYPES as $d) {
+                if ($d['kind'] !== 'showroom' && ! in_array($d['kind'], $kinds, true)) {
+                    $types[] = $d;
+                    $this->line('  + type ajouté : '.$d['label']);
+                }
+            }
+            $settings['types'] = $types;
+        }
         if (($r = $this->option('radius')) !== null) {
             $settings['home_radius_km'] = max(0, (int) $r);
         }
@@ -62,7 +82,7 @@ class BookingSetup extends Command
         if ($d = $this->option('from')) {
             $settings['start_from'] = CarbonImmutable::parse($d)->toDateString();
         }
-        $touched = collect(['enable', 'disable', 'showroom-from', 'from', 'radius', 'showroom', 'home', 'sweep'])->contains(fn ($o) => $this->option($o) !== null && $this->option($o) !== false);
+        $touched = collect(['enable', 'disable', 'showroom-from', 'from', 'radius', 'showroom', 'home', 'sweep', 'email', 'add-types'])->contains(fn ($o) => $this->option($o) !== null && $this->option($o) !== false);
         if ($touched) {
             $store->booking_settings = $settings;
             $store->save();
