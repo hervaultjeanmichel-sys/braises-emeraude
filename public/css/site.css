@@ -568,3 +568,36 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--emerald)
 
 .bk-zone{font-size:.85rem;color:var(--emerald);margin-top:.35rem}
 .bk-zone.out{color:#ff9a6b}
+
+/* Carte magasin entièrement cliquable (le lien « Voir le magasin » couvre toute la carte ; le téléphone reste cliquable) */
+.store{cursor:pointer}
+.store::before{pointer-events:none}
+.store .go::after{content:"";position:absolute;inset:0;z-index:1;border-radius:inherit}
+.store dd a{position:relative;z-index:2}
+.store:focus-within{border-color:rgba(52,227,211,.6)}
+
+/* Galerie et vidéo du showroom */
+.store-video{margin-bottom:1.4rem;border-radius:20px;overflow:hidden;border:1px solid var(--line);aspect-ratio:16/9;background:#000}
+.store-video video,.store-video iframe{display:block;width:100%;height:100%;border:0;object-fit:cover}
+.video-facade{position:relative;display:block;width:100%;height:100%;padding:0;border:0;background:#000;cursor:pointer}
+.video-facade img{width:100%;height:100%;object-fit:cover;opacity:.85;transition:opacity .3s}
+.video-facade:hover img{opacity:1}
+.video-facade .play{position:absolute;left:50%;top:50%;width:84px;height:84px;margin:-42px 0 0 -42px;border-radius:50%;background:var(--emerald);box-shadow:0 10px 40px -8px rgba(52,227,211,.7)}
+.video-facade .play::after{content:"";position:absolute;left:34px;top:26px;border-style:solid;border-width:16px 0 16px 26px;border-color:transparent transparent transparent #041413}
+.store-gallery{display:grid;gap:.8rem;grid-template-columns:repeat(4,1fr);grid-auto-rows:180px}
+.sg-item{padding:0;border:0;border-radius:16px;overflow:hidden;background:#000;cursor:zoom-in}
+.sg-item img{width:100%;height:100%;object-fit:cover;transition:transform .6s ease}
+.sg-item:hover img{transform:scale(1.05)}
+.store-gallery .sg-item:first-child{grid-column:span 2;grid-row:span 2}
+.store-gallery.count-1 .sg-item:first-child{grid-column:1/-1;grid-row:span 2}
+.store-gallery.count-2,.store-gallery.count-3{grid-template-columns:repeat(3,1fr)}
+@media(max-width:760px){.store-gallery{grid-template-columns:repeat(2,1fr);grid-auto-rows:140px}.store-gallery .sg-item:first-child{grid-column:1/-1}}
+
+/* Emblème du logo (sans le texte) : filigrane coloré de certaines sections */
+.has-emblem{position:relative;overflow:hidden;isolation:isolate}
+.has-emblem::after{content:"";position:absolute;z-index:-1;right:-5vw;top:50%;width:min(44vw,540px);aspect-ratio:121/118;background:url(/img/emblem.svg) center/contain no-repeat;opacity:.10;transform:translateY(-50%) rotate(-10deg);pointer-events:none}
+.bg-light.has-emblem::after{opacity:.16}
+.has-emblem.emblem-left::after{right:auto;left:-6vw;transform:translateY(-50%) rotate(10deg) scaleX(-1)}
+@media(max-width:760px){.has-emblem::after{width:70vw;right:-25vw;opacity:.07}}
+/* Petit emblème devant les sur-titres (réglage design.eyebrow_emblem) */
+.emblem-eyebrow .eyebrow::before{width:20px;height:20px;background:url(/img/emblem.svg) center/contain no-repeat}

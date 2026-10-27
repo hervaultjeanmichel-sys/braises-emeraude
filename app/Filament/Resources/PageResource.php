@@ -64,6 +64,7 @@ class PageResource extends Resource
                     Forms\Components\TextInput::make('cta_url')->label('Lien du bouton')->default('/devis/'),
                 ]),
                 Forms\Components\Builder\Block::make('stores')->label('Les magasins (cartes dynamiques)')->icon('heroicon-o-building-storefront')->schema([
+                    Forms\Components\Toggle::make('emblem')->label('Emblème du logo en filigrane')->default(true),
                     Forms\Components\TextInput::make('eyebrow')->label('Sur-titre'),
                     Forms\Components\TextInput::make('title')->label('Titre H2')->required(),
                     Forms\Components\Textarea::make('text')->label('Texte')->rows(3),
@@ -71,6 +72,7 @@ class PageResource extends Resource
                     Forms\Components\Toggle::make('show_map')->label('Afficher la carte des magasins')->default(true)->helperText('Carte OpenStreetMap des magasins dont la latitude / longitude est renseignée.'),
                 ]),
                 Forms\Components\Builder\Block::make('categories')->label('Univers produits (cartes dynamiques)')->icon('heroicon-o-squares-2x2')->schema([
+                    Forms\Components\Toggle::make('emblem')->label('Emblème du logo en filigrane')->default(false),
                     Forms\Components\TextInput::make('eyebrow')->label('Sur-titre'),
                     Forms\Components\TextInput::make('title')->label('Titre H2')->required(),
                     Forms\Components\TextInput::make('more_label')->label('Lien des cartes')->default('Découvrir →'),
@@ -87,6 +89,7 @@ class PageResource extends Resource
                     Forms\Components\TextInput::make('aria')->label('Libellé accessibilité')->default('Nos marques'),
                 ]),
                 Forms\Components\Builder\Block::make('steps')->label('Étapes / méthode')->icon('heroicon-o-list-bullet')->schema([
+                    Forms\Components\Toggle::make('emblem')->label('Emblème du logo en filigrane')->default(false),
                     Forms\Components\TextInput::make('eyebrow')->label('Sur-titre'),
                     Forms\Components\TextInput::make('title')->label('Titre H2')->required(),
                     Forms\Components\Repeater::make('items')->label('Étapes')->schema([
@@ -103,6 +106,7 @@ class PageResource extends Resource
                     Forms\Components\TagsInput::make('bullets')->label('Points listés'),
                 ]),
                 Forms\Components\Builder\Block::make('seo_faq')->label('Texte SEO + FAQ de la page')->icon('heroicon-o-document-text')->schema([
+                    Forms\Components\Toggle::make('emblem')->label('Emblème du logo en filigrane')->default(true),
                     Forms\Components\TextInput::make('eyebrow')->label('Sur-titre'),
                     Forms\Components\TextInput::make('title')->label('Titre H2')->required(),
                     Forms\Components\RichEditor::make('body')->label('Texte (H3, gras, liens)')->toolbarButtons(['h3', 'bold', 'italic', 'bulletList', 'link']),
@@ -117,6 +121,7 @@ class PageResource extends Resource
                     Forms\Components\TextInput::make('cta2_url')->label('Lien secondaire'),
                 ]),
                 Forms\Components\Builder\Block::make('text')->label('Texte libre')->icon('heroicon-o-pencil')->schema([
+                    Forms\Components\Toggle::make('emblem')->label('Emblème du logo en filigrane')->default(false),
                     Forms\Components\TextInput::make('eyebrow')->label('Sur-titre'),
                     Forms\Components\TextInput::make('title')->label('Titre H2'),
                     Forms\Components\RichEditor::make('body')->label('Texte')->toolbarButtons(['h3', 'bold', 'italic', 'bulletList', 'link']),

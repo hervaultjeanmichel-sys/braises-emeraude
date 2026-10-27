@@ -65,7 +65,7 @@
 
         {{-- Les magasins --}}
         @case('stores')
-            <section class="sec groupe bg-emerald" id="groupe" aria-labelledby="{{ $sid }}">
+            <section class="sec @if($d['emblem'] ?? true) has-emblem @endif groupe bg-emerald" id="groupe" aria-labelledby="{{ $sid }}">
                 <div class="wrap">
                     <div class="sec-head reveal">
                         @if(!empty($d['eyebrow']))<span class="eyebrow">{{ $d['eyebrow'] }}</span>@endif
@@ -86,7 +86,7 @@
 
         {{-- Univers produits --}}
         @case('categories')
-            <section class="sec {{ ($d['light'] ?? true) ? 'bg-light slant-top' : 'bg-mesh' }}" id="univers" aria-labelledby="{{ $sid }}">
+            <section class="sec @if($d['emblem'] ?? false) has-emblem @endif {{ ($d['light'] ?? true) ? 'bg-light slant-top' : 'bg-mesh' }}" id="univers" aria-labelledby="{{ $sid }}">
                 <div class="wrap">
                     <div class="sec-head reveal">
                         @if(!empty($d['eyebrow']))<span class="eyebrow">{{ $d['eyebrow'] }}</span>@endif
@@ -136,7 +136,7 @@
 
         {{-- Méthode --}}
         @case('steps')
-            <section class="sec bg-grain" id="methode" aria-labelledby="{{ $sid }}">
+            <section class="sec @if($d['emblem'] ?? false) has-emblem @endif bg-grain" id="methode" aria-labelledby="{{ $sid }}">
                 <div class="wrap">
                     <div class="sec-head reveal">
                         @if(!empty($d['eyebrow']))<span class="eyebrow">{{ $d['eyebrow'] }}</span>@endif
@@ -172,7 +172,7 @@
 
         {{-- Texte SEO + FAQ --}}
         @case('seo_faq')
-            <section class="sec bg-mesh" id="faq" aria-labelledby="{{ $sid }}">
+            <section class="sec @if($d['emblem'] ?? true) has-emblem @endif bg-mesh" id="faq" aria-labelledby="{{ $sid }}">
                 <div class="wrap seo-grid">
                     <div class="prose reveal">
                         @if(!empty($d['eyebrow']))<span class="eyebrow">{{ $d['eyebrow'] }}</span>@endif
@@ -200,7 +200,7 @@
 
         {{-- Texte libre --}}
         @case('text')
-            <section class="sec" aria-labelledby="{{ $sid }}">
+            <section class="sec @if($d['emblem'] ?? false) has-emblem @endif" aria-labelledby="{{ $sid }}">
                 <div class="wrap two-col">
                     <div class="prose-page reveal">
                         @if(!empty($d['eyebrow']))<span class="eyebrow">{{ $d['eyebrow'] }}</span>@endif

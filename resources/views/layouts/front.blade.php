@@ -3,7 +3,7 @@
 @php($banner = \App\Models\EventBanner::current())
 @php($v = config('braises.asset_version'))
 <!doctype html>
-<html lang="fr" class="no-js">
+<html lang="fr" class="no-js @if(s('design.eyebrow_emblem', '1') === '1') emblem-eyebrow @endif">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">

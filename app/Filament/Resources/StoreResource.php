@@ -67,7 +67,13 @@ class StoreResource extends Resource
                     SeoFields::wordCount(600),
                     Forms\Components\TagsInput::make('served_communes')->label('Communes desservies (affichées)'),
                     Forms\Components\TagsInput::make('served_postcodes')->label('Codes postaux routés vers ce magasin'),
-                    Forms\Components\FileUpload::make('photos')->label('Photos du showroom')->image()->multiple()->reorderable()->directory('magasins')->imageEditor(),
+                    Forms\Components\FileUpload::make('photos')->label('Galerie du showroom (3 à 10 photos)')->image()->multiple()->reorderable()->maxFiles(10)->directory('magasins')->imageEditor()->maxSize(12000)
+                        ->helperText('Converties en WebP 1600 px. La 1re photo est la plus grande dans la galerie.'),
+                    Forms\Components\Fieldset::make('Vidéo du showroom (facultative)')->columns(3)->schema([
+                        Forms\Components\FileUpload::make('video')->label('Fichier vidéo (mp4/webm, 40 Mo max)')->directory('magasins/video')->acceptedFileTypes(['video/mp4', 'video/webm'])->maxSize(40000),
+                        Forms\Components\TextInput::make('video_url')->label('… ou lien YouTube / Vimeo')->url()->placeholder('https://youtu.be/…'),
+                        Forms\Components\FileUpload::make('video_poster')->label('Image d’attente')->image()->directory('magasins'),
+                    ]),
                     Forms\Components\Repeater::make('team')->label('Équipe')->schema([
                         Forms\Components\TextInput::make('name')->label('Prénom Nom')->required(),
                         Forms\Components\TextInput::make('role')->label('Rôle'),

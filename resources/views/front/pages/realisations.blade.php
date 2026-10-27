@@ -12,7 +12,7 @@
         'actions' => '<a class="btn btn-main" href="/devis/" data-hover>'.e(s('cta.quote', 'Devis gratuit')).'</a>'])
 
     @if($reals->isNotEmpty())
-        <section class="sec" id="chantiers" aria-labelledby="chantiers-title">
+        <section class="sec has-emblem emblem-left" id="chantiers" aria-labelledby="chantiers-title">
             <div class="wrap">
                 <div class="sec-head">
                     <span class="eyebrow">{{ s('real.eyebrow', 'Nos chantiers') }}</span>
@@ -60,13 +60,7 @@
             </div>
         </section>
 
-        <dialog class="lightbox" data-lightbox-dialog aria-label="{{ s('real.gallery', 'Galerie photos') }}">
-            <button type="button" class="lb-close" data-lb-close aria-label="{{ s('real.close', 'Fermer') }}">×</button>
-            <button type="button" class="lb-nav lb-prev" data-lb-prev aria-label="{{ s('real.prev', 'Photo précédente') }}">‹</button>
-            <figure><img src="" alt="" data-lb-img><figcaption data-lb-caption></figcaption></figure>
-            <button type="button" class="lb-nav lb-next" data-lb-next aria-label="{{ s('real.next', 'Photo suivante') }}">›</button>
-        </dialog>
-        @push('scripts')<script src="/js/realisations.js?v={{ config('braises.asset_version') }}" defer></script>@endpush
+        @push('scripts')<script src="/js/realisations.js?v={{ config('braises.asset_version') }}" defer></script><script src="/js/gallery.js?v={{ config('braises.asset_version') }}" defer></script>@endpush
     @endif
 
     {{-- Texte de la page ; ses anciennes photos sont retirées quand la galerie existe (elles y sont reprises). --}}

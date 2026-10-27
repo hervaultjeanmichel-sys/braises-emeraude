@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Support\WebpImage;
+
 use App\Models\Concerns\HasSeo;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -15,6 +17,15 @@ class Store extends Model
     use HasSeo;
 
     protected $guarded = ['id'];
+
+    protected static function booted(): void
+    {
+        static::saving(function (self $s) {
+            if (is_array($s->photos)) {
+                $s->photos = array_values(array_map(fn ($p) => WebpImage::convert((string) $p), array_filter($s->photos)));
+            }
+        });
+    }
 
     protected function casts(): array
     {
@@ -78,6 +89,31 @@ class Store extends Model
     }
 
     /** Adresse courte façon maquette : « La Hertaudière, 35120 », « Pleurtuit (35730) », « Rennes Métropole ». */
+    /** URL d'intégration (YouTube sans cookie / Vimeo dnt) d'un lien vidéo collé dans l'admin. */
+    public function videoEmbedUrl(): ?string
+    {
+        $u = (string) $this->video_url;
+        if (preg_match('~(?:youtu\.be/|youtube(?:-nocookie)?\.com/(?:watch\?v=|embed/|shorts/|live/))([\w-]{11})~', $u, $m)) {
+            return 'https://www.youtube-nocookie.com/embed/'.$m[1].'?autoplay=1&rel=0';
+        }
+        if (preg_match('~vimeo\.com/(?:video/)?(\d+)~', $u, $m)) {
+            return 'https://player.vimeo.com/video/'.$m[1].'?autoplay=1&dnt=1';
+        }
+
+        return null;
+    }
+
+    /** Vignette de la vidéo : image d'attente de l'admin, sinon miniature YouTube. */
+    public function videoThumb(): ?string
+    {
+        if ($this->video_poster) {
+            return media($this->video_poster);
+        }
+
+        return preg_match('~(?:youtu\.be/|youtube(?:-nocookie)?\.com/(?:watch\?v=|embed/|shorts/|live/))([\w-]{11})~', (string) $this->video_url, $m)
+            ? 'https://i.ytimg.com/vi/'.$m[1].'/hqdefault.jpg' : null;
+    }
+
     /** Lien d'itinéraire Google Maps (coordonnées si connues, sinon nom + adresse). */
     public function directionsUrl(): string
     {

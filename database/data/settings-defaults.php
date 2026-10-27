@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 // Textes du site éditables (Réglages › Textes du site). Généré depuis les gabarits — valeurs par défaut.
 return [
+    "design.eyebrow_emblem" => ['group' => "design", 'value' => '1'],
     "a11y.skip" => ['group' => "general", 'value' => 'Aller au contenu'],
     "aid.box_text" => ['group' => "general", 'value' => 'Nous calculons les aides auxquelles vous avez droit lors du devis, gratuitement.'],
     "aid.box_title" => ['group' => "general", 'value' => 'En résumé'],
