@@ -19,18 +19,22 @@ use Illuminate\Support\Str;
  *   capacity_showroom: 1, capacity_home: 1,               ← RDV simultanés possibles,
  *   start_from: "2026-11-15",                             ← aucun RDV avant cette date (tous types),
  *   showroom_from: "2026-11-15",                          ← pas de RDV au showroom avant cette date (magasin pas encore ouvert),
- *   home_postcodes: ["35000", …]                          ← zone des visites à domicile (vide = pas de contrôle)
+ *   allow_showroom / allow_home / allow_sweep (bool)      ← catégories ouvertes en ligne,
+ *   home_radius_km: 25                                    ← rayon d'intervention à domicile autour du magasin (0 = pas de contrôle)
  * }
  */
 final class Booking
 {
     public const TZ = 'Europe/Paris';
 
+    /** Catégories de rendez-vous, activables par magasin. */
+    public const KINDS = ['showroom' => 'Au showroom', 'domicile' => 'Visite technique à domicile', 'ramonage' => 'Ramonage à domicile'];
+
     /** Types proposés quand le magasin n'en a pas défini. */
     public const DEFAULT_TYPES = [
-        ['key' => 'projet-showroom', 'label' => 'Nouveau projet — rendez-vous au showroom', 'duration' => 60, 'at_home' => false, 'enabled' => true],
-        ['key' => 'projet-domicile', 'label' => 'Nouveau projet — visite technique à domicile', 'duration' => 90, 'at_home' => true, 'enabled' => true],
-        ['key' => 'ramonage', 'label' => 'Ramonage — à domicile', 'duration' => 60, 'at_home' => true, 'enabled' => true],
+        ['key' => 'projet-showroom', 'label' => 'Nouveau projet — rendez-vous au showroom', 'duration' => 60, 'kind' => 'showroom', 'enabled' => true],
+        ['key' => 'projet-domicile', 'label' => 'Nouveau projet — visite technique à domicile', 'duration' => 90, 'kind' => 'domicile', 'enabled' => true],
+        ['key' => 'ramonage', 'label' => 'Ramonage — à domicile', 'duration' => 60, 'kind' => 'ramonage', 'enabled' => true],
     ];
 
     /** Plages par défaut : lun–ven 9h–12h et 14h–18h, sam 9h–12h. */
@@ -66,11 +70,30 @@ final class Booking
             'start_from' => $s['start_from'] ?? null,
             'showroom_from' => $s['showroom_from'] ?? null,
             'home_postcodes' => array_values(array_filter((array) ($s['home_postcodes'] ?? []))),
+            'allow' => [
+                'showroom' => (bool) ($s['allow_showroom'] ?? true),
+                'domicile' => (bool) ($s['allow_home'] ?? true),
+                'ramonage' => (bool) ($s['allow_sweep'] ?? true),
+            ],
+            'radius_km' => max(0, (int) ($s['home_radius_km'] ?? 0)),
             'hours' => array_values(array_filter((array) ($s['hours'] ?? []))) ?: ((array) $this->store->opening_hours ?: self::defaultHours()),
         ];
     }
 
-    /** @return array<string, array{key: string, label: string, duration: int, at_home: bool}> */
+    /** Catégorie d'un type (compatibilité avec les anciens réglages « at_home »). */
+    public static function kindOf(array $t): string
+    {
+        if (isset($t['kind'], self::KINDS[$t['kind']])) {
+            return $t['kind'];
+        }
+        if (str_contains(mb_strtolower((string) ($t['label'] ?? '')), 'ramon')) {
+            return 'ramonage';
+        }
+
+        return ! empty($t['at_home']) ? 'domicile' : 'showroom';
+    }
+
+    /** @return array<string, array{key: string, label: string, duration: int, kind: string, at_home: bool}> */
     public function types(): array
     {
         $raw = array_values(array_filter((array) (($this->store->booking_settings ?? [])['types'] ?? [])));
@@ -83,7 +106,11 @@ final class Booking
             if (! $key || empty($t['label'])) {
                 continue;
             }
-            $out[$key] = ['key' => $key, 'label' => (string) $t['label'], 'duration' => max(15, (int) ($t['duration'] ?? 60)), 'at_home' => (bool) ($t['at_home'] ?? false)];
+            $kind = self::kindOf($t);
+            if (! $this->settings()['allow'][$kind]) {
+                continue;
+            }
+            $out[$key] = ['key' => $key, 'label' => (string) $t['label'], 'duration' => max(15, (int) ($t['duration'] ?? 60)), 'kind' => $kind, 'at_home' => $kind !== 'showroom'];
         }
 
         return $out;
@@ -165,11 +192,25 @@ final class Booking
         return in_array($time, $this->slots($typeKey, $date), true);
     }
 
-    /** Code postal couvert pour une visite à domicile (pas de liste = pas de contrôle). */
-    public function coversPostcode(?string $cp): bool
+    /**
+     * Zone d'intervention à domicile.
+     * @return array{ok: ?bool, km: ?float, radius: int}  ok = null si l'adresse n'a pas pu être localisée (on laisse passer, l'équipe vérifie)
+     */
+    public function zone(?string $postcode, ?string $city = null, ?string $address = null): array
     {
-        $list = $this->settings()['home_postcodes'];
+        $radius = $this->settings()['radius_km'];
+        if ($radius <= 0 || ! $this->store->latitude || ! $this->store->longitude) {
+            return ['ok' => true, 'km' => null, 'radius' => $radius];
+        }
+        $point = Geo::locate(trim(implode(', ', array_filter([$address, trim($postcode.' '.$city)]))));
+        if (! $point && $address) {
+            $point = Geo::locate(trim($postcode.' '.$city)); // repli sur la commune
+        }
+        if (! $point) {
+            return ['ok' => null, 'km' => null, 'radius' => $radius];
+        }
+        $km = round(Geo::km((float) $this->store->latitude, (float) $this->store->longitude, $point[0], $point[1]), 1);
 
-        return $list === [] || in_array((string) $cp, $list, true);
+        return ['ok' => $km <= $radius, 'km' => $km, 'radius' => $radius];
     }
 }

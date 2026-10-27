@@ -69,6 +69,18 @@ class AppointmentController extends Controller
         return response()->json(['days' => $booking->days($type)]);
     }
 
+    /** ?magasin=&cp=&ville= → zone d'intervention à domicile (contrôle dès la saisie du code postal). */
+    public function zone(Request $request): JsonResponse
+    {
+        $store = $this->stores()->firstWhere('id', $request->integer('magasin'));
+        $cp = (string) $request->query('cp');
+        if (! $store || ! preg_match('/^\d{5}$/', $cp)) {
+            return response()->json(['ok' => null]);
+        }
+
+        return response()->json(Booking::for($store)->zone($cp, (string) $request->query('ville')));
+    }
+
     public function store(Request $request): RedirectResponse
     {
         if (filled($request->input('website'))) { // pot de miel
@@ -97,8 +109,10 @@ class AppointmentController extends Controller
         }
         if ($type['at_home']) {
             $request->validate(['address' => ['required'], 'postal_code' => ['required'], 'city' => ['required']], [], ['address' => 'adresse', 'postal_code' => 'code postal', 'city' => 'commune']);
-            if (! $booking->coversPostcode($data['postal_code'] ?? null)) {
-                throw ValidationException::withMessages(['postal_code' => s('booking.err_zone', 'Ce code postal est hors de la zone de ce magasin : choisissez un autre magasin ou appelez-nous.')]);
+            $zone = $booking->zone($data['postal_code'] ?? null, $data['city'] ?? null, $data['address'] ?? null);
+            if ($zone['ok'] === false) {
+                throw ValidationException::withMessages(['postal_code' => str_replace([':km', ':radius'], [(string) round((float) $zone['km']), (string) $zone['radius']],
+                    s('booking.err_zone', 'Votre adresse est à environ :km km du magasin, au-delà de sa zone d’intervention (:radius km). Choisissez un autre magasin ou appelez-nous.'))]);
             }
         }
         if (! $booking->isFree($data['type'], $data['date'], $data['time'])) {
@@ -119,6 +133,7 @@ class AppointmentController extends Controller
             'postal_code' => $data['postal_code'] ?? null,
             'city' => $type['at_home'] ? $data['city'] : null,
             'message' => $data['message'] ?? null,
+            'team_note' => ($type['at_home'] && isset($zone)) ? ($zone['ok'] === null ? 'Distance non vérifiée (adresse non localisée).' : ($zone['km'] !== null ? 'Distance estimée : '.$zone['km'].' km à vol d’oiseau.' : null)) : null,
             'source' => mb_substr((string) (session('utm')['utm_source'] ?? 'site'), 0, 40),
             'consent_at' => now(),
             'ip_hash' => hash('sha256', (string) $request->ip().config('app.key')),

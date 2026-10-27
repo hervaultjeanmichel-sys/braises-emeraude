@@ -565,3 +565,6 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--emerald)
 .bk-slots button.on{background:var(--emerald);border-color:var(--emerald);color:#041413}
 .bk-summary{padding:.9rem 1rem;border-radius:12px;background:rgba(52,227,211,.08);border:1px solid rgba(52,227,211,.3)}
 .booking .hint{color:var(--muted);font-size:.88rem}
+
+.bk-zone{font-size:.85rem;color:var(--emerald);margin-top:.35rem}
+.bk-zone.out{color:#ff9a6b}

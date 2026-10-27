@@ -1,6 +1,7 @@
 {{-- Prise de rendez-vous : magasin → type → jour + créneau → coordonnées. Créneaux calculés par App\Support\Booking. --}}
 @extends('layouts.front')
 @php($oldBooking = ['store_id' => old('store_id'), 'type' => old('type'), 'date' => old('date'), 'time' => old('time')])
+@php($zoneTexts = ['ok' => s('booking.zone_ok', 'Vous êtes dans notre zone d’intervention (environ :km km du magasin).'), 'out' => s('booking.zone_out', 'Votre adresse est à environ :km km du magasin, au-delà de sa zone d’intervention (:radius km). Choisissez un autre magasin ou appelez-nous.')])
 @section('content')
     @include('front.partials.hero', ['eyebrow' => s('booking.eyebrow', 'Rendez-vous'), 'h1' => s('booking.h1', 'Prendre rendez-vous'),
         'intro' => s('booking.intro', 'Choisissez votre magasin, le type de rendez-vous et un créneau. Notre équipe confirme votre rendez-vous par e-mail ou par téléphone.')])
@@ -12,7 +13,8 @@
                 <p><a class="btn btn-main" href="/devis/" data-hover>{{ s('cta.quote', 'Devis gratuit') }}</a></p>
             @else
             <form class="card form-grid booking" method="post" action="/rendez-vous/" novalidate data-booking
-                  data-types='@json($typesByStore)' data-slots-url="/rendez-vous/creneaux"
+                  data-types='@json($typesByStore)' data-slots-url="/rendez-vous/creneaux" data-zone-url="/rendez-vous/zone"
+                  data-zone-texts='@json($zoneTexts)'
                   data-old='@json($oldBooking)'>
                 @csrf
                 <input class="hp" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
@@ -55,7 +57,7 @@
                         <div class="field"><label for="b-name">{{ s('form.name', 'Nom et prénom') }} *</label><input id="b-name" type="text" name="name" required autocomplete="name" value="{{ old('name') }}"></div>
                         <div class="field"><label for="b-phone">{{ s('form.phone', 'Téléphone') }} *</label><input id="b-phone" type="tel" name="phone" required autocomplete="tel" value="{{ old('phone') }}"></div>
                         <div class="field"><label for="b-email">{{ s('form.email', 'E-mail') }} *</label><input id="b-email" type="email" name="email" required autocomplete="email" value="{{ old('email') }}"></div>
-                        <div class="field"><label for="b-cp">{{ s('form.postal_code', 'Code postal') }} <span data-home-only hidden>*</span></label><input id="b-cp" type="text" name="postal_code" inputmode="numeric" maxlength="5" autocomplete="postal-code" value="{{ old('postal_code') }}"></div>
+                        <div class="field"><label for="b-cp">{{ s('form.postal_code', 'Code postal') }} <span data-home-only hidden>*</span></label><input id="b-cp" type="text" name="postal_code" inputmode="numeric" maxlength="5" autocomplete="postal-code" value="{{ old('postal_code') }}" aria-describedby="b-zone"><p class="bk-zone" id="b-zone" data-zone-msg aria-live="polite" hidden></p></div>
                         <div class="field" data-home-only hidden><label for="b-address">{{ s('booking.address', 'Adresse du chantier') }} *</label><input id="b-address" type="text" name="address" autocomplete="street-address" value="{{ old('address') }}"></div>
                         <div class="field" data-home-only hidden><label for="b-city">{{ s('booking.city', 'Commune') }} *</label><input id="b-city" type="text" name="city" autocomplete="address-level2" value="{{ old('city') }}"></div>
                     </div>

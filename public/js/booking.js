@@ -1,7 +1,8 @@
 /* Prise de rendez-vous : magasin → type → jour → créneau → coordonnées. Créneaux lus en JSON sur /rendez-vous/creneaux. */
 (()=>{
 const form=document.querySelector('[data-booking]');if(!form)return;
-const types=JSON.parse(form.dataset.types||'{}'),old=JSON.parse(form.dataset.old||'{}'),url=form.dataset.slotsUrl;
+const types=JSON.parse(form.dataset.types||'{}'),old=JSON.parse(form.dataset.old||'{}'),url=form.dataset.slotsUrl,zoneUrl=form.dataset.zoneUrl,zt=JSON.parse(form.dataset.zoneTexts||'{}');
+const KIND={showroom:'Au showroom',domicile:'À domicile',ramonage:'Ramonage à domicile'};
 const $=s=>form.querySelector(s),$$=s=>[...form.querySelectorAll(s)];
 const step=n=>$('[data-step="'+n+'"]');
 const dateIn=$('input[name="date"]'),timeIn=$('input[name="time"]');
@@ -21,7 +22,7 @@ const summary=()=>{const t=(types[store]||[]).find(x=>x.key===type);if(!t||!date
 
 const pickStore=id=>{store=id;type=null;dateIn.value='';timeIn.value='';
   const list=$('[data-types-list]');
-  list.innerHTML=(types[id]||[]).map(t=>'<label class="bk-choice"><input type="radio" name="type" value="'+esc(t.key)+'" required><span><strong>'+esc(t.label)+'</strong><small>'+(t.at_home?'À domicile':'Au showroom')+' · '+dur(t.duration)+'</small></span></label>').join('');
+  list.innerHTML=(types[id]||[]).map(t=>'<label class="bk-choice"><input type="radio" name="type" value="'+esc(t.key)+'" required><span><strong>'+esc(t.label)+'</strong><small>'+(KIND[t.kind]||(t.at_home?'À domicile':'Au showroom'))+' · '+dur(t.duration)+'</small></span></label>').join('');
   show('type',true);show('when',false);show('contact',false);
   if(first&&old.type&&list.querySelector('[value="'+CSS.escape(old.type)+'"]')){const r=list.querySelector('[value="'+CSS.escape(old.type)+'"]');r.checked=true;pickType(old.type)}
 };
@@ -48,7 +49,7 @@ const pickDay=async d=>{dateIn.value=d;timeIn.value='';show('contact',false);
   first=false;
 };
 
-const pickTime=t=>{timeIn.value=t;$$('[data-time]').forEach(b=>b.classList.toggle('on',b.dataset.time===t));show('contact',true);summary();
+const pickTime=t=>{timeIn.value=t;$$('[data-time]').forEach(b=>b.classList.toggle('on',b.dataset.time===t));show('contact',true);summary();checkZone();
   if(!first)step('contact').scrollIntoView({behavior:'smooth',block:'start'})};
 
 form.addEventListener('change',e=>{
@@ -59,7 +60,21 @@ form.addEventListener('click',e=>{
   const d=e.target.closest('[data-day]');if(d){pickDay(d.dataset.day);return}
   const t=e.target.closest('[data-time]');if(t)pickTime(t.dataset.time);
 });
-form.addEventListener('submit',e=>{if(!dateIn.value||!timeIn.value){e.preventDefault();step('when').scrollIntoView({behavior:'smooth'})}});
+/* Zone d'intervention à domicile : contrôle dès que le code postal est complet */
+let zoneOut=false;
+async function checkZone(){const t=(types[store]||[]).find(x=>x.key===type),msg=$('[data-zone-msg]'),cp=$('[name="postal_code"]').value.trim();
+  zoneOut=false;msg.hidden=true;msg.classList.remove('out');
+  if(!t||!t.at_home||!/^\d{5}$/.test(cp)||!zoneUrl)return;
+  try{const r=await fetch(zoneUrl+'?magasin='+store+'&cp='+cp+'&ville='+encodeURIComponent($('[name="city"]').value||''),{headers:{Accept:'application/json'}});const z=await r.json();
+    if(z.ok===null||z.ok===undefined||z.km===null)return;
+    const txt=(z.ok?zt.ok:zt.out).replace(':km',Math.round(z.km)).replace(':radius',z.radius);
+    msg.textContent=(z.ok?'✓ ':'')+txt;msg.classList.toggle('out',!z.ok);msg.hidden=false;zoneOut=!z.ok;
+  }catch(e){}
+}
+form.addEventListener('input',e=>{if(e.target.name==='postal_code'&&/^\d{5}$/.test(e.target.value.trim()))checkZone()});
+form.addEventListener('change',e=>{if(e.target.name==='city')checkZone()});
+
+form.addEventListener('submit',e=>{if(zoneOut){e.preventDefault();$('[data-zone-msg]').scrollIntoView({behavior:'smooth',block:'center'});return}if(!dateIn.value||!timeIn.value){e.preventDefault();step('when').scrollIntoView({behavior:'smooth'})}});
 
 const checked=form.querySelector('input[name="store_id"]:checked');
 if(checked)pickStore(checked.value);else first=false;

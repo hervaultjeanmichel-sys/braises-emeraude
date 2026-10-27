@@ -28,6 +28,7 @@ Route::get('/mon-projet', [LeadController::class, 'project'])->name('project');
 // Prise de rendez-vous (validation par l'équipe du magasin)
 Route::get('/rendez-vous', [AppointmentController::class, 'show'])->name('booking');
 Route::get('/rendez-vous/creneaux', [AppointmentController::class, 'slots'])->middleware('throttle:60,1')->name('booking.slots');
+Route::get('/rendez-vous/zone', [AppointmentController::class, 'zone'])->middleware('throttle:20,1')->name('booking.zone');
 Route::post('/rendez-vous', [AppointmentController::class, 'store'])->middleware('throttle:6,1')->name('booking.store');
 Route::get('/rendez-vous/merci', [AppointmentController::class, 'thanks'])->name('booking.thanks');
 

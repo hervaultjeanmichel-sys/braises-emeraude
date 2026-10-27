@@ -31,6 +31,7 @@ final class BookingMailer
                 'Téléphone : '.$a->phone,
                 'E-mail : '.$a->email,
                 $a->message ? "\nMessage :\n".$a->message : null,
+                $a->team_note ? "\n".$a->team_note : null,
                 '',
                 'Confirmer ou refuser : '.url('/admin/appointments/'.$a->id.'/edit'),
             ], fn ($l) => $l !== null)), $a->email, $a->name);
