@@ -2,6 +2,7 @@
 
 use App\Http\Middleware\LegacyUrls;
 use App\Http\Middleware\PreprodLock;
+use App\Http\Middleware\RecordVisit;
 use App\Http\Middleware\TrackSource;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -19,7 +20,8 @@ return Application::configure(basePath: dirname(__DIR__))
         // Verrou préprod : mot de passe + noindex (premier exécuté, avant tout le reste)
         $middleware->prepend(PreprodLock::class);
         // Provenance des visiteurs (UTM, référent) pour qualifier les demandes
-        $middleware->web(append: [TrackSource::class]);
+        $middleware->web(append: [TrackSource::class, RecordVisit::class]);
+        // Mesure d'audience sans cookie (tableau de bord)
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //
