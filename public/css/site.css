@@ -601,3 +601,8 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--emerald)
 @media(max-width:760px){.has-emblem::after{width:70vw;right:-25vw;opacity:.07}}
 /* Petit emblème devant les sur-titres (réglage design.eyebrow_emblem) */
 .emblem-eyebrow .eyebrow::before{width:20px;height:20px;background:url(/img/emblem.svg) center/contain no-repeat}
+
+/* Effets saisonniers */
+.fx-canvas{position:fixed;inset:0;width:100vw;height:100vh;z-index:90;pointer-events:none}
+.fx-toggle{position:fixed;left:14px;bottom:14px;z-index:95;font:600 .75rem var(--f-body);padding:.45rem .75rem;border-radius:999px;border:1px solid var(--line);background:rgba(6,9,8,.78);color:var(--fg);cursor:pointer;opacity:.75;transition:opacity .2s}
+.fx-toggle:hover{opacity:1}

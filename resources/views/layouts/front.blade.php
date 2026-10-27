@@ -104,6 +104,12 @@
 <div class="cur" aria-hidden="true"></div>
 <div class="flame" aria-hidden="true">@include('front.partials.icon', ['name' => 'flame'])</div>
 
+@php($fx = \App\Models\SeasonalEffect::current())
+@if($fx && ($fx->scope === 'all' || request()->is('/')))
+    @php($fxConfig = ['id' => $fx->id.'-'.$fx->updated_at?->timestamp, 'type' => $fx->effect, 'intensity' => $fx->intensity, 'labelOff' => '✕ '.$fx->name, 'labelOn' => '✨ '.$fx->name])
+    <script>window.BE_EFFECT=@json($fxConfig);</script>
+    <script src="/js/effects.js?v={{ $v }}" defer></script>
+@endif
 <script src="/js/contrastes.js?v={{ $v }}" defer></script>
 <script src="/js/site.js?v={{ $v }}" defer></script>
 @stack('scripts')
