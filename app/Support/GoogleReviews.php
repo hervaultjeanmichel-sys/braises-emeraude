@@ -34,7 +34,12 @@ final class GoogleReviews
             return null;
         }
         $minutes = max(1, (int) config('services.google_places.cache_minutes', 60));
-        $raw = Cache::remember('greviews:'.$store->google_place_id, now()->addMinutes($minutes), fn () => self::fetch($store->google_place_id));
+        $key = 'greviews:'.$store->google_place_id;
+        $raw = Cache::get($key);
+        if ($raw === null) {
+            $raw = self::fetch($store->google_place_id) ?? false; // échec mémorisé 10 min : pas d'appel à chaque page
+            Cache::put($key, $raw, $raw === false ? now()->addMinutes(10) : now()->addMinutes($minutes));
+        }
         if (! $raw) {
             return null;
         }
