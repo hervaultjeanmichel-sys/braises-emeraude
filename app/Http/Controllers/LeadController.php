@@ -146,7 +146,9 @@ class LeadController extends Controller
 
         $this->notify($lead);
 
-        return (new RedirectResponse('/devis/merci/'))->with('lead_type', $type);
+        session()->flash('lead_type', $type);
+
+        return new RedirectResponse('/devis/merci/');
     }
 
     private function source(array $utm, string $referer): string

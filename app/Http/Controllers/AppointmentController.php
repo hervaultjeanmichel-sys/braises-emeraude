@@ -141,7 +141,9 @@ class AppointmentController extends Controller
 
         BookingMailer::received($appointment);
 
-        return (new RedirectResponse('/rendez-vous/merci/'))->with('appointment_id', $appointment->id);
+        session()->flash('appointment_id', $appointment->id);
+
+        return new RedirectResponse('/rendez-vous/merci/');
     }
 
     public function thanks(Request $request): View
