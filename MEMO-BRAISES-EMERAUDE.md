@@ -1,6 +1,6 @@
 # MEMO technique — Braises Émeraude (refonte Laravel)
 
-*Mis à jour le 27/10/2026 (8h40)*
+*Mis à jour le 27/10/2026 (9h55)*
 
 ## 📍 Reste à faire (au 26/10/2026)
 1. **Prise de RDV** : module fait et actif pour Rennes (27/10). Reste : vraie adresse e-mail de Rennes (provisoirement celle de JM), activer Dinard / Saint-Malo, branchement Google Agenda (compte de service)
@@ -28,6 +28,16 @@
 - **Réalisations** : table `realisations`, admin Contenus › Réalisations (avis affiché seulement si `review_consent`), photos → WebP (`App\Support\WebpImage`), gabarit `pages/realisations` (filtres, visionneuse). `braises:realisations-from-page --publish-titled [--apply]` : 24 chantiers créés depuis l'ancienne page (légendes d'origine, commune + énergie déduites)
 - **SSH GitHub** : port 22 refusé depuis O2Switch le 26/10 → alias `github-braises` passé sur `ssh.github.com:443` dans ~/.ssh/config
 - ASSET_VERSION = 0.9
+
+## Session du 27/10/2026 (suite) — design, effets, tableau de bord, avis Google
+- **Cartes magasins** entièrement cliquables (lien étiré `.go::after`), téléphone toujours cliquable
+- **Page magasin** : galerie 3–10 photos (WebP auto via `Store::booted`), visionneuse commune `public/js/gallery.js`, vidéo fichier ou YouTube/Vimeo chargée au clic (colonnes `video`, `video_url`, `video_poster`)
+- **Emblème du logo** vectorisé : `public/img/emblem.svg` (retracé simplifié, 6,6 Ko — à remplacer par le vectoriel officiel si fourni) ; filigrane `.has-emblem` (interrupteur `emblem` par bloc), petit emblème devant les sur-titres (réglage `design.eyebrow_emblem`)
+- **Effets saisonniers** : table `seasonal_effects` (+ calendrier : Halloween, Noël, Nouvel an, Saint-Valentin, Pâques 2027, Inauguration Rennes inactif), admin Contenus › Effets saisonniers, `public/js/effects.js` (8 effets, 30 i/s, bouton ✕, désactivé si « réduire les animations »)
+- **Tableau de bord** : mesure d'audience sans cookie (`visits` empreinte journalière hachée, `page_views`, middleware `RecordVisit`), widgets LiveStats (30 s), SeasonalEffectCard, BookingByStore (interrupteur RDV), VisitsChart, TopPages, SiteHealth ; widgets sensibles réservés à l'admin groupe
+- **Avis Google** : `App\Support\GoogleReviews` (Places API New, cache court `GOOGLE_REVIEWS_CACHE_MINUTES`, échec mémorisé 10 min), `stores.google_place_id`, table `google_review_choices`, page admin Magasins › Avis Google, bloc Builder `google_reviews`, avis du magasin sur sa page ; mentions obligatoires (date de visite, lien Google Maps, signalement, sélection). **En attente de la clé `GOOGLE_PLACES_KEY`** → puis `php artisan braises:google-reviews --find`
+- **PDF client** « Braises-Emeraude-Projet-nouveau-site.pdf » (9 p., formulé en projet, sans prix ni planning) remis à JM
+- ASSET_VERSION = 1.5
 
 ## Session du 27/10/2026 — prise de rendez-vous
 - **Tables** : `appointments` (en_attente → confirme / refuse / annule) ; réglages par magasin dans `stores.booking_settings`
