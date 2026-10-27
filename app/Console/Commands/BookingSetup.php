@@ -14,12 +14,13 @@ use Illuminate\Console\Command;
  *
  *   php artisan braises:booking rennes                         → état + prochains créneaux
  *   php artisan braises:booking rennes --enable                → active (types et plages par défaut si vides)
+ *   php artisan braises:booking rennes --from=2026-11-15             → aucun RDV avant cette date
  *   php artisan braises:booking rennes --showroom-from=2026-11-16
  *   php artisan braises:booking rennes --disable
  */
 class BookingSetup extends Command
 {
-    protected $signature = 'braises:booking {store : slug, nom court ou id} {--enable} {--disable} {--showroom-from= : AAAA-MM-JJ}';
+    protected $signature = 'braises:booking {store : slug, nom court ou id} {--enable} {--disable} {--showroom-from= : AAAA-MM-JJ} {--from= : début du calendrier, tous types (AAAA-MM-JJ)}';
 
     protected $description = 'Active / diagnostique la prise de rendez-vous d’un magasin';
 
@@ -49,7 +50,10 @@ class BookingSetup extends Command
         if ($d = $this->option('showroom-from')) {
             $settings['showroom_from'] = CarbonImmutable::parse($d)->toDateString();
         }
-        if ($this->option('enable') || $this->option('disable') || $this->option('showroom-from')) {
+        if ($d = $this->option('from')) {
+            $settings['start_from'] = CarbonImmutable::parse($d)->toDateString();
+        }
+        if ($this->option('enable') || $this->option('disable') || $this->option('showroom-from') || $this->option('from')) {
             $store->booking_settings = $settings;
             $store->save();
             $this->info('Enregistré.');
@@ -59,7 +63,7 @@ class BookingSetup extends Command
         $set = $b->settings();
         $this->line("<options=bold>{$store->name}</> — prise de RDV : ".($b->isEnabled() ? '<fg=green>ACTIVE</>' : '<fg=red>inactive</>'));
         $this->line('E-mail des demandes : '.($store->email ?: (s('leads.fallback_email') ?: '<fg=red>aucun (à renseigner !)</>')));
-        $this->line("Délai mini {$set['min_delay_hours']} h · jusqu'à {$set['max_days']} jours · pas {$set['step']} min · showroom à partir du ".($set['showroom_from'] ?: 'immédiatement'));
+        $this->line("Calendrier à partir du ".($set['start_from'] ?: 'aujourd’hui')." · délai mini {$set['min_delay_hours']} h · jusqu'à {$set['max_days']} jours · pas {$set['step']} min · showroom à partir du ".($set['showroom_from'] ?: 'début du calendrier'));
         foreach ($b->types() as $t) {
             $days = $b->days($t['key']);
             $first = $days[0] ?? null;

@@ -100,6 +100,7 @@ class StoreResource extends Resource
                             Forms\Components\Select::make('step')->label('Pas entre deux créneaux')->options([15 => '15 min', 30 => '30 min', 60 => '1 h'])->default(30),
                             Forms\Components\TextInput::make('capacity_showroom')->label('RDV simultanés au showroom')->numeric()->default(1),
                             Forms\Components\TextInput::make('capacity_home')->label('Visites simultanées à domicile')->numeric()->default(1),
+                            Forms\Components\DatePicker::make('start_from')->label('Calendrier ouvert à partir du')->helperText('Aucun rendez-vous avant cette date (tous types).'),
                             Forms\Components\DatePicker::make('showroom_from')->label('RDV au showroom à partir du')->helperText('Pour un magasin pas encore ouvert.'),
                         ]),
                         Forms\Components\TagsInput::make('home_postcodes')->label('Codes postaux couverts pour les visites à domicile')->helperText('Vide = pas de contrôle.'),

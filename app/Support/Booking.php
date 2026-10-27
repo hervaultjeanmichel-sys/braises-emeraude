@@ -17,6 +17,7 @@ use Illuminate\Support\Str;
  *   hours: [{day 1-7, opens "09:00", closes "12:00"}]   ← plages de RDV (sinon horaires du magasin, sinon défaut),
  *   min_delay_hours: 24, max_days: 45, step: 30,
  *   capacity_showroom: 1, capacity_home: 1,               ← RDV simultanés possibles,
+ *   start_from: "2026-11-15",                             ← aucun RDV avant cette date (tous types),
  *   showroom_from: "2026-11-15",                          ← pas de RDV au showroom avant cette date (magasin pas encore ouvert),
  *   home_postcodes: ["35000", …]                          ← zone des visites à domicile (vide = pas de contrôle)
  * }
@@ -62,6 +63,7 @@ final class Booking
             'step' => max(15, (int) ($s['step'] ?? 30)),
             'capacity_showroom' => max(1, (int) ($s['capacity_showroom'] ?? 1)),
             'capacity_home' => max(1, (int) ($s['capacity_home'] ?? 1)),
+            'start_from' => $s['start_from'] ?? null,
             'showroom_from' => $s['showroom_from'] ?? null,
             'home_postcodes' => array_values(array_filter((array) ($s['home_postcodes'] ?? []))),
             'hours' => array_values(array_filter((array) ($s['hours'] ?? []))) ?: ((array) $this->store->opening_hours ?: self::defaultHours()),
@@ -97,8 +99,10 @@ final class Booking
     {
         $now ??= CarbonImmutable::now(self::TZ);
         $days = [];
-        for ($i = 0; $i <= $this->settings()['max_days']; $i++) {
-            $date = $now->startOfDay()->addDays($i)->toDateString();
+        $set = $this->settings();
+        $from = ($set['start_from'] && $set['start_from'] > $now->toDateString()) ? CarbonImmutable::parse($set['start_from'], self::TZ) : $now->startOfDay();
+        for ($i = 0; $i <= $set['max_days']; $i++) {
+            $date = $from->addDays($i)->toDateString();
             if ($this->slots($typeKey, $date, $now) !== []) {
                 $days[] = $date;
             }
@@ -118,8 +122,10 @@ final class Booking
         $now ??= CarbonImmutable::now(self::TZ);
         $day = CarbonImmutable::parse($date, self::TZ)->startOfDay();
 
-        if ($day->gt($now->startOfDay()->addDays($set['max_days']))
+        $windowStart = ($set['start_from'] && $set['start_from'] > $now->toDateString()) ? CarbonImmutable::parse($set['start_from'], self::TZ) : $now->startOfDay();
+        if ($day->gt($windowStart->addDays($set['max_days']))
             || in_array($date, (array) ($this->store->closed_dates ?? []), true)
+            || ($set['start_from'] && $date < $set['start_from'])
             || (! $type['at_home'] && $set['showroom_from'] && $date < $set['showroom_from'])) {
             return [];
         }
