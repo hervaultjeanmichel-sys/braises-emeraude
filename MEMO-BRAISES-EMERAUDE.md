@@ -13,6 +13,12 @@
 7. Questions client : gaz encore vendu ? RGE Qualibois toujours valide ? adresses magasins (Baguer-Morvan vs Baguer-Pican) ? droits vidéo MCZ ?
 8. ⚠️ Le site WordPress EN LIGNE promet encore MaPrimeRénov' pour les poêles (faux depuis le 01/09/2026) → à corriger sur braisesemeraude.com sans attendre la refonte
 
+## Session du 29/10/2026 — site plus lumineux (demande client)
+- **Vidéo d'accueil** : nouveau réglage « Voile sombre » du bloc saga (`veil` : light / medium / dark, défaut **light**) → classes `.saga.veil-*` ; luminosité vidéo 1 au lieu de .72
+- **Le Groupe** : réglage « Fond de la section » du bloc stores (`tone` : light = `#34e3d3` / deep = ancien émeraude profond), classe `.bg-emerald-light`, cartes blanches
+- **Signature « au poil »** : réglage « Fond du texte » du bloc quote (`tone` : beige / dark), classe `.parallax.tone-beige`, variable `--gold-beige:#e8d4a6`
+- ASSET_VERSION = 1.6
+
 ## Session du 26/10/2026 — fait
 - **Accueil allégé** (commit 118f54d) : scènes canvas en sprites, résolution 1x, plus de pré-calcul au chargement → chargement test 26 s → 0,13 s (ordi), 55 s → 0,4 s (mobile). LCP mesuré par JM : 1,44 s en 4G lente, CLS 0
 - **Vidéo de fond commune** aux 3 épisodes de la Saga : champs `bg_video` / `bg_poster` du bloc saga ; vidéo MCZ Eiko (1,1 Mo) dans `storage/app/public/accueil/mcz-eiko-loop.mp4` ; chargée après `load`, ignorée en économie de données

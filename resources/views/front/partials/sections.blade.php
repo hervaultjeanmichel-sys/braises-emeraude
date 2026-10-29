@@ -14,7 +14,7 @@
         {{-- Bandeau cinéma --}}
         @case('saga')
             @php($eps = array_values($d['episodes'] ?? []))
-            <section class="saga" id="saga" aria-labelledby="{{ $sid }}" aria-roledescription="carrousel">
+            <section class="saga veil-{{ in_array($d['veil'] ?? 'light', ['light', 'medium', 'dark'], true) ? ($d['veil'] ?? 'light') : 'light' }}" id="saga" aria-labelledby="{{ $sid }}" aria-roledescription="carrousel">
                 @php($bgVideo = $d['bg_video'] ?? null)
                 @if($bgVideo)
                     <video class="saga-video" muted loop playsinline preload="none" @if(!empty($d['bg_poster'])) poster="{{ media($d['bg_poster']) }}" @endif data-src="{{ media($bgVideo) }}" data-type="{{ str_ends_with($bgVideo, '.webm') ? 'video/webm' : 'video/mp4' }}" aria-hidden="true"></video>
@@ -65,7 +65,7 @@
 
         {{-- Les magasins --}}
         @case('stores')
-            <section class="sec @if($d['emblem'] ?? true) has-emblem @endif groupe bg-emerald" id="groupe" aria-labelledby="{{ $sid }}">
+            <section class="sec @if($d['emblem'] ?? true) has-emblem @endif groupe {{ ($d['tone'] ?? 'light') === 'deep' ? 'bg-emerald' : 'bg-emerald-light' }}" id="groupe" aria-labelledby="{{ $sid }}">
                 <div class="wrap">
                     <div class="sec-head reveal">
                         @if(!empty($d['eyebrow']))<span class="eyebrow">{{ $d['eyebrow'] }}</span>@endif
@@ -109,7 +109,7 @@
 
         {{-- Signature de campagne --}}
         @case('quote')
-            <section class="parallax" aria-label="{{ s('quote.aria', 'Signature de campagne') }}">
+            <section class="parallax {{ ($d['tone'] ?? 'beige') === 'dark' ? '' : 'tone-beige' }}" aria-label="{{ s('quote.aria', 'Signature de campagne') }}">
                 <div class="bgimg" data-parallax style="background-image:url('{{ media($d['image'] ?? '/img/campagne-chien.webp') }}')" role="img" aria-label="{{ $d['image_alt'] ?? '' }}"></div>
                 <div class="wrap">
                     <blockquote class="reveal">

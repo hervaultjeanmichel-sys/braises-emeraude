@@ -12,6 +12,7 @@ html,body{margin:0}
   --emerald:#34e3d3;     /* la goutte de vert */
   --emerald-deep:#0e3a38;
   --ember:#ff7b30;       /* la flamme, rarissime */
+  --gold-beige:#e8d4a6;  /* beige doré (signature de campagne) */
   --f-display:"DM Serif Display",Georgia,"Times New Roman",serif;
   --f-body:"Manrope",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
   --f-hand:"Caveat","Comic Sans MS",cursive;
@@ -633,3 +634,32 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--emerald)
 .gr-card footer{all:unset;display:flex;flex-wrap:wrap;gap:.4rem .9rem;font-size:.75rem;color:var(--muted)}
 .gr-card footer a{color:var(--muted);text-decoration:underline;text-underline-offset:2px}
 .gr-notice{margin-top:1.4rem;font-size:.78rem;color:var(--muted);max-width:60rem}
+
+/* ---------- v1.6 (29/10) : site plus lumineux ---------- */
+/* Voile sur la vidéo / décors du bandeau cinéma (réglage « veil » du bloc saga) */
+.saga.veil-light .saga-video{filter:saturate(1.1) brightness(1)}
+.saga.veil-light .scene-video{filter:saturate(1.15) brightness(1)}
+.saga.veil-light .act::after{background:radial-gradient(70% 80% at 15% 55%,rgba(0,0,0,.5),transparent 65%),linear-gradient(0deg,rgba(0,0,0,.85) 0,transparent 16%,transparent 90%,rgba(0,0,0,.6) 100%)}
+.saga.veil-medium .saga-video{filter:saturate(1.1) brightness(.86)}
+.saga.veil-medium .act::after{background:radial-gradient(80% 85% at 16% 52%,rgba(0,0,0,.6),transparent 63%),linear-gradient(0deg,#000 0,transparent 17%,transparent 88%,rgba(0,0,0,.8) 100%)}
+.saga.veil-light .act-title,.saga.veil-light .act-tag,.saga.veil-medium .act-title,.saga.veil-medium .act-tag{text-shadow:0 2px 18px rgba(0,0,0,.55)}
+@media(max-width:899px){
+  .saga.veil-light .act::after{background:linear-gradient(0deg,rgba(0,0,0,.8) 0,rgba(0,0,0,.35) 40%,rgba(0,0,0,.1) 100%)}
+  .saga.veil-medium .act::after{background:linear-gradient(0deg,#000 0,rgba(0,0,0,.45) 40%,rgba(0,0,0,.22) 100%)}
+}
+
+/* Le Groupe sur fond émeraude clair (couleur du logo) */
+.bg-emerald-light{--fg:#04201d;--muted:rgba(4,32,29,.72);--line:rgba(4,32,29,.16);--bg-2:rgba(255,255,255,.9);--emerald:#06554f;
+  background:radial-gradient(900px 500px at 85% 0%,rgba(255,255,255,.35),transparent 60%),repeating-radial-gradient(circle at 12% 110%,transparent 0 38px,rgba(4,32,29,.06) 38px 39px),#34e3d3;color:var(--fg)}
+.bg-emerald-light .sec-head p{color:var(--muted)}
+.bg-emerald-light .store{border-color:rgba(255,255,255,.6);box-shadow:0 18px 40px -24px rgba(4,32,29,.45)}
+.bg-emerald-light .store:hover{border-color:#fff;background:#fff}
+.bg-emerald-light .store::before{background:radial-gradient(420px circle at var(--mx,50%) var(--my,0%),rgba(52,227,211,.22),transparent 45%)}
+.bg-emerald-light .store-num{-webkit-text-stroke:1px rgba(6,85,79,.5)}
+.bg-emerald-light .store:hover .go span.ar{color:#fff}
+.bg-emerald-light.has-emblem::after{opacity:.14}
+
+/* Signature de campagne sur beige doré (réglage « tone » du bloc quote) */
+.parallax.tone-beige{--fg:#2b1e0c;--muted:#6a5433;--emerald:#8a5a16;color:var(--fg);background:var(--gold-beige)}
+.parallax.tone-beige::before{background:linear-gradient(90deg,rgba(232,212,166,.98) 0%,rgba(232,212,166,.9) 40%,rgba(232,212,166,.2) 76%,rgba(232,212,166,0) 100%)}
+@media(max-width:899px){.parallax.tone-beige::before{background:linear-gradient(90deg,rgba(232,212,166,.95) 0%,rgba(232,212,166,.82) 100%)}}

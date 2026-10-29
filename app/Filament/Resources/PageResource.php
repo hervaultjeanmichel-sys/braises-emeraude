@@ -48,6 +48,7 @@ class PageResource extends Resource
                     Forms\Components\TextInput::make('kicker')->label('Mention en haut à gauche')->default('Braises Émeraude présente'),
                     Forms\Components\FileUpload::make('bg_video')->label('Vidéo de fond commune (optionnelle)')->helperText('Une seule vidéo derrière tous les épisodes : remplace les décors animés. MP4/WebM sans son, 20 Mo max. Chargée après l\'affichage de la page.')->directory('accueil')->acceptedFileTypes(['video/mp4', 'video/webm'])->maxSize(20000),
                     Forms\Components\FileUpload::make('bg_poster')->label('Image d\'attente de la vidéo commune')->helperText('Affichée pendant le chargement et pour les visiteurs en économie de données. WebP conseillé.')->image()->directory('accueil'),
+                    Forms\Components\Select::make('veil')->label('Voile sombre sur la vidéo / les décors')->options(['light' => 'Léger (vidéo lumineuse)', 'medium' => 'Moyen', 'dark' => 'Fort (d\'origine)'])->default('light')->selectablePlaceholder(false)->helperText('Assombrit l\'image pour la lisibilité des textes.'),
                     Forms\Components\Repeater::make('episodes')->label('Épisodes')->schema([
                         Forms\Components\TextInput::make('label')->label('Numéro')->placeholder('Épisode I'),
                         Forms\Components\TextInput::make('title')->label('Titre')->required(),
@@ -64,6 +65,7 @@ class PageResource extends Resource
                     Forms\Components\TextInput::make('cta_url')->label('Lien du bouton')->default('/devis/'),
                 ]),
                 Forms\Components\Builder\Block::make('stores')->label('Les magasins (cartes dynamiques)')->icon('heroicon-o-building-storefront')->schema([
+                    Forms\Components\Select::make('tone')->label('Fond de la section')->options(['light' => 'Émeraude clair (couleur du logo)', 'deep' => 'Émeraude profond'])->default('light')->selectablePlaceholder(false),
                     Forms\Components\Toggle::make('emblem')->label('Emblème du logo en filigrane')->default(true),
                     Forms\Components\TextInput::make('eyebrow')->label('Sur-titre'),
                     Forms\Components\TextInput::make('title')->label('Titre H2')->required(),
@@ -79,6 +81,7 @@ class PageResource extends Resource
                     Forms\Components\Toggle::make('light')->label('Fond clair')->default(true),
                 ]),
                 Forms\Components\Builder\Block::make('quote')->label('Signature de campagne (parallaxe)')->icon('heroicon-o-megaphone')->schema([
+                    Forms\Components\Select::make('tone')->label('Fond du texte')->options(['beige' => 'Beige doré', 'dark' => 'Sombre'])->default('beige')->selectablePlaceholder(false),
                     Forms\Components\TextInput::make('big')->label('Phrase principale')->required(),
                     Forms\Components\TextInput::make('small')->label('Phrase secondaire'),
                     Forms\Components\TextInput::make('hand')->label('Mot manuscrit'),
