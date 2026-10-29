@@ -28,17 +28,18 @@ const draw=el=>{
     L.marker([m.lat,m.lng],{icon,title:m.name}).addTo(map).bindPopup(html);
     return [m.lat,m.lng];
   });
-  // cercles de zone (carte du groupe uniquement)
-  const zones=L.featureGroup();
-  if(markers.length>1){
-    const pal=['#06756d','#0d8bb5','#ff7b30','#7a5af5'];
-    markers.forEach((m,i)=>{if(m.radius>0){const col=m.isNew?'#ff7b30':pal[i%pal.length];
-      L.circle([m.lat,m.lng],{radius:m.radius*1000,color:col,weight:2,opacity:.85,fillColor:col,fillOpacity:.14,interactive:false}).addTo(zones)}});
-    zones.addTo(map);
-  }
+  // cercles de zone (carte du groupe uniquement) : cadrage d'abord, cercles ensuite (Leaflet exige une vue)
+  const pal=['#06756d','#0d8bb5','#ff7b30','#7a5af5'];
+  const zoned=markers.length>1?markers.filter(m=>m.radius>0):[];
   if(pts.length===1)map.setView(pts[0],14);
-  else if(zones.getLayers().length)map.fitBounds(zones.getBounds(),{padding:[20,20]});
+  else if(zoned.length){
+    const b=L.latLngBounds(pts);
+    zoned.forEach(m=>b.extend(L.latLng(m.lat,m.lng).toBounds(m.radius*2000)));
+    map.fitBounds(b,{padding:[20,20]});
+  }
   else map.fitBounds(pts,{padding:[60,60]});
+  zoned.forEach(m=>{const col=m.isNew?'#ff7b30':pal[markers.indexOf(m)%pal.length];
+    L.circle([m.lat,m.lng],{radius:m.radius*1000,color:col,weight:2,opacity:.85,fillColor:col,fillOpacity:.14,interactive:false}).addTo(map)});
   map.on('click',()=>map.scrollWheelZoom.enable());
 };
 const start=el=>leaflet().then(()=>draw(el)).catch(()=>{});

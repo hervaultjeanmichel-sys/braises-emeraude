@@ -22,7 +22,7 @@
 - **Zones magasins** : colonnes `stores.zone_label` / `zone_text` (admin Magasins › Coordonnées), remplies par la migration : Zone de Dinard (rive gauche de la Rance, ~30 km), Zone Saint-Malo (Saint-Malo, Cancale, jusqu'à Combourg), Zone Rennes (Combourg → Rennes, Vitré, Fougères, ~40 km). Carte d'accueil : titre = zone, sur-titre « Showroom à :ville » (`store.showroom_at`), étiquettes de la carte = zone. Ville du magasin Saint-Malo corrigée en **Baguer-Pican** (confirmé par JM le 29/10)
 - **Cercles de zone** sur la carte de l'accueil : `stores.zone_radius_km` (Dinard 30, Saint-Malo 25, Rennes 40 km ; vide = pas de cercle), dessinés dans `public/js/map.js`
 - **Carte claire** par défaut (réglage `design.map_theme` = light | dark)
-- ASSET_VERSION = 2.0
+- ASSET_VERSION = 2.1
 
 ## Session du 26/10/2026 — fait
 - **Accueil allégé** (commit 118f54d) : scènes canvas en sprites, résolution 1x, plus de pré-calcul au chargement → chargement test 26 s → 0,13 s (ordi), 55 s → 0,4 s (mobile). LCP mesuré par JM : 1,44 s en 4G lente, CLS 0
