@@ -110,6 +110,11 @@
     <script>window.BE_EFFECT=@json($fxConfig);</script>
     <script src="/js/effects.js?v={{ $v }}" defer></script>
 @endif
+@php($promo = \App\Models\PromoSlide::current(request()->is('/')))
+@if($promo)
+    @include('front.partials.promo-slide', ['promo' => $promo])
+    <script src="/js/promo.js?v={{ $v }}" defer></script>
+@endif
 <script src="/js/contrastes.js?v={{ $v }}" defer></script>
 <script src="/js/site.js?v={{ $v }}" defer></script>
 @stack('scripts')

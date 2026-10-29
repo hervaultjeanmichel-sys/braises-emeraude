@@ -663,3 +663,20 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--emerald)
 .parallax.tone-beige{--fg:#2b1e0c;--muted:#6a5433;--emerald:#8a5a16;color:var(--fg);background:var(--gold-beige)}
 .parallax.tone-beige::before{background:linear-gradient(90deg,rgba(232,212,166,.98) 0%,rgba(232,212,166,.9) 40%,rgba(232,212,166,.2) 76%,rgba(232,212,166,0) 100%)}
 @media(max-width:899px){.parallax.tone-beige::before{background:linear-gradient(90deg,rgba(232,212,166,.95) 0%,rgba(232,212,166,.82) 100%)}}
+
+/* ---------- Volet promo (Contenus › Volets promo) — glisse de gauche à droite ---------- */
+.promo-slide{--promo-fg:#04201d;position:fixed;z-index:90;left:0;bottom:max(16px,env(safe-area-inset-bottom,0px));width:min(380px,calc(100vw - 32px));max-height:calc(100svh - 32px);overflow:auto;display:grid;background:var(--promo-bg,#34e3d3);color:var(--promo-fg);border-radius:0 22px 22px 0;box-shadow:0 24px 60px -18px rgba(0,0,0,.55);transform:translateX(-105%);transition:transform .6s cubic-bezier(.2,.8,.2,1);font-family:var(--f-body)}
+.promo-slide.on{transform:translateX(0)}
+.promo-slide.is-dark{--promo-fg:#f6f3ec}
+.promo-close{position:absolute;top:.6rem;right:.6rem;z-index:2;width:36px;height:36px;border-radius:50%;border:0;cursor:pointer;font-size:1rem;line-height:1;background:rgba(0,0,0,.55);color:#fff;display:grid;place-items:center}
+.promo-close:hover{background:#000}
+.promo-img img{width:100%;height:auto;display:block}
+.promo-body{display:grid;gap:.55rem;padding:1.3rem 1.4rem 1.5rem}
+.promo-eyebrow{font-size:.72rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;opacity:.8}
+.promo-title{margin:0;font-family:var(--f-display);font-size:1.6rem;line-height:1.1}
+.promo-text{margin:0;font-size:.95rem;line-height:1.5}
+.promo-cta{justify-self:start;margin-top:.4rem;background:var(--promo-fg);color:var(--promo-bg,#34e3d3)}
+.promo-cta:hover{filter:brightness(1.15)}
+.promo-slide :focus-visible{outline:2px solid var(--promo-fg);outline-offset:3px}
+@media(max-width:600px){.promo-slide{width:calc(100vw - 24px);bottom:12px}.promo-title{font-size:1.35rem}}
+@media(prefers-reduced-motion:reduce){.promo-slide{transition:none}}
