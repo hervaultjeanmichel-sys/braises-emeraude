@@ -5,7 +5,7 @@
 @php($mapMarkers = $mapStores->map(fn ($st) => ($currentPage ?? false) ? array_merge($st->mapMarker(), ['url' => null]) : $st->mapMarker())->values()->all())
 @php($mapLabels = ['directions' => s('store.directions', 'Itinéraire'), 'page' => s('store.map_page', 'Voir le magasin')])
 @if($mapStores->isNotEmpty())
-    <div class="store-map @if($mapStores->count() > 1) store-map--group @endif"
+    <div class="store-map @if($mapStores->count() > 1) store-map--group @endif @if(s('design.map_theme', 'light') === 'dark') store-map--dark @endif"
          data-map
          data-markers='@json($mapMarkers)'
          data-labels='@json($mapLabels)'

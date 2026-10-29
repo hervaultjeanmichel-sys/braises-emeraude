@@ -8,7 +8,12 @@
         @elseif($store->region_label)<span class="badge">{{ $store->region_label }}</span>@endif
     </div>
     <div>
-        <h3><small>{{ s('store.showroom', 'Showroom') }}</small>{{ $store->area_label ?: $store->short_name }}</h3>
+        @if($store->zone_label)
+            <h3><small>{{ $store->city ? str_replace(':ville', $store->city, s('store.showroom_at', 'Showroom à :ville')) : s('store.showroom', 'Showroom') }}</small>{{ $store->zone_label }}</h3>
+            @if($store->zone_text)<p class="zone">@include('front.partials.icon', ['name' => 'pin']) <span>{{ $store->zone_text }}</span></p>@endif
+        @else
+            <h3><small>{{ s('store.showroom', 'Showroom') }}</small>{{ $store->area_label ?: $store->short_name }}</h3>
+        @endif
         @if($store->card_text ?: $store->intro)<p class="desc">{{ $store->card_text ?: \Illuminate\Support\Str::limit((string) $store->intro, 160) }}</p>@endif
     </div>
     <dl>

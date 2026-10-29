@@ -5,6 +5,7 @@ declare(strict_types=1);
 // Textes du site éditables (Réglages › Textes du site). Généré depuis les gabarits — valeurs par défaut.
 return [
     "design.eyebrow_emblem" => ['group' => "design", 'value' => '1'],
+    "design.map_theme" => ['group' => "design", 'value' => 'light'],
     "a11y.skip" => ['group' => "general", 'value' => 'Aller au contenu'],
     "aid.box_text" => ['group' => "general", 'value' => 'Nous calculons les aides auxquelles vous avez droit lors du devis, gratuitement.'],
     "aid.box_title" => ['group' => "general", 'value' => 'En résumé'],
@@ -154,6 +155,7 @@ Contact|/contact/'],
     "store.photos_title" => ['group' => "general", 'value' => 'Des poêles *en fonctionnement*'],
     "store.reviews" => ['group' => "general", 'value' => 'Avis Google'],
     "store.showroom" => ['group' => "general", 'value' => 'Showroom'],
+    "store.showroom_at" => ['group' => "general", 'value' => 'Showroom à :ville'],
     "store.team_eyebrow" => ['group' => "general", 'value' => 'L\'équipe'],
     "store.team_title" => ['group' => "general", 'value' => 'Vos interlocuteurs *près de chez vous*'],
     "univers.products_eyebrow" => ['group' => "general", 'value' => 'En exposition'],

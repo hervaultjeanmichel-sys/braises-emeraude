@@ -35,6 +35,8 @@ class StoreResource extends Resource
                     Forms\Components\Grid::make(2)->schema([
                         Forms\Components\TextInput::make('name')->label('Nom complet')->required(),
                         Forms\Components\TextInput::make('short_name')->label('Nom court (menu)')->required(),
+                        Forms\Components\TextInput::make('zone_label')->label('Zone (titre de la carte d\'accueil)')->placeholder('Zone Saint-Malo'),
+                        Forms\Components\TextInput::make('zone_text')->label('Communes couvertes')->placeholder('Tout Saint-Malo, Cancale, jusqu\'à Combourg.')->maxLength(400),
                         Forms\Components\TextInput::make('area_label')->label('Secteur affiché')->placeholder('Dinard · Pleurtuit'),
                         Forms\Components\TextInput::make('region_label')->label('Pastille région (carte d\'accueil)')->placeholder('Côte d\'Émeraude'),
                         Forms\Components\TextInput::make('announcement')->label('Annonce (si pas encore de téléphone)')->placeholder('Inauguration en novembre 2026'),

@@ -687,3 +687,16 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--emerald)
 .promo-backdrop.on{opacity:1}
 @media(max-width:600px){.promo-slide.pos-center{width:calc(100vw - 24px)}}
 @media(prefers-reduced-motion:reduce){.promo-backdrop{transition:none}}
+/* v1.9 (29/10) : zones des magasins + carte claire (réglage design.map_theme = light | dark) */
+.store .zone{display:flex;gap:.45rem;align-items:flex-start;margin:.7rem 0 0;font-size:.92rem;font-weight:600;color:var(--fg)}
+.store .zone svg{flex:none;width:16px;height:16px;margin-top:.22rem;color:var(--emerald)}
+.store-map:not(.store-map--dark){background:#eef2ef}
+.store-map:not(.store-map--dark) .leaflet-tile-pane{filter:saturate(.85)}
+.store-map:not(.store-map--dark).leaflet-container{background:#eef2ef}
+.store-map:not(.store-map--dark).leaflet-container .leaflet-control-attribution{background:rgba(255,255,255,.85);color:#4a5d55}
+.store-map:not(.store-map--dark).leaflet-container .leaflet-control-attribution a{color:#4a5d55}
+.store-map:not(.store-map--dark) .leaflet-bar a{background:#fff;color:#0a1612;border-color:rgba(10,22,18,.15)}
+.store-map:not(.store-map--dark) .leaflet-popup-content-wrapper,.store-map:not(.store-map--dark) .leaflet-popup-tip{background:#fff;color:#0a1612;border:1px solid rgba(10,22,18,.12)}
+.store-map:not(.store-map--dark) .leaflet-popup-content a{color:#06756d}
+.store-map:not(.store-map--dark) .map-pin span{background:#06756d;border-color:#fff;box-shadow:0 0 0 0 rgba(6,117,109,.5)}
+.store-map:not(.store-map--dark) .map-pin b{background:#fff;color:#0a1612;box-shadow:0 4px 14px -4px rgba(0,0,0,.35)}

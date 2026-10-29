@@ -127,7 +127,7 @@ class Store extends Model
     {
         return [
             'lat' => (float) $this->latitude, 'lng' => (float) $this->longitude,
-            'name' => $this->name, 'short' => $this->short_name,
+            'name' => $this->name, 'short' => $this->zone_label ?: $this->short_name,
             'address' => $this->addressLine(), 'phone' => $this->phone,
             'url' => $this->url(), 'directions' => $this->directionsUrl(), 'isNew' => (bool) $this->is_new,
         ];

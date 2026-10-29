@@ -19,7 +19,9 @@
 - **Signature « au poil »** : réglage « Fond du texte » du bloc quote (`tone` : beige / dark), classe `.parallax.tone-beige`, variable `--gold-beige:#e8d4a6`
 - **Volets promo** (glissent de gauche à droite) : table `promo_slides`, admin Contenus › Volets promo (image → WebP 1200 px, couleur de fond, sur-titre / titre / texte / bouton, début et fin d'affichage, pages : toutes ou accueil, fréquence session / jour / semaine / toujours, délai en s, ordre). `PromoSlide::current()`, texte clair ou foncé calculé selon la couleur de fond, `public/js/promo.js` (✕, Échap, mémorisé en localStorage/sessionStorage, clé = id + date de modif), partial `front/partials/promo-slide`
 - Volets promo : colonne `position` (center par défaut = glisse jusqu'au centre avec fond assombri cliquable, ou bottom-left)
-- ASSET_VERSION = 1.8
+- **Zones magasins** : colonnes `stores.zone_label` / `zone_text` (admin Magasins › Coordonnées), remplies par la migration : Zone de Dinard (rive gauche de la Rance, ~30 km), Zone Saint-Malo (Saint-Malo, Cancale, jusqu'à Combourg), Zone Rennes (Combourg → Rennes, Vitré, Fougères, ~40 km). Carte d'accueil : titre = zone, sur-titre « Showroom à :ville » (`store.showroom_at`), étiquettes de la carte = zone. Ville du magasin Saint-Malo corrigée en **Baguer-Pican** (confirmé par JM le 29/10)
+- **Carte claire** par défaut (réglage `design.map_theme` = light | dark)
+- ASSET_VERSION = 1.9
 
 ## Session du 26/10/2026 — fait
 - **Accueil allégé** (commit 118f54d) : scènes canvas en sprites, résolution 1x, plus de pré-calcul au chargement → chargement test 26 s → 0,13 s (ordi), 55 s → 0,4 s (mobile). LCP mesuré par JM : 1,44 s en 4G lente, CLS 0
@@ -119,7 +121,7 @@
 - Contenus : aucun fait non vérifié (pas de label, prix, origine incertaine de marque). Origine affichée seulement pour Austroflamm, Romotop, Dovre, Brunner, MCZ, Rizzoli
 - 3 slugs produits nettoyés + 301 : jazz-mural-turbo-fonte(-copie), club-comfort-air-12-m2(-copie), cuisiniere-riz(z)oli-serie-m
 - Cancale = page ville ; Rennes et Saint-Malo = pages magasins ; Dinard = nouvelle page magasin
-- Coordonnées magasins provisoires : Saint-Malo indique « Baguer-Morvan » alors que le magasin s'appelle « Baguer-Pican » → à confirmer
+- Magasin zone Saint-Malo : à Baguer-Pican (confirmé par JM le 29/10/2026)
 
 ## Avancement (6 étapes du cahier des charges)
 1. Cadrage — en attente des réponses client (OpenFire, coordonnées, gaz, labels)
