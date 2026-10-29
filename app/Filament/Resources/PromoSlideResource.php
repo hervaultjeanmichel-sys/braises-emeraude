@@ -29,7 +29,7 @@ class PromoSlideResource extends Resource
     public static function form(Form $form): Form
     {
         return $form->schema([
-            Forms\Components\Section::make('Contenu du volet')->description('Le volet glisse depuis la gauche de l\'écran. Le visiteur peut le fermer ; il ne réapparaît pas avant la fréquence choisie.')->columns(2)->schema([
+            Forms\Components\Section::make('Contenu du volet')->description('Le volet glisse depuis la gauche de l\'écran, jusqu\'au centre ou en bas à gauche. Le visiteur peut le fermer ; il ne réapparaît pas avant la fréquence choisie.')->columns(2)->schema([
                 Forms\Components\TextInput::make('name')->label('Nom interne')->required()->placeholder('Ouverture Rennes — remise MCZ')->helperText('Visible seulement dans l\'admin.')->columnSpanFull(),
                 Forms\Components\FileUpload::make('image')->label('Image (convertie en WebP)')->image()->imageEditor()->directory('promos')->maxSize(12000)->helperText('Visuel de l\'offre. Format portrait ou carré conseillé.'),
                 Forms\Components\Group::make([
@@ -45,6 +45,7 @@ class PromoSlideResource extends Resource
             Forms\Components\Section::make('Affichage')->columns(2)->schema([
                 Forms\Components\DateTimePicker::make('starts_at')->label('Début d\'affichage')->seconds(false)->helperText('Vide = tout de suite.'),
                 Forms\Components\DateTimePicker::make('ends_at')->label('Fin d\'affichage')->seconds(false)->after('starts_at')->helperText('Vide = sans fin.'),
+                Forms\Components\Select::make('position')->label('Arrivée du volet')->options(PromoSlide::POSITIONS)->default('center')->selectablePlaceholder(false)->helperText('Il glisse toujours depuis la gauche.'),
                 Forms\Components\Select::make('scope')->label('Pages')->options(PromoSlide::SCOPES)->default('all')->selectablePlaceholder(false),
                 Forms\Components\Select::make('frequency')->label('Fréquence pour un même visiteur')->options(PromoSlide::FREQUENCIES)->default('day')->selectablePlaceholder(false),
                 Forms\Components\TextInput::make('delay')->label('Apparition après (secondes)')->numeric()->minValue(0)->maxValue(60)->default(3),

@@ -680,3 +680,10 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--emerald)
 .promo-slide :focus-visible{outline:2px solid var(--promo-fg);outline-offset:3px}
 @media(max-width:600px){.promo-slide{width:calc(100vw - 24px);bottom:12px}.promo-title{font-size:1.35rem}}
 @media(prefers-reduced-motion:reduce){.promo-slide{transition:none}}
+/* v1.8 : arrivée au centre de l'écran (réglage « position ») */
+.promo-slide.pos-center{top:50%;left:50%;bottom:auto;width:min(460px,calc(100vw - 32px));max-height:calc(100svh - 48px);border-radius:22px;transform:translate(calc(-50vw - 100%),-50%)}
+.promo-slide.pos-center.on{transform:translate(-50%,-50%)}
+.promo-backdrop{position:fixed;inset:0;z-index:89;background:rgba(0,0,0,.55);opacity:0;transition:opacity .5s}
+.promo-backdrop.on{opacity:1}
+@media(max-width:600px){.promo-slide.pos-center{width:calc(100vw - 24px)}}
+@media(prefers-reduced-motion:reduce){.promo-backdrop{transition:none}}

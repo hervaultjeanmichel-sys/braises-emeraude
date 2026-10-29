@@ -18,7 +18,8 @@
 - **Le Groupe** : réglage « Fond de la section » du bloc stores (`tone` : light = `#34e3d3` / deep = ancien émeraude profond), classe `.bg-emerald-light`, cartes blanches
 - **Signature « au poil »** : réglage « Fond du texte » du bloc quote (`tone` : beige / dark), classe `.parallax.tone-beige`, variable `--gold-beige:#e8d4a6`
 - **Volets promo** (glissent de gauche à droite) : table `promo_slides`, admin Contenus › Volets promo (image → WebP 1200 px, couleur de fond, sur-titre / titre / texte / bouton, début et fin d'affichage, pages : toutes ou accueil, fréquence session / jour / semaine / toujours, délai en s, ordre). `PromoSlide::current()`, texte clair ou foncé calculé selon la couleur de fond, `public/js/promo.js` (✕, Échap, mémorisé en localStorage/sessionStorage, clé = id + date de modif), partial `front/partials/promo-slide`
-- ASSET_VERSION = 1.7
+- Volets promo : colonne `position` (center par défaut = glisse jusqu'au centre avec fond assombri cliquable, ou bottom-left)
+- ASSET_VERSION = 1.8
 
 ## Session du 26/10/2026 — fait
 - **Accueil allégé** (commit 118f54d) : scènes canvas en sprites, résolution 1x, plus de pré-calcul au chargement → chargement test 26 s → 0,13 s (ordi), 55 s → 0,4 s (mobile). LCP mesuré par JM : 1,44 s en 4G lente, CLS 0

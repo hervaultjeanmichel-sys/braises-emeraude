@@ -14,6 +14,8 @@ class PromoSlide extends Model
 
     public const SCOPES = ['all' => 'Toutes les pages', 'home' => 'Accueil uniquement'];
 
+    public const POSITIONS = ['center' => 'Centre de l\'écran', 'bottom-left' => 'En bas à gauche'];
+
     public const FREQUENCIES = [
         'session' => 'Une fois par visite',
         'day' => 'Une fois par jour',
