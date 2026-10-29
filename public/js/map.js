@@ -28,7 +28,17 @@ const draw=el=>{
     L.marker([m.lat,m.lng],{icon,title:m.name}).addTo(map).bindPopup(html);
     return [m.lat,m.lng];
   });
-  pts.length===1?map.setView(pts[0],14):map.fitBounds(pts,{padding:[60,60]});
+  // cercles de zone (carte du groupe uniquement)
+  const zones=L.featureGroup();
+  if(markers.length>1){
+    const pal=['#06756d','#0d8bb5','#ff7b30','#7a5af5'];
+    markers.forEach((m,i)=>{if(m.radius>0){const col=m.isNew?'#ff7b30':pal[i%pal.length];
+      L.circle([m.lat,m.lng],{radius:m.radius*1000,color:col,weight:2,opacity:.85,fillColor:col,fillOpacity:.14,interactive:false}).addTo(zones)}});
+    zones.addTo(map);
+  }
+  if(pts.length===1)map.setView(pts[0],14);
+  else if(zones.getLayers().length)map.fitBounds(zones.getBounds(),{padding:[20,20]});
+  else map.fitBounds(pts,{padding:[60,60]});
   map.on('click',()=>map.scrollWheelZoom.enable());
 };
 const start=el=>leaflet().then(()=>draw(el)).catch(()=>{});

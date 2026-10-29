@@ -129,7 +129,7 @@ class Store extends Model
             'lat' => (float) $this->latitude, 'lng' => (float) $this->longitude,
             'name' => $this->name, 'short' => $this->zone_label ?: $this->short_name,
             'address' => $this->addressLine(), 'phone' => $this->phone,
-            'url' => $this->url(), 'directions' => $this->directionsUrl(), 'isNew' => (bool) $this->is_new,
+            'url' => $this->url(), 'directions' => $this->directionsUrl(), 'isNew' => (bool) $this->is_new, 'radius' => (int) $this->zone_radius_km,
         ];
     }
 
