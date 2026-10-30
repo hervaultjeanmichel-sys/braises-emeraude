@@ -34,7 +34,7 @@ class PromoSlideResource extends Resource
                 Forms\Components\FileUpload::make('image')->label('Image (convertie en WebP)')->image()->imageEditor()->directory('promos')->maxSize(12000)->helperText('Visuel de l\'offre. Format portrait ou carré conseillé.'),
                 Forms\Components\Group::make([
                     Forms\Components\TextInput::make('image_alt')->label('Description de l\'image')->helperText('Pour l\'accessibilité et Google. Si l\'image contient le texte de l\'offre, recopiez-le ici.'),
-                    Forms\Components\ColorPicker::make('bg_color')->label('Couleur de fond')->default('#34e3d3')->required()->helperText('La couleur du texte s\'adapte automatiquement (claire ou foncée).'),
+                    Forms\Components\ColorPicker::make('bg_color')->label('Couleur de fond')->default('#8a5a16')->required()->helperText('La couleur du texte s\'adapte automatiquement (claire ou foncée).'),
                 ]),
                 Forms\Components\TextInput::make('eyebrow')->label('Sur-titre')->placeholder('Nouveau magasin'),
                 Forms\Components\TextInput::make('title')->label('Titre')->placeholder('Braises Émeraude ouvre à Rennes'),

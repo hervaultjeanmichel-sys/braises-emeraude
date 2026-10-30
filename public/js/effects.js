@@ -37,7 +37,7 @@ const fallers=(imgs,n,{vy=[.4,1.2],sz=[14,30],sway=.6,spin=.02,up=false,alpha=[.
 };
 
 /* Feux d'artifice */
-const fireworks=()=>{const cols=['255,96,64','255,200,60','52,227,211','140,120,255','255,110,180','255,255,255'];
+const fireworks=()=>{const cols=['255,96,64','255,200,60','138,90,22','140,120,255','255,110,180','255,255,255'];
   const sp=cols.map(glow);let rockets=[],sparks=[],t=0;
   return()=>{t+=K;
     if(t%Math.round(70/mult)<K||(t%Math.round(28/mult)<K&&Math.random()<.4))rockets.push({x:R(W*.15,W*.85),y:H+10,vy:R(-9.5,-7)*(H/900+.4),ty:R(H*.12,H*.45),c:Math.floor(Math.random()*cols.length)});
@@ -48,7 +48,7 @@ const fireworks=()=>{const cols=['255,96,64','255,200,60','52,227,211','140,120,
 };
 
 /* Confettis */
-const confetti=()=>{const cols=['#34e3d3','#ff7b30','#f6bf2a','#e2381f','#ffffff','#5cc9e2'];
+const confetti=()=>{const cols=['#8a5a16','#ff7b30','#f6bf2a','#e2381f','#ffffff','#5cc9e2'];
   const mk=i=>({x:R(0,W),y:i?R(-H,H):-20,w:R(6,11),h:R(3,6),vy:R(1.2,2.6),vx:R(-.6,.6),r:R(0,6),vr:R(-.12,.12),c:cols[Math.floor(Math.random()*cols.length)]});
   const ps=Array.from({length:N(90)},(_,i)=>mk(true));
   return()=>{for(const p of ps){p.y+=p.vy*K;p.x+=(p.vx+Math.sin(p.y*.02)*.4)*K;p.r+=p.vr*K;if(p.y>H+20)Object.assign(p,mk(false));
@@ -61,7 +61,7 @@ const make={
   easter:()=>fallers([emoji('🥚'),emoji('🐣'),emoji('🌷'),emoji('🐰'),emoji('🌼')],22,{vy:[.5,1.2],sz:[20,34],sway:.9,spin:.02}),
   hearts:()=>fallers([emoji('❤️'),emoji('💕'),emoji('💗')],22,{vy:[.5,1.1],sz:[16,30],sway:.8,spin:.015,up:true,alpha:[.6,.9]}),
   leaves:()=>fallers([emoji('🍂'),emoji('🍁'),emoji('🍃')],26,{vy:[.6,1.4],sz:[18,32],sway:1.6,spin:.04}),
-  embers:()=>fallers([glow('255,123,48'),glow('255,170,60'),glow('52,227,211')],60,{vy:[.4,1.1],sz:[4,10],sway:.5,spin:0,up:true,alpha:[.5,.95]}),
+  embers:()=>fallers([glow('255,123,48'),glow('255,170,60'),glow('138,90,22')],60,{vy:[.4,1.1],sz:[4,10],sway:.5,spin:0,up:true,alpha:[.5,.95]}),
   fireworks,confetti,
 };
 if(!make[cfg.type]){btn.remove();cv.remove();return}

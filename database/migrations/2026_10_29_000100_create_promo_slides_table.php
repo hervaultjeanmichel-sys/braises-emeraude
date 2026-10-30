@@ -18,7 +18,7 @@ return new class extends Migration
             $t->text('text')->nullable();
             $t->string('image')->nullable();
             $t->string('image_alt')->nullable();
-            $t->string('bg_color', 9)->default('#34e3d3');
+            $t->string('bg_color', 9)->default('#8a5a16');
             $t->string('cta_label')->nullable();
             $t->string('cta_url')->nullable();
             $t->dateTime('starts_at')->nullable();

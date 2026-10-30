@@ -7,7 +7,7 @@
         <div class="gallery" data-gallery>
             <div class="main">
                 @if($images)<img src="{{ media($images[0]) }}" alt="{{ $product->name }}" width="700" height="700" data-gallery-main fetchpriority="high">
-                @else<div style="height:100%;display:grid;place-items:center;color:rgba(52,227,211,.35)"><span style="width:80px">@include('front.partials.icon', ['name' => $product->energy === 'granules' ? 'granules' : 'bois'])</span></div>@endif
+                @else<div style="height:100%;display:grid;place-items:center;color:rgba(138,90,22,.35)"><span style="width:80px">@include('front.partials.icon', ['name' => $product->energy === 'granules' ? 'granules' : 'bois'])</span></div>@endif
             </div>
             @if(count($images) > 1)
                 <div class="thumbs">@foreach($images as $img)<button type="button" class="@if($loop->first) on @endif" data-src="{{ media($img) }}" aria-label="{{ s('product.photo', 'Photo') }} {{ $loop->iteration }}"><img src="{{ media($img) }}" alt="" width="76" height="76" loading="lazy"></button>@endforeach</div>

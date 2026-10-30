@@ -33,7 +33,7 @@ class VisitsChart extends ChartWidget
 
         return [
             'datasets' => [
-                ['label' => 'Visiteurs', 'data' => $days->map(fn ($d) => (int) ($visitors[$d] ?? 0))->all(), 'borderColor' => '#34e3d3', 'backgroundColor' => 'rgba(52,227,211,.15)', 'fill' => true, 'tension' => .3],
+                ['label' => 'Visiteurs', 'data' => $days->map(fn ($d) => (int) ($visitors[$d] ?? 0))->all(), 'borderColor' => '#8a5a16', 'backgroundColor' => 'rgba(138,90,22,.15)', 'fill' => true, 'tension' => .3],
                 ['label' => 'Pages vues', 'data' => $days->map(fn ($d) => (int) ($views[$d] ?? 0))->all(), 'borderColor' => '#ff7b30', 'backgroundColor' => 'rgba(255,123,48,0)', 'tension' => .3],
             ],
             'labels' => $days->map(fn ($d) => \Carbon\Carbon::parse($d)->locale('fr')->isoFormat('dd D'))->all(),

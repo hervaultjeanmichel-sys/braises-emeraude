@@ -29,7 +29,7 @@ const draw=el=>{
     return [m.lat,m.lng];
   });
   // cercles de zone (carte du groupe uniquement) : cadrage d'abord, cercles ensuite (Leaflet exige une vue)
-  const pal=['#06756d','#0d8bb5','#ff7b30','#7a5af5'];
+  const pal=['#8a5a16','#0d8bb5','#ff7b30','#7a5af5'];
   const zoned=markers.length>1?markers.filter(m=>m.radius>0):[];
   if(pts.length===1)map.setView(pts[0],14);
   else if(zoned.length){
