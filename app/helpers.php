@@ -35,10 +35,19 @@ if (! function_exists('menu')) {
     /** Menu éditable dans Réglages : une ligne « Libellé|/url/ » par entrée. @return array<int, array{label:string,url:string}> */
     function menu(string $key, string $default = ''): array
     {
+        // Pages hors ligne : leur lien disparaît automatiquement des menus.
+        static $offline = null;
+        $offline ??= \App\Models\Page::where('is_published', false)->get(['slug'])
+            ->map(fn ($p) => $p->url())->all();
+
         $items = [];
         foreach (preg_split('/\R/', (string) s($key, $default)) as $line) {
             if (str_contains($line, '|')) {
                 [$label, $url] = array_map('trim', explode('|', $line, 2));
+                $path = '/'.trim((string) parse_url($url, PHP_URL_PATH), '/').'/';
+                if (in_array(str_replace('//', '/', $path), $offline, true)) {
+                    continue;
+                }
                 $items[] = ['label' => $label, 'url' => $url];
             }
         }
