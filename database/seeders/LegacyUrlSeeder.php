@@ -228,8 +228,7 @@ class LegacyUrlSeeder extends Seeder
                     'text' => 'De la Côte d\'Émeraude à la métropole rennaise, chaque showroom expose ses poêles en fonctionnement et dispose de sa propre équipe de pose et d\'entretien.',
                     'link_label' => 'Voir le magasin de :magasin']],
                 ['type' => 'categories', 'data' => ['eyebrow' => 'Nos univers', 'title' => 'Choisissez votre *flamme*', 'more_label' => 'Découvrir →', 'light' => true]],
-                ['type' => 'quote', 'data' => ['big' => 'Avec Braises Émeraude, vous serez *au poil* devant votre poêle.', 'small' => '(Ou à poil, on ne juge pas.)',
-                    'hand' => 'Le feu, c\'est la vie !', 'image' => '/img/campagne-chien.webp', 'image_alt' => 'Golden retriever heureux devant un poêle à bois allumé']],
+                ['type' => 'quote', 'data' => ['big' => 'Avec Braises Émeraude, vous serez *au poil* devant votre poêle.', 'hand' => 'Le feu, c\'est la vie !', 'image' => '/img/campagne-chien.webp', 'image_alt' => 'Golden retriever heureux devant un poêle à bois allumé']],
                 ['type' => 'marquee', 'data' => ['aria' => 'Nos marques']],
                 ['type' => 'steps', 'data' => ['eyebrow' => 'Notre méthode', 'title' => 'De la visite au *premier feu*', 'items' => [
                     ['title' => 'Visite technique', 'text' => 'Un technicien vient chez vous : conduit, surface, isolation, emplacement idéal.'],

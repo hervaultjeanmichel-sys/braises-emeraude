@@ -1,13 +1,15 @@
 {{-- Page univers (/chauffage-bois/, /cuisson/…) : texte de la page + cartes catégories + produits de la catégorie liée. --}}
 @extends('layouts.front')
-@php($linked = \App\Models\ProductCategory::published()->whereIn('path', [$page->slug, rtrim($page->slug, 's'), str_replace('granules', 'granule', $page->slug)])->first())
+{{-- Catégories choisies sur la page (admin › Catégories de la page, ex. /inserts/) : prioritaires sur la catégorie liée par le slug --}}
+@php($chosen = !empty($page->category_ids) ? \App\Models\ProductCategory::published()->whereIn('id', $page->category_ids)->orderByRaw('parent_id IS NOT NULL')->orderBy('sort')->orderBy('id')->get() : collect())
+@php($linked = $chosen->isEmpty() ? \App\Models\ProductCategory::published()->whereIn('path', [$page->slug, rtrim($page->slug, 's'), str_replace('granules', 'granule', $page->slug)])->first() : null)
 {{-- Sans catégorie liée (/chauffage/) : les catégories cochées « Carte sur la page /chauffage/ » dans l'admin --}}
-@php($cats = $linked ? $linked->children()->published()->get() : \App\Models\ProductCategory::published()->where('on_heating_page', true)->orderByRaw('parent_id IS NOT NULL')->orderBy('sort')->orderBy('id')->get())
-{{-- Catégories couvertes par la page : la catégorie liée, sinon tout le chauffage (hors cuisson) --}}
-@php($catIds = $linked ? $linked->selfAndChildrenIds() : \App\Models\ProductCategory::published()->where('path', 'not like', 'cuisson%')->pluck('id')->all())
+@php($cats = $chosen->isNotEmpty() ? $chosen : ($linked ? $linked->children()->published()->get() : \App\Models\ProductCategory::published()->where('on_heating_page', true)->orderByRaw('parent_id IS NOT NULL')->orderBy('sort')->orderBy('id')->get()))
+{{-- Catégories couvertes par la page : choisies, sinon la catégorie liée, sinon tout le chauffage (hors cuisson) --}}
+@php($catIds = $chosen->isNotEmpty() ? $chosen->flatMap->selfAndChildrenIds()->unique()->values()->all() : ($linked ? $linked->selfAndChildrenIds() : \App\Models\ProductCategory::published()->where('path', 'not like', 'cuisson%')->pluck('id')->all()))
 @php($products = \App\Models\Product::published()->whereIn('product_category_id', $catIds)->with('brand')->orderByDesc('is_featured')->inRandomOrder(crc32($page->slug))->limit(8)->get())
 {{-- Marques : toutes les marques publiées sur /chauffage/, sinon celles qui ont des modèles dans la catégorie --}}
-@php($pageBrands = $linked
+@php($pageBrands = ($linked || $chosen->isNotEmpty())
     ? \App\Models\Brand::published()->withCount(['products' => fn ($q) => $q->published()->whereIn('product_category_id', $catIds)])->get()->where('products_count', '>', 0)->sortBy('sort')
     : \App\Models\Brand::published()->withCount(['products' => fn ($q) => $q->published()])->orderBy('sort')->orderBy('name')->get())
 @section('content')

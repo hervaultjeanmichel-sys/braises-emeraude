@@ -18,6 +18,7 @@ class Page extends Model
         return [
             'sections' => 'array',
             'faq' => 'array',
+            'category_ids' => 'array',
             'in_sitemap' => 'boolean',
             'is_published' => 'boolean',
         ];

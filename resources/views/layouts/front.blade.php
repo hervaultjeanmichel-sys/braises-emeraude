@@ -44,7 +44,7 @@
     <div class="wrap">
         <a class="logo" href="/" aria-label="{{ s('group.name', 'Braises Émeraude') }} — {{ s('nav.home', 'accueil') }}"><img src="{{ media(s('group.logo', '/img/logo.webp')) }}" alt="{{ s('group.logo_alt', 'Braises Émeraude, poêles à bois et à granulés') }}" width="371" height="130"></a>
         <nav class="nav" aria-label="{{ s('nav.aria', 'Navigation principale') }}">
-            @foreach(menu('menu.main', "Nos magasins|/#groupe\nChauffage|/chauffage/\nCuisson|/cuisson/\nAides & financement|/aides-financement/\nRéalisations|/nos-realisations/\nContact|/contact/") as $item)
+            @foreach(menu('menu.main', "Nos magasins|/#groupe\nChauffage|/chauffage/\nInserts|/inserts/\nCuisson|/cuisson/\nAides & financement|/aides-financement/\nRéalisations|/nos-realisations/\nContact|/contact/") as $item)
                 <a href="{{ $item['url'] }}">{{ $item['label'] }}</a>
             @endforeach
             @foreach($layoutStores->where('is_new', true) as $store)
@@ -62,7 +62,7 @@
     </div>
     <nav class="mnav" id="mnav" aria-label="{{ s('nav.aria_mobile', 'Menu mobile') }}">
         @foreach($layoutStores as $store)<a href="{{ $store->url() }}">{{ $store->area_label ?: $store->short_name }}@if($store->is_new) <span class="badge new">{{ $store->badge_label ?: s('label.new', 'Nouveau') }}</span>@endif</a>@endforeach
-        @foreach(menu('menu.main', "Chauffage|/chauffage/\nCuisson|/cuisson/\nAides & financement|/aides-financement/\nContact|/contact/") as $item)
+        @foreach(menu('menu.main', "Chauffage|/chauffage/\nInserts|/inserts/\nCuisson|/cuisson/\nAides & financement|/aides-financement/\nContact|/contact/") as $item)
             @unless(str_starts_with($item['url'], '/#'))<a href="{{ $item['url'] }}">{{ $item['label'] }}</a>@endunless
         @endforeach
         <a href="/devis/">{{ s('cta.quote', 'Devis gratuit') }}</a>

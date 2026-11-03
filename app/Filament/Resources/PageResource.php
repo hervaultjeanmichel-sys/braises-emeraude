@@ -34,10 +34,14 @@ class PageResource extends Resource
                 Forms\Components\TextInput::make('title')->label('Titre (admin, menu)')->required(),
                 Forms\Components\TextInput::make('slug')->label('Slug (URL)')->required()->unique(ignoreRecord: true)
                     ->helperText('« / » pour l\'accueil. Sinon : chauffage-bois, showroom…'),
-                Forms\Components\Select::make('template')->label('Gabarit')->options([
+                Forms\Components\Select::make('template')->label('Gabarit')->live()->options([
                     'home' => 'Accueil Groupe', 'default' => 'Page standard', 'univers' => 'Univers produit',
                     'contact' => 'Contact', 'realisations' => 'Réalisations', 'legal' => 'Mentions / légal',
                 ])->default('default')->required(),
+                Forms\Components\Select::make('category_ids')->label('Catégories de la page (gabarit Univers)')->multiple()
+                    ->options(fn () => \App\Models\ProductCategory::orderBy('path')->get()->mapWithKeys(fn ($c) => [$c->id => $c->path]))
+                    ->helperText('Vide = catégorie déduite du slug. Ex. /inserts/ : inserts bois + inserts granulés.')
+                    ->visible(fn (Forms\Get $get) => $get('template') === 'univers')->live(),
                 Forms\Components\Toggle::make('in_sitemap')->label('Dans le sitemap')->default(true),
                 Forms\Components\FileUpload::make('hero_image')->label('Image d\'en-tête')->image()->directory('pages'),
             ]),

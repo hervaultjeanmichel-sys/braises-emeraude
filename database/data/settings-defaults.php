@@ -111,6 +111,7 @@ Confidentialité|/politique-de-confidentialite/
 Plan du site|/sitemap.xml'],
     "menu.main" => ['group' => "header", 'value' => 'Nos magasins|/#groupe
 Chauffage|/chauffage/
+Inserts|/inserts/
 Cuisson|/cuisson/
 Aides & financement|/aides-financement/
 Réalisations|/nos-realisations/

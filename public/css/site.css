@@ -149,6 +149,7 @@ section{position:relative}
 .parallax blockquote{margin:0;max-width:36rem;display:grid;gap:1.2rem}
 .parallax blockquote p.big{font-family:var(--f-display);font-size:clamp(2.2rem,5vw,4rem);line-height:1.05}
 .parallax blockquote p.small{font-family:var(--f-display);font-style:italic;font-size:1.4rem;color:var(--muted)}
+.parallax blockquote p.big em{color:#fff;text-shadow:0 2px 14px rgba(43,30,12,.35)}
 .hand{font-family:var(--f-hand);font-size:clamp(2rem,4vw,2.8rem);color:var(--emerald);transform:rotate(-4deg);display:inline-block}
 .scribble{display:block;width:150px;height:14px;color:var(--emerald)}
 
