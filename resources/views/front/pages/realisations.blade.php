@@ -40,7 +40,7 @@
                                     @if($photos->count() > 1)<span class="real-count">{{ $photos->count() }} {{ s('real.photos', 'photos') }}</span>@endif
                                 </button>
                             @endif
-                            <div class="real-body">
+                            <div class="real-body @unless($r->city) no-city @endunless">
                                 @if($r->city)<p class="real-city">@include('front.partials.icon', ['name' => 'pin'])<span>{{ $r->city }}</span></p>@endif
                                 <h3>{{ $r->title }}</h3>
                                 @if($r->store?->short_name)<p class="real-meta">{{ s('real.store_prefix', 'magasin de') }} {{ $r->store->short_name }}</p>@endif
