@@ -1,7 +1,9 @@
 {{-- Rendu des sections éditables (Builder Filament) — balisage repris de la maquette Contrastes.
      Le gabarit est un moteur de rendu : tous les textes viennent de $sections, des magasins, catégories et marques en base. --}}
 @php($stores = $stores ?? \App\Models\Store::published()->orderBy('sort')->get())
-@php($categories = $categories ?? \App\Models\ProductCategory::published()->whereNull('parent_id')->orderBy('sort')->get())
+{{-- Cartes univers de l'accueil : catégories cochées « Carte sur l'accueil » (admin), sinon les catégories principales --}}
+@php($categories = $categories ?? \App\Models\ProductCategory::published()->where('on_home', true)->orderByRaw('parent_id IS NOT NULL')->orderBy('sort')->orderBy('id')->get())
+@php($categories = $categories->isNotEmpty() ? $categories : \App\Models\ProductCategory::published()->whereNull('parent_id')->orderBy('sort')->get())
 @php($brands = $brands ?? \App\Models\Brand::published()->orderBy('sort')->get())
 @php($page = $page ?? null)
 @php($romans = ['I', 'II', 'III', 'IV', 'V'])
@@ -96,7 +98,7 @@
                         @foreach($categories as $cat)
                             <a class="uni" href="{{ $cat->url() }}" data-hover>
                                 <span class="ico">@include('front.partials.icon', ['name' => $cat->icon ?: 'bois'])</span>
-                                <h3>{{ $cat->name }}</h3>
+                                <h3>{{ $cat->card_title ?: $cat->name }}</h3>
                                 @if($cat->card_text ?: $cat->intro)<p>{{ $cat->card_text ?: \Illuminate\Support\Str::limit((string) $cat->intro, 140) }}</p>@endif
                                 @if($line = $cat->brandsLine())<span class="brands">{{ $line }}</span>@endif
                                 <span class="more">{{ $d['more_label'] ?? s('label.discover', 'Découvrir →') }}</span>

@@ -41,6 +41,7 @@ class ProductCategoryResource extends Resource
                 Forms\Components\Select::make('icon')->label('Icône (carte univers)')->options(['bois' => 'Flamme bois', 'granules' => 'Poêle granulés', 'mixte' => 'Double flamme', 'cuisson' => 'Cuisson']),
                 Forms\Components\TextInput::make('card_title')->label('Titre de la carte univers')->helperText('Vide = nom de la catégorie.'),
                 Forms\Components\Toggle::make('on_heating_page')->label('Carte sur la page /chauffage/'),
+                Forms\Components\Toggle::make('on_home')->label('Carte sur l\'accueil (univers produits)'),
                 Forms\Components\Textarea::make('card_text')->label('Texte de la carte univers')->rows(2)->maxLength(400),
                 Forms\Components\TextInput::make('brands_line')->label('Ligne des marques')->helperText('Vide = calculée automatiquement depuis le catalogue.'),
             ]),

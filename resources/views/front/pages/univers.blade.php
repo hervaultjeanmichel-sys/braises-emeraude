@@ -6,7 +6,10 @@
 {{-- Catégories couvertes par la page : la catégorie liée, sinon tout le chauffage (hors cuisson) --}}
 @php($catIds = $linked ? $linked->selfAndChildrenIds() : \App\Models\ProductCategory::published()->where('path', 'not like', 'cuisson%')->pluck('id')->all())
 @php($products = \App\Models\Product::published()->whereIn('product_category_id', $catIds)->with('brand')->orderByDesc('is_featured')->inRandomOrder(crc32($page->slug))->limit(8)->get())
-@php($pageBrands = \App\Models\Brand::published()->withCount(['products' => fn ($q) => $q->published()->whereIn('product_category_id', $catIds)])->get()->where('products_count', '>', 0)->sortBy('sort'))
+{{-- Marques : toutes les marques publiées sur /chauffage/, sinon celles qui ont des modèles dans la catégorie --}}
+@php($pageBrands = $linked
+    ? \App\Models\Brand::published()->withCount(['products' => fn ($q) => $q->published()->whereIn('product_category_id', $catIds)])->get()->where('products_count', '>', 0)->sortBy('sort')
+    : \App\Models\Brand::published()->withCount(['products' => fn ($q) => $q->published()])->orderBy('sort')->orderBy('name')->get())
 @section('content')
     @include('front.partials.hero', ['eyebrow' => $page->eyebrow, 'h1' => $page->h1 ?: $page->title, 'intro' => $page->intro,
         'actions' => '<a class="btn btn-main" href="/devis/" data-hover>'.e(s('cta.quote', 'Devis gratuit')).'</a>'.($linked ? '<a class="btn btn-ghost" href="'.e($linked->url()).'" data-hover>'.e(s('cta.see_catalogue', 'Voir tout le catalogue')).'</a>' : '')])
@@ -45,7 +48,7 @@
                 @foreach($pageBrands as $b)
                     <a class="brand-card" href="{{ $b->url() }}" data-hover>
                         @if($b->logo)<img src="{{ media($b->logo) }}" alt="{{ $b->name }}" loading="lazy" height="40">@else<strong>{{ $b->name }}</strong>@endif
-                        <span>{{ trans_choice(s('univers.brands_count', ':count modèle|:count modèles'), $b->products_count, ['count' => $b->products_count]) }}@if($b->country) · {{ $b->country }}@endif</span>
+                        <span>@if($b->products_count){{ trans_choice(s('univers.brands_count', ':count modèle|:count modèles'), $b->products_count, ['count' => $b->products_count]) }}@if($b->country) · @endif @endif{{ $b->country }}</span>
                     </a>
                 @endforeach
             </div>
