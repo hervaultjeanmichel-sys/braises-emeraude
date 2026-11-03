@@ -32,7 +32,7 @@ class AdminPanelProvider extends PanelProvider
             ->login()
             ->brandName('Braises Émeraude')
             ->colors([
-                'primary' => Color::hex('#8a5a16'),
+                'primary' => Color::hex('#aba396'),
                 'warning' => Color::hex('#ff7b30'),
             ])
             ->darkMode(true)

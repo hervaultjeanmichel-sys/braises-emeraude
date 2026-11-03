@@ -42,7 +42,7 @@
 
 <header class="top" id="top">
     <div class="wrap">
-        <a class="logo" href="/" aria-label="{{ s('group.name', 'Braises Émeraude') }} — {{ s('nav.home', 'accueil') }}"><img src="{{ media(s('group.logo', '/img/logo.webp')) }}" alt="{{ s('group.logo_alt', 'Braises Émeraude, poêles à bois et à granulés') }}" width="324" height="130"></a>
+        <a class="logo" href="/" aria-label="{{ s('group.name', 'Braises Émeraude') }} — {{ s('nav.home', 'accueil') }}"><img src="{{ media(s('group.logo', '/img/logo.webp')) }}" alt="{{ s('group.logo_alt', 'Braises Émeraude, poêles à bois et à granulés') }}" width="371" height="130"></a>
         <nav class="nav" aria-label="{{ s('nav.aria', 'Navigation principale') }}">
             @foreach(menu('menu.main', "Nos magasins|/#groupe\nChauffage|/chauffage/\nCuisson|/cuisson/\nAides & financement|/aides-financement/\nRéalisations|/nos-realisations/\nContact|/contact/") as $item)
                 <a href="{{ $item['url'] }}">{{ $item['label'] }}</a>
@@ -77,7 +77,7 @@
     <div class="wrap">
         <div class="foot">
             <div style="display:grid;gap:1rem;align-content:start">
-                <img src="{{ media(s('group.logo', '/img/logo.webp')) }}" alt="{{ s('group.name', 'Braises Émeraude') }}" width="324" height="130" style="height:48px;width:auto" loading="lazy">
+                <img src="{{ media(s('group.logo', '/img/logo.webp')) }}" alt="{{ s('group.name', 'Braises Émeraude') }}" width="371" height="130" style="height:48px;width:auto" loading="lazy">
                 <p>{{ s('footer.text', 'Vente, installation et entretien de poêles à bois, à granulés et mixtes en Ille-et-Vilaine.') }}</p>
             </div>
             @foreach($layoutStores as $store)

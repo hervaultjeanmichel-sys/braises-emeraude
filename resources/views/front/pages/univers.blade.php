@@ -1,7 +1,8 @@
 {{-- Page univers (/chauffage-bois/, /cuisson/…) : texte de la page + cartes catégories + produits de la catégorie liée. --}}
 @extends('layouts.front')
 @php($linked = \App\Models\ProductCategory::published()->whereIn('path', [$page->slug, rtrim($page->slug, 's'), str_replace('granules', 'granule', $page->slug)])->first())
-@php($cats = $linked ? $linked->children()->published()->get() : \App\Models\ProductCategory::published()->whereNull('parent_id')->orderBy('sort')->get())
+{{-- Sans catégorie liée (/chauffage/) : les catégories cochées « Carte sur la page /chauffage/ » dans l'admin --}}
+@php($cats = $linked ? $linked->children()->published()->get() : \App\Models\ProductCategory::published()->where('on_heating_page', true)->orderByRaw('parent_id IS NOT NULL')->orderBy('sort')->orderBy('id')->get())
 {{-- Catégories couvertes par la page : la catégorie liée, sinon tout le chauffage (hors cuisson) --}}
 @php($catIds = $linked ? $linked->selfAndChildrenIds() : \App\Models\ProductCategory::published()->where('path', 'not like', 'cuisson%')->pluck('id')->all())
 @php($products = \App\Models\Product::published()->whereIn('product_category_id', $catIds)->with('brand')->orderByDesc('is_featured')->inRandomOrder(crc32($page->slug))->limit(8)->get())
@@ -16,7 +17,7 @@
                 @foreach($cats as $cat)
                     <a class="uni" href="{{ $cat->url() }}" data-hover>
                         <span class="ico">@include('front.partials.icon', ['name' => $cat->icon ?: ($linked->icon ?? 'bois')])</span>
-                        <h3>{{ $cat->name }}</h3>
+                        <h3>{{ $cat->card_title ?: $cat->name }}</h3>
                         @if($cat->card_text ?: $cat->intro)<p>{{ $cat->card_text ?: \Illuminate\Support\Str::limit((string) $cat->intro, 140) }}</p>@endif
                         @if($line = $cat->brandsLine())<span class="brands">{{ $line }}</span>@endif
                         <span class="more">{{ s('label.discover', 'Découvrir →') }}</span>

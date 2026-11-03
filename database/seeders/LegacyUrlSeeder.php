@@ -64,7 +64,7 @@ class LegacyUrlSeeder extends Seeder
             'card_text' => 'Poêles à bois et à granulés pour Dinard, Saint-Lunaire, Saint-Briac et toute la rive gauche de la Rance.',
         ]);
         $this->upsert(Store::class, ['slug' => 'poele-a-bois-granules-saint-malo'], [
-            'name' => 'Braises Émeraude Saint-Malo · Baguer-Pican', 'short_name' => 'Saint-Malo', 'area_label' => 'Saint-Malo · Baguer-Pican',
+            'name' => 'Braises Émeraude Saint-Malo · Baguer-Morvan', 'short_name' => 'Saint-Malo', 'area_label' => 'Saint-Malo · Baguer-Morvan',
             'address' => 'La Hertaudière', 'postal_code' => '35120', 'city' => 'Baguer-Morvan', 'phone' => '02 23 15 28 66',
             'opening_hours' => [...$mf('09:00', '12:00', '14:00', '18:00'), ['day' => 6, 'opens' => '09:00', 'closes' => '12:30']],
             'served_communes' => ['Saint-Malo', 'Dol-de-Bretagne', 'Cancale', 'Combourg'],

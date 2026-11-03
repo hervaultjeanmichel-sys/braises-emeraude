@@ -616,7 +616,7 @@ HTML,
 </ol>
 
 <h2>Les communes que nous servons</h2>
-<p>Dinard, Pleurtuit, Saint-Lunaire, Saint-Briac-sur-Mer, La Richardais, Le Minihic-sur-Rance et, côté Côtes-d'Armor, Lancieux et les communes voisines. Pour Saint-Malo, Cancale et le pays de Dol, notre showroom de <a href="/poele-a-bois-granules-saint-malo/">Saint-Malo · Baguer-Pican</a> prend le relais ; pour la métropole, rendez-vous à <a href="/poele-a-bois-granules-rennes/">Rennes</a>.</p>
+<p>Dinard, Pleurtuit, Saint-Lunaire, Saint-Briac-sur-Mer, La Richardais, Le Minihic-sur-Rance et, côté Côtes-d'Armor, Lancieux et les communes voisines. Pour Saint-Malo, Cancale et le pays de Dol, notre showroom de <a href="/poele-a-bois-granules-saint-malo/">Saint-Malo · Baguer-Morvan</a> prend le relais ; pour la métropole, rendez-vous à <a href="/poele-a-bois-granules-rennes/">Rennes</a>.</p>
 
 <h2>Un projet de poêle à Dinard ?</h2>
 <p>Passez nous voir au showroom ou <a href="/devis/">demandez votre devis gratuit</a> en ligne : votre demande arrive directement à l'équipe de Dinard · Pleurtuit.</p>

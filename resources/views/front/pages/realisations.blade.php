@@ -36,13 +36,14 @@
                         <article class="real reveal @if($r->is_featured) is-featured @endif" data-tags="store-{{ $r->store_id }} energy-{{ $r->energy }}">
                             @if($photos->isNotEmpty())
                                 <button type="button" class="real-photo" data-lightbox='@json($photos)' data-title="{{ $r->title }}" aria-label="{{ s('real.see_photos', 'Voir les photos') }} : {{ $r->title }}">
-                                    <img src="{{ $photos[0] }}" alt="{{ $r->title }}" width="800" height="600" loading="lazy" decoding="async">
+                                    <img src="{{ $photos[0] }}" alt="{{ $r->title }}" width="600" height="600" loading="lazy" decoding="async">
                                     @if($photos->count() > 1)<span class="real-count">{{ $photos->count() }} {{ s('real.photos', 'photos') }}</span>@endif
                                 </button>
                             @endif
                             <div class="real-body">
-                                <p class="real-meta">{{ collect([$r->city, $r->store?->short_name ? s('real.store_prefix', 'magasin de').' '.$r->store->short_name : null])->filter()->implode(' · ') }}</p>
+                                @if($r->city)<p class="real-city">@include('front.partials.icon', ['name' => 'pin'])<span>{{ $r->city }}</span></p>@endif
                                 <h3>{{ $r->title }}</h3>
+                                @if($r->store?->short_name)<p class="real-meta">{{ s('real.store_prefix', 'magasin de') }} {{ $r->store->short_name }}</p>@endif
                                 @if($r->product)<p class="real-product"><a href="{{ $r->product->url() }}">{{ $r->product->name }}</a></p>@endif
                                 @if($r->hasPublicReview())
                                     <blockquote class="real-review">
