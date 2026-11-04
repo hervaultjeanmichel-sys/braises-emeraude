@@ -20,7 +20,7 @@ use Illuminate\Support\Facades\Http;
  */
 class AuditLegacyUrls extends Command
 {
-    protected $signature = 'braises:audit-urls {base} {--user=} {--pass=} {--old=https://www.braisesemeraude.com} {--extra=} {--no-images}';
+    protected $signature = 'braises:audit-urls {base} {--user=} {--pass=} {--old=https://www.braisesemeraude.com} {--extra=} {--no-images} {--ip= : force l\'adresse IP du nouveau site (test depuis le serveur lui-même)}';
 
     protected $description = 'Compare toutes les URLs du site WordPress en ligne avec le nouveau site';
 
@@ -72,7 +72,16 @@ class AuditLegacyUrls extends Command
         // Identifiants du verrou préprod : options, sinon ceux du .env
         $user = $this->option('user') ?: config('braises.preprod.user');
         $pass = $this->option('pass') ?: config('braises.preprod.password');
+        $resolve = [];
+        if ($ip = $this->option('ip')) {
+            $host = (string) parse_url($base, PHP_URL_HOST);
+            foreach (array_unique([$host, preg_replace('/^www\./', '', $host), 'www.'.preg_replace('/^www\./', '', $host)]) as $h) {
+                $resolve[] = $h.':443:'.$ip;
+                $resolve[] = $h.':80:'.$ip;
+            }
+        }
         $client = fn () => Http::timeout(20)->withoutRedirecting()
+            ->when($resolve, fn ($h) => $h->withOptions(['curl' => [CURLOPT_RESOLVE => $resolve]]))
             ->when($user, fn ($h) => $h->withBasicAuth((string) $user, (string) $pass));
 
         $ko = [];
