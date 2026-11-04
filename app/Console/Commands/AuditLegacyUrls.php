@@ -143,13 +143,23 @@ class AuditLegacyUrls extends Command
 
     private function fetch(string $url): string
     {
-        try {
-            $res = Http::timeout(30)->withUserAgent('BraisesEmeraude-audit/1.0')->get($url);
+        // Lecture seule du plan du site public : si le certificat SSL de l'ancien site est invalide
+        // (constaté le 04/11/2026 : certificat lb2.levillage.org), on relit sans vérification.
+        foreach ([false, true] as $insecure) {
+            try {
+                $req = Http::timeout(30)->withUserAgent('BraisesEmeraude-audit/1.0');
+                $res = ($insecure ? $req->withoutVerifying() : $req)->get($url);
+                if ($insecure) {
+                    $this->warn('Certificat SSL invalide sur '.parse_url($url, PHP_URL_HOST).' : lecture sans vérification');
+                }
 
-            return $res->ok() ? $res->body() : '';
-        } catch (\Throwable) {
-            return '';
+                return $res->ok() ? $res->body() : '';
+            } catch (\Throwable) {
+                continue;
+            }
         }
+
+        return '';
     }
 
     /** @return string[] */
