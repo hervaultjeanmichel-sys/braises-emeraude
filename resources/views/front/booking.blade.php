@@ -63,7 +63,7 @@
                     </div>
                     <div class="field"><label for="b-msg">{{ s('booking.message', 'Votre projet en quelques mots (facultatif)') }}</label><textarea id="b-msg" name="message" rows="3">{{ old('message') }}</textarea></div>
                     <label class="consent"><input type="checkbox" name="consent" value="1" required @checked(old('consent'))><span>{{ s('booking.consent', 'J’accepte que Braises Émeraude utilise ces informations pour organiser ce rendez-vous. Elles ne sont jamais transmises à des tiers.') }}</span></label>
-                    <p class="hint">{{ s('booking.pending_note', 'Votre rendez-vous sera confirmé par notre équipe : vous recevez un e-mail dès sa validation.') }}</p>
+                    <p class="hint bk-pending">{{ s('booking.pending_note', 'Votre rendez-vous sera confirmé par notre équipe : vous recevez un e-mail dès sa validation.') }}</p>
                     <button class="btn btn-main" type="submit" data-hover>{{ s('booking.submit', 'Demander ce rendez-vous') }}</button>
                 </fieldset>
             </form>

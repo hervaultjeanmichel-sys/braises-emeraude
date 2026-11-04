@@ -2,12 +2,14 @@
 @php($open = $store->isOpenNow())
 @php($today = now('Europe/Paris')->dayOfWeekIso)
 @php($mapUrl = $store->directionsUrl())
+{{-- Pas de devis en magasin : le devis passe toujours par la visite d'un technicien (JM, 04/11/2026) --}}
+@php($visitUrl = \App\Support\Booking::for($store)->isEnabled() ? '/rendez-vous/?magasin='.$store->id : '/devis/?magasin='.$store->id)
 @section('content')
     @include('front.partials.hero', [
         'eyebrow' => $store->eyebrow ?: ($store->region_label ?: $store->area_label),
         'h1' => $store->h1 ?: $store->name,
         'intro' => $store->intro,
-        'actions' => '<a class="btn btn-main" href="/devis/?magasin='.$store->id.'" data-hover>'.e(s('cta.quote', 'Devis gratuit')).'</a>'
+        'actions' => '<a class="btn btn-main" href="'.e($visitUrl).'" data-hover>'.e(s('store.cta_visit', 'Devis : visite technique gratuite')).'</a>'
             .($store->phone ? '<a class="btn btn-ghost" href="tel:'.e(tel($store->phone)).'" data-hover>'.e($store->phone).'</a>' : ''),
     ])
 
@@ -43,6 +45,26 @@
             </div>
         </section>
     @endif
+
+    {{-- Showroom ≠ devis : textes modifiables dans Admin › Réglages (store.how_*) --}}
+    <section class="sec store-how" aria-labelledby="how-title">
+        <div class="wrap">
+            <div class="sec-head"><h2 id="how-title">{!! em(s('store.how_title', 'Showroom et devis : *comment ça se passe ?*')) !!}</h2></div>
+            <div class="how-grid">
+                <div class="how-card">
+                    <span class="how-step">1</span>
+                    <h3>{{ str_replace(':ville', $store->short_name, s('store.how_showroom_title', 'Au showroom de :ville')) }}</h3>
+                    <p>{{ s('store.how_showroom_text', 'Venez voir nos poêles et inserts en fonctionnement, comparer les modèles et les finitions, et découvrir les fourchettes de prix. Nos conseillers répondent à toutes vos questions.') }}</p>
+                </div>
+                <div class="how-card is-key">
+                    <span class="how-step">2</span>
+                    <h3>{{ s('store.how_visit_title', 'Votre devis : un technicien vient chez vous') }}</h3>
+                    <p>{{ s('store.how_visit_text', 'Nous ne réalisons pas de devis en magasin. Chaque installation est différente : un technicien se déplace à votre domicile pour contrôler la faisabilité (conduit, emplacement, ventilation) et chiffrer précisément votre projet. La visite est gratuite et sans engagement.') }}</p>
+                    <a class="btn btn-main" href="{{ $visitUrl }}" data-hover>{{ s('store.how_visit_cta', 'Prendre rendez-vous avec un technicien') }}</a>
+                </div>
+            </div>
+        </div>
+    </section>
 
     <section class="content">
         <div class="wrap two-col">

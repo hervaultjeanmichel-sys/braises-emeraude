@@ -571,6 +571,7 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--emerald)
 .bk-slots button.on{background:var(--emerald);border-color:var(--emerald);color:#0a1612}
 .bk-summary{padding:.9rem 1rem;border-radius:12px;background:rgba(171,163,150,.08);border:1px solid rgba(171,163,150,.3)}
 .booking .hint{color:var(--muted);font-size:.88rem}
+.booking .hint.bk-pending{color:var(--ember);font-weight:700;font-size:.98rem}
 
 .bk-zone{font-size:.85rem;color:var(--emerald);margin-top:.35rem}
 .bk-zone.out{color:#ff9a6b}
@@ -706,3 +707,13 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--emerald)
 .store-map:not(.store-map--dark) .leaflet-popup-content a{color:#aba396}
 .store-map:not(.store-map--dark) .map-pin span{background:#aba396;border-color:#fff;box-shadow:0 0 0 0 rgba(171,163,150,.5)}
 .store-map:not(.store-map--dark) .map-pin b{background:#fff;color:#0a1612;box-shadow:0 4px 14px -4px rgba(0,0,0,.35)}
+
+/* Pages magasins : showroom ≠ devis (04/11/2026) */
+.store-how .how-grid{display:grid;gap:1.2rem;grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
+.store-how .how-card{position:relative;display:grid;gap:.7rem;align-content:start;padding:1.6rem 1.6rem 1.8rem;border:1px solid var(--line);border-radius:20px;background:var(--bg-2)}
+.store-how .how-card.is-key{border-color:var(--ember);box-shadow:0 0 0 1px var(--ember) inset}
+.store-how .how-card h3{font-family:var(--f-display);font-weight:400;font-size:1.45rem;line-height:1.15}
+.store-how .how-card p{color:var(--muted)}
+.store-how .how-card .btn{justify-self:start;margin-top:.4rem}
+.store-how .how-step{display:inline-grid;place-items:center;width:2.2rem;height:2.2rem;border-radius:50%;background:var(--emerald);color:#0a1612;font-weight:700}
+.store-how .is-key .how-step{background:var(--ember)}
