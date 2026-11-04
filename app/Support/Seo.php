@@ -45,7 +45,17 @@ final class Seo
     {
         $suffix = Setting::get('seo.title_suffix', ' · Braises Émeraude');
 
-        return $this->title && ! str_contains($this->title, 'Braises Émeraude') ? $this->title.$suffix : ($this->title ?: 'Braises Émeraude');
+        if (! $this->title) {
+            return 'Braises Émeraude';
+        }
+        // Titles repris de WordPress : « … - Braises Emeraude » (sans accent) → retiré, sinon doublon avec le suffixe
+        $title = trim((string) preg_replace('/\s*[-–|]\s*Braises\s+Emeraudes?\s*$/iu', '', $this->title));
+        if (preg_match('/braises\s+[eé]meraude/iu', $title)) {
+            return $title;
+        }
+
+        // Suffixe de marque seulement s'il tient dans ~65 caractères (au-delà, Google tronque)
+        return mb_strlen($title.$suffix) <= 65 ? $title.$suffix : $title;
     }
 
     public function absolute(string $path): string
