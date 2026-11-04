@@ -32,6 +32,9 @@ Route::get('/rendez-vous/zone', [AppointmentController::class, 'zone'])->middlew
 Route::post('/rendez-vous', [AppointmentController::class, 'store'])->middleware('throttle:6,1')->name('booking.store');
 Route::get('/rendez-vous/merci', [AppointmentController::class, 'thanks'])->name('booking.thanks');
 
+// Anciennes images / PDF WordPress → copies rapatriées (301)
+Route::get('/wp-content/uploads/{path}', \App\Http\Controllers\LegacyMediaController::class)->where('path', '.+')->name('legacy.media');
+
 Route::get('/produit/{slug}', [FrontController::class, 'product'])->name('product');
 Route::get('/categorie-produit/{path}', [FrontController::class, 'category'])->where('path', '[a-z0-9\-/]+')->name('category');
 Route::get('/marque/{slug}', [FrontController::class, 'brand'])->name('brand');
