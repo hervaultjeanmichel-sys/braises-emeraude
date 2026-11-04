@@ -44,8 +44,18 @@ class LegacyUrls
                 abort(410);
             }
 
+            // Chaînes de redirections (A → B → C) : on envoie directement vers la destination finale (SEO : un seul 301)
+            $to = $redirect->to_path;
+            for ($i = 0; $i < 5; $i++) {
+                $next301 = Redirect::where('from_path', Redirect::normalize($to))->where('status_code', '!=', 410)->first();
+                if (! $next301 || $next301->to_path === $to) {
+                    break;
+                }
+                $to = $next301->to_path;
+            }
+
             // RedirectResponse direct : redirect() passe par le générateur d'URL, qui retire le slash final
-            return new RedirectResponse($redirect->to_path, $redirect->status_code);
+            return new RedirectResponse($to, $redirect->status_code);
         }
 
         // 2. Slash final
