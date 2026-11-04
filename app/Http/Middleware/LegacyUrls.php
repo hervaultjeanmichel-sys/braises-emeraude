@@ -38,6 +38,10 @@ class LegacyUrls
             Redirect::normalize($path),
         ]);
         $redirect = Redirect::whereIn('from_path', $candidates)->first();
+        // Une page remise en ligne reprend la main sur sa redirection (ex. /aides-financement/)
+        if ($redirect && ! $qs && \App\Models\Page::published()->where('slug', trim($path, '/'))->exists()) {
+            $redirect = null;
+        }
         if ($redirect) {
             $redirect->increment('hits', 1, ['last_hit_at' => now()]);
             if ($redirect->status_code === 410) {
