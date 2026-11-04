@@ -23,6 +23,10 @@
     RewriteCond %{HTTP_HOST} ^(?:www\.)?(braisesemeraude\.com)$ [NC]
     RewriteRule ^ https://www.%1%{REQUEST_URI} [L,R=301]
 
+    # Anciennes URLs de spam du WordPress piraté (content.php, comment.php…) : 410 Gone
+    RewriteCond %{REQUEST_URI} !^/index\.php
+    RewriteRule \.php$ - [G,L]
+
     # Send Requests To Front Controller...
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_FILENAME} !-f

@@ -148,3 +148,10 @@
 /produit/cuisiniere-a-bois-rizzoli-serie-s/
 /produit/cuisiniere-a-bois-rizzoli-serie-l/
 /produit/cuisiniere-a-bois-rizzoli-serie-zvi/
+/etiquette-produit/miniac-morvan/
+/etiquette-produit/pleudihen/
+/etiquette-produit/poele-a-bois/page/2/
+/etiquette-produit/saint-malo/page/2/
+/etiquette-produit/bois/page/2/
+/author/bubble/
+/author/admin/

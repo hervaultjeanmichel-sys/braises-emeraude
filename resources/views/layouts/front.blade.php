@@ -11,6 +11,7 @@
     @if($seo->description)<meta name="description" content="{{ $seo->description }}">@endif
     <meta name="robots" content="{{ app()->environment('production') ? $seo->robots : 'noindex,nofollow' }}">
     <link rel="canonical" href="{{ $seo->absolute($seo->canonical) }}">
+    @if($gsv = s('seo.google_site_verification', ''))<meta name="google-site-verification" content="{{ trim(preg_replace('/^.*content="([^"]+)".*$/s', '$1', $gsv)) }}">@endif
     <meta property="og:type" content="website">
     <meta property="og:locale" content="fr_FR">
     <meta property="og:site_name" content="{{ s('group.name', 'Braises Émeraude') }}">
