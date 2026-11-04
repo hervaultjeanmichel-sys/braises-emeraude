@@ -131,7 +131,7 @@ section{position:relative}
 /* Univers */
 .univers{display:grid;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:22px;overflow:hidden}
 @media(min-width:700px){.univers{grid-template-columns:repeat(2,1fr)}}
-@media(min-width:1100px){.univers{grid-template-columns:repeat(4,1fr)}}
+@media(min-width:1100px){.univers{grid-template-columns:repeat(3,1fr)}}
 .uni{position:relative;display:grid;gap:1rem;align-content:start;padding:2.2rem 1.8rem 2rem;background:var(--bg);min-height:300px;transition:background .35s;min-width:0}
 .uni:hover{background:var(--bg-2)}
 .uni .ico{width:52px;height:52px;border-radius:14px;display:grid;place-items:center;background:var(--emerald-deep);color:var(--emerald);transition:transform .4s}
@@ -398,7 +398,7 @@ footer{background:#000}
 .product-card{position:relative;display:grid;grid-template-rows:auto 1fr;border-radius:22px;background:var(--bg-2);border:1px solid var(--line);overflow:hidden;transition:border-color .3s,transform .4s cubic-bezier(.2,.7,.2,1)}
 .product-card:hover{border-color:rgba(171,163,150,.45);transform:translateY(-4px)}
 .product-card .ph{aspect-ratio:1;background:#0f1715;display:grid;place-items:center;overflow:hidden}
-.product-card .ph img{width:100%;height:100%;object-fit:contain;transition:transform .6s}
+.product-card .ph img{width:100%;height:100%;object-fit:cover;object-position:center;transition:transform .6s}
 .product-card:hover .ph img{transform:scale(1.05)}
 .product-card .ph svg{width:56px;height:56px;color:rgba(171,163,150,.35)}
 .product-card .body{display:grid;gap:.35rem;padding:1.2rem 1.3rem 1.4rem;align-content:start}
@@ -717,3 +717,20 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--emerald)
 .store-how .how-card .btn{justify-self:start;margin-top:.4rem}
 .store-how .how-step{display:inline-grid;place-items:center;width:2.2rem;height:2.2rem;border-radius:50%;background:var(--emerald);color:#0a1612;font-weight:700}
 .store-how .is-key .how-step{background:var(--ember)}
+
+/* Retours client 04/11/2026 */
+.uni-ph{display:block;margin:-2.2rem -1.8rem .2rem;aspect-ratio:16/10;overflow:hidden;background:#0f1715}
+.uni-ph img{width:100%;height:100%;object-fit:cover;transition:transform .7s ease}
+.uni:hover .uni-ph img{transform:scale(1.06)}
+.uni-ph + .ico{margin-top:-2.6rem;position:relative;z-index:1;box-shadow:0 8px 20px -8px rgba(0,0,0,.6)}
+.rating{font-size:.95rem;padding:.6rem 1.1rem .6rem .6rem;background:var(--emerald);color:#0a1612;border-color:var(--emerald);box-shadow:0 10px 30px -10px rgba(0,0,0,.6)}
+.rating svg{width:26px;height:26px;background:#0a1612;color:var(--emerald)}
+.prose-page strong,.content strong,.real-body strong{color:var(--ember);font-weight:700}
+.bg-light .prose-page strong{color:#c4520f}
+.promo-logo{max-height:46px;width:auto;justify-self:start;background:#fff;padding:.35rem .6rem;border-radius:8px}
+.promo-brand{justify-self:start;font:800 .95rem/1 var(--f-body);letter-spacing:.12em;text-transform:uppercase;background:#fff;color:#0a1612;padding:.45rem .7rem;border-radius:8px}
+.contact-stack{display:grid;gap:3rem;justify-items:center}
+.contact-stack .prose-wide{max-width:64rem;width:100%;text-align:center;justify-items:center}
+.contact-stack .prose-wide ul,.contact-stack .prose-wide ol{text-align:left}
+.contact-stack > form{width:100%;max-width:52rem}
+.prose-page .lead{font-size:1.25rem;line-height:1.5;color:var(--fg)}

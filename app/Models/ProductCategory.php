@@ -62,6 +62,21 @@ class ProductCategory extends Model
             ->orderBy('sort')->limit($max)->pluck('name')->implode(' · ');
     }
 
+    /** Photo de la carte « univers » : image de la catégorie (admin), sinon photo d'un produit mis en avant de la catégorie. */
+    public function cardImage(): ?string
+    {
+        if ($this->image) {
+            return $this->image;
+        }
+
+        return cache()->remember('cat-card-img-'.$this->id, 3600, function () {
+            $product = Product::published()->whereIn('product_category_id', $this->selfAndChildrenIds())
+                ->whereNotNull('images')->orderByDesc('is_featured')->orderBy('id')->first();
+
+            return $product?->mainImage();
+        });
+    }
+
     /** Ids de la catégorie et de ses sous-catégories (2 niveaux). */
     public function selfAndChildrenIds(): array
     {

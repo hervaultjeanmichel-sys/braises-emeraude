@@ -9,6 +9,8 @@
     @endif
     @if($promo->eyebrow || $promo->title || $promo->text || $promo->cta_url)
     <div class="promo-body">
+        @php($promoLogo = $promo->logo ?: $promo->brand?->logo)
+        @if($promoLogo)<img class="promo-logo" src="{{ media($promoLogo) }}" alt="{{ $promo->brand?->name ?? '' }}" loading="lazy">@elseif($promo->brand)<span class="promo-brand">{{ $promo->brand->name }}</span>@endif
         @if($promo->eyebrow)<span class="promo-eyebrow">{{ $promo->eyebrow }}</span>@endif
         @if($promo->title)<p class="promo-title" id="promo-title">{{ $promo->title }}</p>@endif
         @if($promo->text)<p class="promo-text">{{ $promo->text }}</p>@endif

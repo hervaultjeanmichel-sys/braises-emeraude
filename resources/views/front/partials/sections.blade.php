@@ -97,6 +97,7 @@
                     <div class="univers reveal">
                         @foreach($categories as $cat)
                             <a class="uni" href="{{ $cat->url() }}" data-hover>
+                                @if($catImg = $cat->cardImage())<span class="uni-ph"><img src="{{ media($catImg) }}" alt="" loading="lazy" decoding="async" width="600" height="400"></span>@endif
                                 <span class="ico">@include('front.partials.icon', ['name' => $cat->icon ?: 'bois'])</span>
                                 <h3>{{ $cat->card_title ?: $cat->name }}</h3>
                                 @if($cat->card_text ?: $cat->intro)<p>{{ $cat->card_text ?: \Illuminate\Support\Str::limit((string) $cat->intro, 140) }}</p>@endif

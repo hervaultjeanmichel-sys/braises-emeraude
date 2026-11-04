@@ -36,6 +36,8 @@ class PromoSlideResource extends Resource
                     Forms\Components\TextInput::make('image_alt')->label('Description de l\'image')->helperText('Pour l\'accessibilité et Google. Si l\'image contient le texte de l\'offre, recopiez-le ici.'),
                     Forms\Components\ColorPicker::make('bg_color')->label('Couleur de fond')->default('#aba396')->required()->helperText('La couleur du texte s\'adapte automatiquement (claire ou foncée).'),
                 ]),
+                Forms\Components\Select::make('brand_id')->label('Logo de marque affiché')->relationship('brand', 'name')->searchable()->preload()->helperText('Ex. MCZ : affiche le logo de la marque (Catalogue › Marques). Sans logo enregistré, son nom s\'affiche en pastille.'),
+                Forms\Components\FileUpload::make('logo')->label('Ou logo spécifique (remplace celui de la marque)')->image()->directory('promos'),
                 Forms\Components\TextInput::make('eyebrow')->label('Sur-titre')->placeholder('Nouveau magasin'),
                 Forms\Components\TextInput::make('title')->label('Titre')->placeholder('Braises Émeraude ouvre à Rennes'),
                 Forms\Components\Textarea::make('text')->label('Texte')->rows(3)->columnSpanFull()->placeholder('500 € de remise sur les appareils MCZ pour l\'ouverture.'),

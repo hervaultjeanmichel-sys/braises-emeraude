@@ -39,6 +39,11 @@ class PromoSlide extends Model
     }
 
     /** Volet en cours pour cette page (le premier dans l'ordre), ou null. */
+    public function brand(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(Brand::class);
+    }
+
     public static function current(bool $isHome): ?self
     {
         if (! Schema::hasTable('promo_slides')) {

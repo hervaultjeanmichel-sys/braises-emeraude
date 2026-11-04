@@ -4,7 +4,8 @@
     @include('front.partials.hero', ['eyebrow' => $page->eyebrow, 'h1' => $page->h1 ?: $page->title, 'intro' => $page->intro,
         'actions' => '<a class="btn btn-main" href="/devis/" data-hover>'.e(s('contact.quote_cta', 'Je veux un devis')).'</a>'])
     <section class="content">
-        <div class="wrap two-col">
+        <div class="wrap contact-stack">
+            @if(trim(strip_tags((string) $page->content)) !== '')<div class="prose-page prose-wide">{!! $page->content !!}</div>@endif
             <form class="card form-grid" method="post" action="/contact/" novalidate>
                 @csrf
                 <h2>{!! em(s('contact.form_title', 'Une question ? *Écrivez-nous*')) !!}</h2>
@@ -22,7 +23,6 @@
                 <label class="consent"><input type="checkbox" name="consent" value="1" required @checked(old('consent'))><span>{{ s('form.consent', 'J\'accepte que Braises Émeraude utilise ces informations pour me recontacter au sujet de mon projet. Elles ne sont jamais transmises à des tiers.') }}</span></label>
                 <button class="btn btn-main" type="submit" data-hover>{{ s('contact.submit', 'Envoyer') }}</button>
             </form>
-            <div class="prose-page">{!! $page->content !!}</div>
         </div>
     </section>
     <section class="sec groupe bg-emerald" id="magasins"><div class="wrap">
