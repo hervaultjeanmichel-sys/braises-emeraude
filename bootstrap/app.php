@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\CanonicalHost;
 use App\Http\Middleware\LegacyUrls;
 use App\Http\Middleware\PreprodLock;
 use App\Http\Middleware\RecordVisit;
@@ -19,6 +20,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->prepend(LegacyUrls::class);
         // Verrou préprod : mot de passe + noindex (premier exécuté, avant tout le reste)
         $middleware->prepend(PreprodLock::class);
+        $middleware->prepend(CanonicalHost::class); // en premier : redirige les autres domaines en production
         // Provenance des visiteurs (UTM, référent) pour qualifier les demandes
         $middleware->web(append: [TrackSource::class, RecordVisit::class]);
         // Mesure d'audience sans cookie (tableau de bord)
