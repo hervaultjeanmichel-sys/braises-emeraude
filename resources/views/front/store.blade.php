@@ -11,6 +11,39 @@
             .($store->phone ? '<a class="btn btn-ghost" href="tel:'.e(tel($store->phone)).'" data-hover>'.e($store->phone).'</a>' : ''),
     ])
 
+    @php($gallery = collect($store->photos ?? [])->filter()->map(fn ($p) => media($p))->values())
+    @if($gallery->isNotEmpty() || $store->video || $store->videoEmbedUrl())
+        <section class="sec bg-mesh has-emblem" id="showroom" aria-labelledby="showroom-title">
+            <div class="wrap">
+                <div class="sec-head"><h2 id="showroom-title">{!! em(str_replace(':ville', $store->short_name, s('store.photos_title_city', 'Le showroom de *:ville*'))) !!}</h2></div>
+                @if($store->video || $store->videoEmbedUrl())
+                    <div class="store-video">
+                        @if($store->video)
+                            <video controls playsinline preload="none" @if($store->video_poster) poster="{{ media($store->video_poster) }}" @endif>
+                                <source src="{{ media($store->video) }}" type="{{ str_ends_with($store->video, '.webm') ? 'video/webm' : 'video/mp4' }}">
+                            </video>
+                        @else
+                            <button type="button" class="video-facade" data-embed="{{ $store->videoEmbedUrl() }}" data-title="{{ $store->name }}" aria-label="{{ s('store.video_play', 'Lire la vidéo du showroom') }}">
+                                @if($thumb = $store->videoThumb())<img src="{{ $thumb }}" alt="" loading="lazy" width="1280" height="720">@endif
+                                <span class="play" aria-hidden="true"></span>
+                            </button>
+                        @endif
+                    </div>
+                @endif
+                @if($gallery->isNotEmpty())
+                    <div class="store-gallery count-{{ min($gallery->count(), 10) }}">
+                        @foreach($gallery->take(10) as $i => $photo)
+                            <button type="button" class="sg-item" data-lightbox='@json($gallery)' data-index="{{ $i }}" data-title="{{ $store->name }}" aria-label="{{ s('store.photo_open', 'Agrandir la photo') }} {{ $i + 1 }}">
+                                <img src="{{ $photo }}" alt="{{ s('store.photo_alt', 'Showroom') }} {{ $store->name }} — {{ $i + 1 }}" loading="lazy" decoding="async" width="800" height="600">
+                            </button>
+                        @endforeach
+                    </div>
+                    @push('scripts')<script src="/js/gallery.js?v={{ config('braises.asset_version') }}" defer></script>@endpush
+                @endif
+            </div>
+        </section>
+    @endif
+
     <section class="content">
         <div class="wrap two-col">
             <div class="prose-page">
@@ -52,39 +85,6 @@
                     <h2 id="carte-title">{!! em(s('store.map_title', 'Venez voir *le feu* en vrai')) !!}</h2>
                 </div>
                 @include('front.partials.store-map', ['mapStores' => [$store], 'currentPage' => true])
-            </div>
-        </section>
-    @endif
-
-    @php($gallery = collect($store->photos ?? [])->filter()->map(fn ($p) => media($p))->values())
-    @if($gallery->isNotEmpty() || $store->video || $store->videoEmbedUrl())
-        <section class="sec bg-mesh has-emblem" id="showroom" aria-labelledby="showroom-title">
-            <div class="wrap">
-                <div class="sec-head"><span class="eyebrow">{{ s('store.photos_eyebrow', 'Le showroom') }}</span><h2 id="showroom-title">{!! em(s('store.photos_title', 'Des poêles *en fonctionnement*')) !!}</h2></div>
-                @if($store->video || $store->videoEmbedUrl())
-                    <div class="store-video">
-                        @if($store->video)
-                            <video controls playsinline preload="none" @if($store->video_poster) poster="{{ media($store->video_poster) }}" @endif>
-                                <source src="{{ media($store->video) }}" type="{{ str_ends_with($store->video, '.webm') ? 'video/webm' : 'video/mp4' }}">
-                            </video>
-                        @else
-                            <button type="button" class="video-facade" data-embed="{{ $store->videoEmbedUrl() }}" data-title="{{ $store->name }}" aria-label="{{ s('store.video_play', 'Lire la vidéo du showroom') }}">
-                                @if($thumb = $store->videoThumb())<img src="{{ $thumb }}" alt="" loading="lazy" width="1280" height="720">@endif
-                                <span class="play" aria-hidden="true"></span>
-                            </button>
-                        @endif
-                    </div>
-                @endif
-                @if($gallery->isNotEmpty())
-                    <div class="store-gallery count-{{ min($gallery->count(), 10) }}">
-                        @foreach($gallery->take(10) as $i => $photo)
-                            <button type="button" class="sg-item" data-lightbox='@json($gallery)' data-index="{{ $i }}" data-title="{{ $store->name }}" aria-label="{{ s('store.photo_open', 'Agrandir la photo') }} {{ $i + 1 }}">
-                                <img src="{{ $photo }}" alt="{{ s('store.photo_alt', 'Showroom') }} {{ $store->name }} — {{ $i + 1 }}" loading="lazy" decoding="async" width="800" height="600">
-                            </button>
-                        @endforeach
-                    </div>
-                    @push('scripts')<script src="/js/gallery.js?v={{ config('braises.asset_version') }}" defer></script>@endpush
-                @endif
             </div>
         </section>
     @endif
