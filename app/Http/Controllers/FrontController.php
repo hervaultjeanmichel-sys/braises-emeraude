@@ -34,7 +34,9 @@ class FrontController extends Controller
             'page' => $page,
             'seo' => $seo,
             'stores' => Store::published()->orderBy('sort')->get(),
-            'categories' => ProductCategory::published()->whereNull('parent_id')->orderBy('sort')->get(),
+            // Cartes univers : catégories cochées « Carte sur l'accueil » (dont les inserts), sinon les catégories principales
+            'categories' => ($onHome = ProductCategory::published()->where('on_home', true)->orderByRaw('parent_id IS NOT NULL')->orderBy('sort')->orderBy('id')->get())->isNotEmpty()
+                ? $onHome : ProductCategory::published()->whereNull('parent_id')->orderBy('sort')->get(),
             'brands' => Brand::published()->orderBy('sort')->get(),
         ]);
     }
