@@ -27,10 +27,24 @@ class AuditLegacyUrls extends Command
     /** @var array<string, string> chemin => source */
     private array $urls = [];
 
+    /** @var string[] CURLOPT_RESOLVE (option --ip) */
+    private array $resolve = [];
+
     public function handle(): int
     {
         $base = rtrim((string) $this->argument('base'), '/');
         $old = rtrim((string) $this->option('old'), '/');
+
+        if ($ip = $this->option('ip')) {
+            foreach ([$base, $old] as $u) {
+                $host = (string) parse_url($u, PHP_URL_HOST);
+                foreach (array_unique([$host, preg_replace('/^www\./', '', $host), 'www.'.preg_replace('/^www\./', '', $host)]) as $h) {
+                    $this->resolve[] = $h.':443:'.$ip;
+                    $this->resolve[] = $h.':80:'.$ip;
+                }
+            }
+            $this->resolve = array_values(array_unique($this->resolve));
+        }
 
         // 1. Plan du site WordPress en ligne (Yoast, sinon sitemap natif WordPress)
         $images = [];
@@ -47,7 +61,7 @@ class AuditLegacyUrls extends Command
             }
         }
         $fromSitemap = count($this->urls);
-        $this->info(count($sitemaps).' plans lus sur le site en ligne : '.$fromSitemap.' pages, '.count($images).' images');
+        $this->info(count($sitemaps).' plans lus sur '.$old.' : '.$fromSitemap.' pages, '.count($images).' images');
 
         // 2. Liste connue + export Search Console
         $known = [];
@@ -72,14 +86,7 @@ class AuditLegacyUrls extends Command
         // Identifiants du verrou préprod : options, sinon ceux du .env
         $user = $this->option('user') ?: config('braises.preprod.user');
         $pass = $this->option('pass') ?: config('braises.preprod.password');
-        $resolve = [];
-        if ($ip = $this->option('ip')) {
-            $host = (string) parse_url($base, PHP_URL_HOST);
-            foreach (array_unique([$host, preg_replace('/^www\./', '', $host), 'www.'.preg_replace('/^www\./', '', $host)]) as $h) {
-                $resolve[] = $h.':443:'.$ip;
-                $resolve[] = $h.':80:'.$ip;
-            }
-        }
+        $resolve = $this->resolve;
         $client = fn () => Http::timeout(20)->withoutRedirecting()
             ->when($resolve, fn ($h) => $h->withOptions(['curl' => [CURLOPT_RESOLVE => $resolve]]))
             ->when($user, fn ($h) => $h->withBasicAuth((string) $user, (string) $pass));
@@ -104,7 +111,8 @@ class AuditLegacyUrls extends Command
                 $target = str_starts_with($loc, 'http') ? $loc : $base.$loc;
                 $finalCode = $client()->get($target)->status();
                 $final = $this->path($target)." ({$finalCode})";
-                $ok = $finalCode === 200;
+                // Une URL du plan du site doit répondre 200 directement (pas de redirection dans un sitemap)
+                $ok = $finalCode === 200 && $source !== 'sitemap';
             }
             $ok ? $okCount++ : $ko[] = "KO  {$code}  {$path}  [{$source}]".($final ? "  → {$final}" : '');
         }
@@ -156,7 +164,8 @@ class AuditLegacyUrls extends Command
         // (constaté le 04/11/2026 : certificat lb2.levillage.org), on relit sans vérification.
         foreach ([false, true] as $insecure) {
             try {
-                $req = Http::timeout(30)->withUserAgent('BraisesEmeraude-audit/1.0');
+                $req = Http::timeout(30)->withUserAgent('BraisesEmeraude-audit/1.0')
+                    ->when($this->resolve, fn ($h) => $h->withOptions(['curl' => [CURLOPT_RESOLVE => $this->resolve]]));
                 $res = ($insecure ? $req->withoutVerifying() : $req)->get($url);
                 if ($insecure) {
                     $this->warn('Certificat SSL invalide sur '.parse_url($url, PHP_URL_HOST).' : lecture sans vérification');
