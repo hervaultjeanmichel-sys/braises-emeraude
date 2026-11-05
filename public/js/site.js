@@ -168,4 +168,17 @@ if (form) {
 }
 
 refresh();
+
+/* ---------- Chiffres clés : compteur animé à l'arrivée à l'écran ---------- */
+const counters = $$('.figure-num[data-count]').filter(el => el.dataset.count !== '');
+if (counters.length && 'IntersectionObserver' in window && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+  const run = el => {
+    const end = parseInt(el.dataset.count, 10) || 0, suf = el.dataset.suffix || '', t0 = performance.now(), d = 1400;
+    const step = t => { const p = Math.min((t - t0) / d, 1); el.textContent = Math.round(end * (1 - Math.pow(1 - p, 3))) + suf; if (p < 1) requestAnimationFrame(step); };
+    requestAnimationFrame(step);
+  };
+  const io = new IntersectionObserver(es => es.forEach(en => { if (en.isIntersecting) { io.unobserve(en.target); run(en.target); } }), {threshold: .6});
+  counters.forEach(el => io.observe(el));
+}
+
 })();

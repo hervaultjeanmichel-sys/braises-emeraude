@@ -74,6 +74,8 @@
     @yield('content')
 </main>
 
+@include('front.partials.key-figures')
+
 <footer>
     <div class="wrap">
         <div class="foot">
