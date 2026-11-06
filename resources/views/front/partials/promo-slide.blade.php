@@ -5,12 +5,12 @@
     <button class="promo-close" type="button" aria-label="{{ s('promo.close', 'Fermer') }}">✕</button>
     @if($promo->image)
         @php($promoImg = $promo->cta_url ? '<a href="'.e($promo->cta_url).'" class="promo-img" tabindex="-1">' : '<div class="promo-img">')
-        {!! $promoImg !!}<img src="{{ media($promo->image) }}" alt="{{ $promo->image_alt ?? '' }}" loading="lazy" decoding="async">{!! $promo->cta_url ? '</a>' : '</div>' !!}
+        {!! $promoImg !!}<img src="{{ media($promo->image) }}" {!! ($d = @getimagesize(storage_path('app/public/'.$promo->image))) ? 'width="'.$d[0].'" height="'.$d[1].'"' : '' !!} alt="{{ $promo->image_alt ?? '' }}" loading="lazy" decoding="async">{!! $promo->cta_url ? '</a>' : '</div>' !!}
     @endif
     @if($promo->eyebrow || $promo->title || $promo->text || $promo->cta_url)
     <div class="promo-body">
         @php($promoLogo = $promo->logo ?: $promo->brand?->logo)
-        @if($promoLogo)<img class="promo-logo" src="{{ media($promoLogo) }}" alt="{{ $promo->brand?->name ?? '' }}" loading="lazy">@elseif($promo->brand)<span class="promo-brand">{{ $promo->brand->name }}</span>@endif
+        @if($promoLogo)<img class="promo-logo" src="{{ media($promoLogo) }}" {!! ($d2 = @getimagesize(storage_path('app/public/'.$promoLogo))) ? 'width="'.$d2[0].'" height="'.$d2[1].'"' : '' !!} alt="{{ $promo->brand?->name ?? '' }}" loading="lazy">@elseif($promo->brand)<span class="promo-brand">{{ $promo->brand->name }}</span>@endif
         @if($promo->eyebrow)<span class="promo-eyebrow">{{ $promo->eyebrow }}</span>@endif
         @if($promo->title)<p class="promo-title" id="promo-title">{{ $promo->title }}</p>@endif
         @if($promo->text)<p class="promo-text">{{ $promo->text }}</p>@endif
