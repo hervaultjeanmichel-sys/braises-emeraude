@@ -21,9 +21,8 @@
     <meta property="og:image" content="{{ $seo->absolute(media($seo->image ?: (s('seo.og_image') ?: '/img/campagne-chien.webp'))) }}">
     <meta name="theme-color" content="#060908">
     <link rel="icon" href="{{ s('group.favicon', '/favicon.ico') }}">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&family=DM+Serif+Display:ital@0;1&family=Manrope:wght@400;500;600;700&display=swap">
+    <link rel="preload" href="/fonts/manrope-latin-var.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="/fonts/dm-serif-display-latin-400.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="stylesheet" href="/css/site.css?v={{ $v }}">
     <script>document.documentElement.classList.replace('no-js','js')</script>
     @foreach($seo->allSchemas() as $schema)
