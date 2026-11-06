@@ -40,6 +40,8 @@
     </div>
 @endif
 
+@include('front.partials.countdown')
+
 <header class="top" id="top">
     <div class="wrap">
         <a class="logo" href="/" aria-label="{{ s('group.name', 'Braises Émeraude') }} — {{ s('nav.home', 'accueil') }}"><img src="{{ media(s('group.logo', '/img/logo.webp')) }}" alt="{{ s('group.logo_alt', 'Braises Émeraude, poêles à bois et à granulés') }}" width="371" height="130"></a>

@@ -4,6 +4,14 @@ declare(strict_types=1);
 
 // Textes du site éditables (Réglages › Textes du site). Généré depuis les gabarits — valeurs par défaut.
 return [
+    "countdown.date" => ['group' => "countdown", 'value' => '2026-11-17 09:00'],
+    "countdown.enabled" => ['group' => "countdown", 'value' => '1'],
+    "countdown.link_label" => ['group' => "countdown", 'value' => 'Découvrir le magasin'],
+    "countdown.link_url" => ['group' => "countdown", 'value' => '/poele-a-bois-granules-rennes/'],
+    "countdown.text" => ['group' => "countdown", 'value' => 'Ouverture de notre magasin de *Rennes* le 17 novembre 2026'],
+    "countdown.unit_days" => ['group' => "countdown", 'value' => 'jours'],
+    "countdown.unit_hours" => ['group' => "countdown", 'value' => 'h'],
+    "countdown.unit_minutes" => ['group' => "countdown", 'value' => 'min'],
     "design.eyebrow_emblem" => ['group' => "design", 'value' => '1'],
     "design.map_theme" => ['group' => "design", 'value' => 'light'],
     "a11y.skip" => ['group' => "general", 'value' => 'Aller au contenu'],

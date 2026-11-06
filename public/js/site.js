@@ -181,4 +181,17 @@ if (counters.length && 'IntersectionObserver' in window && !matchMedia('(prefers
   counters.forEach(el => io.observe(el));
 }
 
+/* ---------- Décompte ouverture (bandeau au-dessus de l'en-tête) ---------- */
+const cd = $('[data-countdown]');
+if (cd) {
+  const end = Date.parse(cd.dataset.countdown), d = $('[data-cd="d"]', cd), h = $('[data-cd="h"]', cd), m = $('[data-cd="m"]', cd);
+  const tick = () => {
+    const left = Math.floor((end - Date.now()) / 60000);
+    if (!(left > 0)) { cd.remove(); return false; }
+    d.textContent = Math.floor(left / 1440); h.textContent = Math.floor(left % 1440 / 60); m.textContent = left % 60;
+    return true;
+  };
+  if (tick()) setInterval(tick, 30000);
+}
+
 })();
