@@ -69,7 +69,7 @@ class ProductResource extends Resource
                 Tables\Columns\TextColumn::make('category.name')->label('Catégorie'),
                 Tables\Columns\TextColumn::make('energy')->label('Énergie')->badge(),
                 Tables\Columns\TextColumn::make('power_kw')->label('kW')->sortable(),
-                Tables\Columns\ToggleColumn::make('is_published')->label('Publié'),
+                Tables\Columns\ToggleColumn::make('is_published')->label('Publié')->onColor('success')->offColor('danger'),
             ])
             ->filters([
                 Tables\Filters\SelectFilter::make('brand_id')->label('Marque')->relationship('brand', 'name'),

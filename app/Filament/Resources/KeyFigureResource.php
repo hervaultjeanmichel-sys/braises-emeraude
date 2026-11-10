@@ -54,7 +54,7 @@ class KeyFigureResource extends Resource
                 Tables\Columns\TextColumn::make('suffix')->label('Après'),
                 Tables\Columns\TextColumn::make('label')->label('Libellé'),
                 Tables\Columns\TextColumn::make('sort')->label('Ordre')->sortable(),
-                Tables\Columns\ToggleColumn::make('is_active')->label('Affiché'),
+                Tables\Columns\ToggleColumn::make('is_active')->label('Affiché')->onColor('success')->offColor('danger'),
             ])
             ->defaultSort('sort', 'asc')
             ->reorderable('sort')

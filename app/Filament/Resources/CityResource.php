@@ -51,7 +51,7 @@ class CityResource extends Resource
                 Tables\Columns\TextColumn::make('name')->label('Ville')->searchable()->sortable(),
                 Tables\Columns\TextColumn::make('store.short_name')->label('Magasin'),
                 Tables\Columns\TextColumn::make('slug')->label('URL')->prefix('/')->suffix('/'),
-                Tables\Columns\ToggleColumn::make('is_published')->label('Publié'),
+                Tables\Columns\ToggleColumn::make('is_published')->label('Publié')->onColor('success')->offColor('danger'),
             ])
             ->filters([
                 

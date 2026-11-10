@@ -65,7 +65,7 @@ class RealisationResource extends Resource
                 Tables\Columns\TextColumn::make('store.short_name')->label('Magasin'),
                 Tables\Columns\TextColumn::make('review_rating')->label('Avis')->formatStateUsing(fn ($state) => $state ? str_repeat('★', (int) $state) : '—'),
                 Tables\Columns\IconColumn::make('review_consent')->label('Accord')->boolean(),
-                Tables\Columns\ToggleColumn::make('is_published')->label('Publiée'),
+                Tables\Columns\ToggleColumn::make('is_published')->label('Publiée')->onColor('success')->offColor('danger'),
             ])
             ->filters([
                 Tables\Filters\SelectFilter::make('store_id')->label('Magasin')->relationship('store', 'short_name'),

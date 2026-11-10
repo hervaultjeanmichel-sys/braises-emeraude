@@ -67,7 +67,7 @@ class PromoSlideResource extends Resource
                 Tables\Columns\TextColumn::make('starts_at')->label('Début')->dateTime('d/m/Y H:i')->placeholder('—'),
                 Tables\Columns\TextColumn::make('ends_at')->label('Fin')->dateTime('d/m/Y H:i')->placeholder('—'),
                 Tables\Columns\TextColumn::make('scope')->label('Pages')->formatStateUsing(fn ($state) => PromoSlide::SCOPES[$state] ?? $state),
-                Tables\Columns\ToggleColumn::make('is_active')->label('Actif'),
+                Tables\Columns\ToggleColumn::make('is_active')->label('Actif')->onColor('success')->offColor('danger'),
             ])
             ->defaultSort('starts_at', 'desc')
             ->actions([Tables\Actions\EditAction::make()])

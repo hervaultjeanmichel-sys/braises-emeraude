@@ -51,7 +51,7 @@ class PostResource extends Resource
                 Tables\Columns\TextColumn::make('published_at')->label('Date')->date('d/m/Y')->sortable(),
                 Tables\Columns\TextColumn::make('title')->label('Titre')->searchable()->limit(60),
                 Tables\Columns\TextColumn::make('store.short_name')->label('Magasin'),
-                Tables\Columns\ToggleColumn::make('is_published')->label('Publié'),
+                Tables\Columns\ToggleColumn::make('is_published')->label('Publié')->onColor('success')->offColor('danger'),
             ])
             ->filters([
                 

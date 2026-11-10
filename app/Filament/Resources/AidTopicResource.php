@@ -58,7 +58,7 @@ class AidTopicResource extends Resource
                 Tables\Columns\TextColumn::make('title')->label('Aide')->searchable(),
                 Tables\Columns\TextColumn::make('verified_on')->label('Vérifiée le')->date('d/m/Y')->sortable()
                     ->color(fn ($state) => $state && $state->lt(now()->subYear()) ? 'danger' : null),
-                Tables\Columns\ToggleColumn::make('is_published')->label('Publié'),
+                Tables\Columns\ToggleColumn::make('is_published')->label('Publié')->onColor('success')->offColor('danger'),
             ])
             ->filters([
                 

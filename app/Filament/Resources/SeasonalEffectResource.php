@@ -59,7 +59,7 @@ class SeasonalEffectResource extends Resource
                 Tables\Columns\TextColumn::make('en_cours')->label('Aujourd’hui')->badge()
                     ->state(fn (SeasonalEffect $e) => $e->isOn($today) ? 'En cours' : '—')
                     ->color(fn ($state) => $state === 'En cours' ? 'success' : 'gray'),
-                Tables\Columns\ToggleColumn::make('is_active')->label('Actif'),
+                Tables\Columns\ToggleColumn::make('is_active')->label('Actif')->onColor('success')->offColor('danger'),
             ])
             ->reorderable('sort')
             ->defaultSort('sort')

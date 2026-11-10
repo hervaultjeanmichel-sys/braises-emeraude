@@ -58,7 +58,7 @@ class FormOptionResource extends Resource
                 Tables\Columns\TextColumn::make('list')->label('Liste')->formatStateUsing(fn ($state) => self::LISTS[$state] ?? $state)->badge(),
                 Tables\Columns\TextColumn::make('label')->label('Libellé'),
                 Tables\Columns\TextColumn::make('sort')->label('Ordre')->sortable(),
-                Tables\Columns\ToggleColumn::make('is_active')->label('Active'),
+                Tables\Columns\ToggleColumn::make('is_active')->label('Active')->onColor('success')->offColor('danger'),
             ])
             ->filters([
                 Tables\Filters\SelectFilter::make('list')->label('Liste')->options(self::LISTS),

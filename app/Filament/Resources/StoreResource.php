@@ -138,7 +138,7 @@ class StoreResource extends Resource
                 Tables\Columns\TextColumn::make('phone')->label('Téléphone'),
                 Tables\Columns\IconColumn::make('is_new')->label('Nouveau')->boolean(),
                 Tables\Columns\IconColumn::make('booking_enabled')->label('RDV')->boolean(),
-                Tables\Columns\ToggleColumn::make('is_published')->label('Publié'),
+                Tables\Columns\ToggleColumn::make('is_published')->label('Publié')->onColor('success')->offColor('danger'),
             ])
             ->filters([
                 

@@ -50,7 +50,7 @@ class EventBannerResource extends Resource
                 Tables\Columns\TextColumn::make('title')->label('Bandeau'),
                 Tables\Columns\TextColumn::make('starts_at')->label('Début')->dateTime('d/m/Y H:i'),
                 Tables\Columns\TextColumn::make('ends_at')->label('Fin')->dateTime('d/m/Y H:i'),
-                Tables\Columns\ToggleColumn::make('is_active')->label('Actif'),
+                Tables\Columns\ToggleColumn::make('is_active')->label('Actif')->onColor('success')->offColor('danger'),
             ])
             ->filters([
                 
