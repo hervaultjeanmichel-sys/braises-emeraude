@@ -57,7 +57,7 @@ class ProductCategoryResource extends Resource
                 Tables\Columns\TextColumn::make('name')->label('Catégorie')->searchable(),
                 Tables\Columns\TextColumn::make('path')->label('URL')->prefix('/categorie-produit/')->suffix('/'),
                 Tables\Columns\TextColumn::make('products_count')->label('Produits')->counts('products'),
-                Tables\Columns\IconColumn::make('is_published')->label('Publié')->boolean(),
+                Tables\Columns\ToggleColumn::make('is_published')->label('Publié'),
             ])
             ->filters([
                 

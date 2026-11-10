@@ -50,7 +50,7 @@ class BrandResource extends Resource
                 Tables\Columns\ImageColumn::make('logo')->height(32),
                 Tables\Columns\TextColumn::make('name')->label('Marque')->searchable()->sortable(),
                 Tables\Columns\TextColumn::make('products_count')->label('Produits')->counts('products')->sortable(),
-                Tables\Columns\IconColumn::make('is_published')->label('Publié')->boolean(),
+                Tables\Columns\ToggleColumn::make('is_published')->label('Publié'),
             ])
             ->filters([
                 

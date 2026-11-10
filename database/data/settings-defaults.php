@@ -117,6 +117,7 @@ return [
     "label.open" => ['group' => "general", 'value' => 'Ouvert maintenant'],
     "label.open_title" => ['group' => "general", 'value' => 'Ouvert en ce moment'],
     "leads.fallback_email" => ['group' => "devis", 'value' => ''],
+    "leads.notify_email" => ['group' => "devis", 'value' => 'contact@braisesemeraude.com'],
     "menu.legal" => ['group' => "header", 'value' => 'Mentions légales|/mentions-legales/
 Confidentialité|/politique-de-confidentialite/
 Plan du site|/sitemap.xml'],

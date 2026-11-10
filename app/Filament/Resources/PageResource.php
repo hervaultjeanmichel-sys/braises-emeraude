@@ -152,7 +152,7 @@ class PageResource extends Resource
                 Tables\Columns\TextColumn::make('slug')->label('URL')->formatStateUsing(fn ($state) => $state === '/' ? '/' : '/'.$state.'/'),
                 Tables\Columns\TextColumn::make('template')->label('Gabarit')->badge(),
                 Tables\Columns\TextColumn::make('robots')->label('Robots'),
-                Tables\Columns\IconColumn::make('is_published')->label('Publié')->boolean(),
+                Tables\Columns\ToggleColumn::make('is_published')->label('Publié'),
             ])
             ->filters([
                 

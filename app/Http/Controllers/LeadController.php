@@ -168,11 +168,19 @@ class LeadController extends Controller
         };
     }
 
-    /** E-mail au magasin destinataire (repli : adresse générale). Un échec d'envoi ne bloque jamais la demande. */
+    /**
+     * E-mail à l'adresse générale (réglage leads.notify_email, ex. contact@braisesemeraude.com)
+     * + au magasin destinataire s'il a sa propre adresse. Un échec d'envoi ne bloque jamais la demande.
+     */
     private function notify(Lead $lead): void
     {
-        $to = $lead->store?->email ?: s('leads.fallback_email');
+        $to = collect([s('leads.notify_email'), $lead->store?->email ?: s('leads.fallback_email')])
+            ->map(fn ($e) => strtolower(trim((string) $e)))
+            ->filter(fn ($e) => filter_var($e, FILTER_VALIDATE_EMAIL))
+            ->unique()->values()->all();
         if (! $to) {
+            Log::warning('Notification demande : aucune adresse destinataire', ['lead' => $lead->id]);
+
             return;
         }
         $lines = [
