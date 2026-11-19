@@ -58,7 +58,8 @@ class FrontController extends Controller
             return view('front.store', [
                 'store' => $store->load('brands'),
                 'seo' => $seo,
-                'cities' => $store->cities()->published()->orderBy('name')->get(),
+                'cities' => $store->cities()->published()->whereNull('product_category_id')->orderBy('name')->get(),
+                'guides' => $store->cities()->published()->whereNotNull('product_category_id')->orderBy('name')->get(),
             ]);
         }
 
@@ -69,7 +70,19 @@ class FrontController extends Controller
         ])));
         $seo->schemas[] = Seo::faqSchema($city->faq);
 
-        return view('front.city', compact('city', 'seo'));
+        // Page « ville + type de produit » : appareils de la catégorie, en priorité ceux des marques du magasin
+        $products = collect();
+        if ($category = $city->productCategory()->where('is_published', true)->first()) {
+            $base = fn () => Product::published()->whereIn('product_category_id', $category->selfAndChildrenIds())
+                ->with('brand')->orderByDesc('is_featured')->orderBy('name')->limit(8);
+            $brandIds = $city->store?->brands->pluck('id') ?? collect();
+            $products = $brandIds->isNotEmpty() ? $base()->whereIn('brand_id', $brandIds)->get() : collect();
+            if ($products->isEmpty()) {
+                $products = $base()->get();
+            }
+        }
+
+        return view('front.city', compact('city', 'seo', 'category', 'products'));
     }
 
     public function product(string $slug): View

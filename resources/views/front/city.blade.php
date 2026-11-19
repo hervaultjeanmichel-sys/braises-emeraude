@@ -13,10 +13,18 @@
             @endif
         </div>
     </section>
+    @if(!empty($category) && $products->isNotEmpty())
+        <section class="sec"><div class="wrap">
+            <div class="sec-head"><span class="eyebrow">{{ s('city.products_eyebrow', 'En showroom') }}</span>
+                <h2>{!! em(str_replace([':categorie', ':ville'], [mb_strtolower($category->name), $city->place()], s('city.products_title', 'Nos *:categorie* à :ville'))) !!}</h2></div>
+            <div class="grid">@foreach($products as $product)@include('front.partials.product-card')@endforeach</div>
+            <p style="text-align:center;margin-top:1.5rem"><a class="btn btn-ghost" href="{{ $category->url() }}">{{ s('city.products_all', 'Voir toute la gamme') }}</a></p>
+        </div></section>
+    @endif
     @if(true)
         <section class="sec bg-light"><div class="wrap two-col">
             @if($city->store?->brands->isNotEmpty())
-                <div><h2>{!! em(str_replace(':ville', $city->name, s('city.brands_title', 'Nos marques près de *:ville*'))) !!}</h2>
+                <div><h2>{!! em(str_replace(':ville', $city->place(), s('city.brands_title', 'Nos marques près de *:ville*'))) !!}</h2>
                     <ul class="chips">@foreach($city->store->brands as $brand)<li><a href="{{ $brand->url() }}">{{ $brand->name }}</a></li>@endforeach</ul></div>
             @endif
             @php($aids = \App\Models\AidTopic::published()->orderBy('sort')->limit(6)->get())

@@ -35,6 +35,8 @@ class CityResource extends Resource
                 SeoFields::slug()->placeholder('poele-a-bois-granules-dinard'),
                 Forms\Components\TextInput::make('postal_code')->label('Code postal'),
                 Forms\Components\Select::make('store_id')->label('Magasin le plus proche')->relationship('store', 'short_name')->required(),
+                Forms\Components\Select::make('product_category_id')->label('Type de produit (page « ville + produit »)')
+                    ->relationship('productCategory', 'name')->nullable()->helperText('Laisser vide pour une page ville classique. Rempli : la page affiche les appareils de cette catégorie.'),
                 Forms\Components\TagsInput::make('neighbours')->label('Communes voisines'),
                 Forms\Components\FileUpload::make('hero_image')->image()->directory('villes'),
             ]),

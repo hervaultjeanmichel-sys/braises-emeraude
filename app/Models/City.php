@@ -32,4 +32,16 @@ class City extends Model
     {
         return $this->belongsTo(Store::class);
     }
+
+    /** Page « ville + type de produit » (ex. poêle à granulés à Dinard) : catégorie affichée. */
+    public function productCategory(): BelongsTo
+    {
+        return $this->belongsTo(ProductCategory::class);
+    }
+
+    /** Nom du lieu dans les titres : la ville, ou celle du magasin pour une page « ville + produit ». */
+    public function place(): string
+    {
+        return $this->product_category_id && $this->store ? $this->store->short_name : $this->name;
+    }
 }

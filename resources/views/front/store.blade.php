@@ -131,6 +131,10 @@
                         @foreach(collect($store->served_communes ?? [])->diff($cities->pluck('name')) as $commune)<li><span>{{ $commune }}</span></li>@endforeach
                     </ul></div>
             @endif
+            @if(!empty($guides) && $guides->isNotEmpty())
+                <div><h2>{!! em(s('store.guides_title', 'Nos pages *par appareil*')) !!}</h2>
+                    <ul class="chips">@foreach($guides as $guide)<li><a href="{{ $guide->url() }}">{{ $guide->h1 ?: $guide->name }}</a></li>@endforeach</ul></div>
+            @endif
         </div></section>
     @endif
 
