@@ -94,6 +94,7 @@
                             <select id="store_id" name="store_id" data-store-select><option value="">{{ s('form.store_auto', 'Le plus proche de chez moi') }}</option>
                                 @foreach($stores as $st)<option value="{{ $st->id }}" @selected((int) old('store_id', $preStore?->id) === $st->id)>{{ $st->area_label ?: $st->short_name }}</option>@endforeach</select>
                             <span class="hint">{{ s('form.store_hint', 'Proposé automatiquement selon votre code postal, modifiable.') }}</span></div>
+                        <div class="field"><label for="promo_code">{{ s('form.promo_code', 'Code promo') }}</label><input id="promo_code" type="text" name="promo_code" maxlength="40" autocomplete="off" autocapitalize="characters" style="text-transform:uppercase" value="{{ old('promo_code', session('promo_code')) }}"><span class="hint">{{ s('form.promo_code_hint', 'Facultatif : saisissez le code d\'une offre en cours.') }}</span></div>
                         <div class="field"><label for="photos">{{ s('form.photos', 'Photos du lieu (facultatif, 5 max.)') }}</label><input id="photos" type="file" name="photos[]" accept="image/*" multiple></div>
                     </div>
                     <div class="field"><label for="message">{{ s('form.message', 'Un détail à nous préciser ?') }}</label><textarea id="message" name="message" rows="4">{{ old('message') }}</textarea></div>

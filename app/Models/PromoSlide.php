@@ -77,6 +77,17 @@ class PromoSlide extends Model
         return $l > 0.35;
     }
 
+    /** Lien du bouton ; avec un code promo, ajoute ?code=… pour pré-remplir les formulaires. */
+    public function ctaHref(): ?string
+    {
+        if (! $this->cta_url || ! $this->promo_code) {
+            return $this->cta_url;
+        }
+        [$base, $hash] = array_pad(explode('#', (string) $this->cta_url, 2), 2, null);
+
+        return $base.(str_contains($base, '?') ? '&' : '?').'code='.rawurlencode($this->promo_code).($hash !== null ? '#'.$hash : '');
+    }
+
     /** Clé de mémorisation côté visiteur : change si le volet est modifié. */
     public function memoKey(): string
     {

@@ -98,8 +98,9 @@ class AppointmentController extends Controller
             'postal_code' => ['nullable', 'regex:/^\d{5}$/'],
             'city' => ['nullable', 'string', 'max:120'],
             'message' => ['nullable', 'string', 'max:2000'],
+            'promo_code' => ['nullable', 'string', 'max:40'],
             'consent' => ['accepted'],
-        ], [], ['name' => 'nom', 'phone' => 'téléphone', 'email' => 'e-mail', 'postal_code' => 'code postal', 'address' => 'adresse', 'city' => 'commune', 'time' => 'créneau', 'date' => 'date', 'consent' => 'consentement']);
+        ], [], ['name' => 'nom', 'phone' => 'téléphone', 'email' => 'e-mail', 'postal_code' => 'code postal', 'address' => 'adresse', 'city' => 'commune', 'time' => 'créneau', 'date' => 'date', 'promo_code' => 'code promo', 'consent' => 'consentement']);
 
         $store = $this->stores()->firstWhere('id', (int) $data['store_id']);
         $booking = $store ? Booking::for($store) : null;
@@ -133,6 +134,7 @@ class AppointmentController extends Controller
             'postal_code' => $data['postal_code'] ?? null,
             'city' => $type['at_home'] ? $data['city'] : null,
             'message' => $data['message'] ?? null,
+            'promo_code' => filled($data['promo_code'] ?? null) ? mb_strtoupper(trim((string) $data['promo_code'])) : null,
             'team_note' => ($type['at_home'] && isset($zone)) ? ($zone['ok'] === null ? 'Distance non vérifiée (adresse non localisée).' : ($zone['km'] !== null ? 'Distance estimée : '.$zone['km'].' km à vol d’oiseau.' : null)) : null,
             'source' => mb_substr((string) (session('utm')['utm_source'] ?? 'site'), 0, 40),
             'consent_at' => now(),

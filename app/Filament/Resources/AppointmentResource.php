@@ -68,6 +68,7 @@ class AppointmentResource extends Resource
                 Forms\Components\TextInput::make('address')->label('Adresse'),
                 Forms\Components\TextInput::make('postal_code')->label('Code postal'),
                 Forms\Components\TextInput::make('city')->label('Commune'),
+                Forms\Components\TextInput::make('promo_code')->label('Code promo'),
                 Forms\Components\Textarea::make('message')->label('Message du client')->rows(3)->columnSpanFull()->disabled(),
                 Forms\Components\Textarea::make('team_note')->label('Note de l’équipe (ajoutée à l’e-mail de confirmation ou de refus)')->rows(3)->columnSpanFull(),
             ]),

@@ -17,6 +17,7 @@
                     <div class="field"><label for="c-phone">{{ s('form.phone', 'Téléphone') }}</label><input id="c-phone" type="tel" name="phone" autocomplete="tel" value="{{ old('phone') }}"></div>
                     <div class="field"><label for="c-cp">{{ s('form.postal_code', 'Code postal') }}</label><input id="c-cp" type="text" name="postal_code" inputmode="numeric" maxlength="5" value="{{ old('postal_code') }}"></div>
                 </div>
+                <div class="field"><label for="c-promo">{{ s('form.promo_code', 'Code promo') }}</label><input id="c-promo" type="text" name="promo_code" maxlength="40" autocomplete="off" autocapitalize="characters" style="text-transform:uppercase" value="{{ old('promo_code', session('promo_code')) }}"><span class="hint">{{ s('form.promo_code_hint', 'Facultatif : saisissez le code d\'une offre en cours.') }}</span></div>
                 <div class="field"><label for="c-store">{{ s('form.store', 'Magasin') }}</label>
                     <select id="c-store" name="store_id"><option value="">{{ s('form.store_auto', 'Le plus proche de chez moi') }}</option>@foreach($stores as $st)<option value="{{ $st->id }}" @selected((int) old('store_id') === $st->id)>{{ $st->area_label ?: $st->short_name }}</option>@endforeach</select></div>
                 <div class="field"><label for="c-msg">{{ s('form.message_required', 'Votre message') }} *</label><textarea id="c-msg" name="message" rows="5" required>{{ old('message') }}</textarea></div>

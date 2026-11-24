@@ -30,6 +30,7 @@ final class BookingMailer
                 'Client : '.$a->name,
                 'Téléphone : '.$a->phone,
                 'E-mail : '.$a->email,
+                $a->promo_code ? 'Code promo : '.$a->promo_code : null,
                 $a->message ? "\nMessage :\n".$a->message : null,
                 $a->team_note ? "\n".$a->team_note : null,
                 '',

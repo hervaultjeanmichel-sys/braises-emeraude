@@ -4,17 +4,21 @@
 <aside class="promo-slide {{ $promoCenter ? 'pos-center' : 'pos-corner' }} {{ $promo->isLightBackground() ? 'is-light' : 'is-dark' }}" id="promo-slide" style="--promo-bg:{{ $promo->bg_color }}" role="dialog" aria-modal="false" @if($promo->title) aria-labelledby="promo-title" @else aria-label="{{ $promo->image_alt ?: $promo->name }}" @endif data-key="{{ $promo->memoKey() }}" data-delay="{{ (int) $promo->delay }}" data-frequency="{{ $promo->frequency }}" hidden>
     <button class="promo-close" type="button" aria-label="{{ s('promo.close', 'Fermer') }}">✕</button>
     @if($promo->image)
-        @php($promoImg = $promo->cta_url ? '<a href="'.e($promo->cta_url).'" class="promo-img" tabindex="-1">' : '<div class="promo-img">')
+        @php($promoImg = $promo->cta_url ? '<a href="'.e($promo->ctaHref()).'" class="promo-img" tabindex="-1">' : '<div class="promo-img">')
         {!! $promoImg !!}<img src="{{ media($promo->image) }}" {!! ($d = @getimagesize(storage_path('app/public/'.$promo->image))) ? 'width="'.$d[0].'" height="'.$d[1].'"' : '' !!} alt="{{ $promo->image_alt ?? '' }}" loading="lazy" decoding="async">{!! $promo->cta_url ? '</a>' : '</div>' !!}
     @endif
-    @if($promo->eyebrow || $promo->title || $promo->text || $promo->cta_url)
+    @if($promo->eyebrow || $promo->title || $promo->text || $promo->cta_url || $promo->promo_code)
     <div class="promo-body">
         @php($promoLogo = $promo->logo ?: $promo->brand?->logo)
         @if($promoLogo)<img class="promo-logo" src="{{ media($promoLogo) }}" {!! ($d2 = @getimagesize(storage_path('app/public/'.$promoLogo))) ? 'width="'.$d2[0].'" height="'.$d2[1].'"' : '' !!} alt="{{ $promo->brand?->name ?? '' }}" loading="lazy">@elseif($promo->brand)<span class="promo-brand">{{ $promo->brand->name }}</span>@endif
         @if($promo->eyebrow)<span class="promo-eyebrow">{{ $promo->eyebrow }}</span>@endif
         @if($promo->title)<p class="promo-title" id="promo-title">{{ $promo->title }}</p>@endif
         @if($promo->text)<p class="promo-text">{{ $promo->text }}</p>@endif
-        @if($promo->cta_url && $promo->cta_label)<a class="btn promo-cta" href="{{ $promo->cta_url }}">{{ $promo->cta_label }}</a>@endif
+        @if($promo->promo_code)
+            <p class="promo-code"><span>{{ s('promo.code_label', 'Code promo') }} :</span> <strong>{{ $promo->promo_code }}</strong>
+                <button class="promo-copy js-only" type="button" data-copy="{{ $promo->promo_code }}" data-copied="{{ s('promo.code_copied', 'Copié !') }}">{{ s('promo.code_copy', 'Copier') }}</button></p>
+        @endif
+        @if($promo->cta_url && $promo->cta_label)<a class="btn promo-cta" href="{{ $promo->ctaHref() }}">{{ $promo->cta_label }}</a>@endif
     </div>
     @endif
 </aside>

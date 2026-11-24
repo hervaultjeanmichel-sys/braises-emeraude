@@ -18,6 +18,11 @@ class TrackSource
             if ($utm !== []) {
                 $request->session()->put('utm', $utm);
             }
+            // Code promo arrivé par un lien (?code=SISKO, bouton du volet promo) → pré-remplit les formulaires
+            $code = strtoupper(trim((string) $request->query('code', '')));
+            if ($code !== '' && preg_match('/^[A-Z0-9_-]{2,40}$/', $code)) {
+                $request->session()->put('promo_code', $code);
+            }
             $ref = (string) $request->headers->get('referer', '');
             if ($ref !== '' && ! $request->session()->has('referer') && parse_url($ref, PHP_URL_HOST) !== $request->getHost()) {
                 $request->session()->put('referer', mb_substr($ref, 0, 255));

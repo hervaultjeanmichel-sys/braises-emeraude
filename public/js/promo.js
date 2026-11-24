@@ -19,6 +19,10 @@
   el.querySelector('.promo-close').addEventListener('click',close);if(bd)bd.addEventListener('click',close);
   el.querySelectorAll('a').forEach(function(a){a.addEventListener('click',remember)});
   document.addEventListener('keydown',esc);
+  el.querySelectorAll('[data-copy]').forEach(function(b){b.addEventListener('click',function(){
+    var t=b.textContent,done=function(){b.textContent=b.dataset.copied||'OK';setTimeout(function(){b.textContent=t},2000)};
+    if(navigator.clipboard)navigator.clipboard.writeText(b.dataset.copy).then(done,done);else done();
+  })});
   function start(){setTimeout(open,delay)}
   if(document.readyState==='complete')start();else window.addEventListener('load',start);
 })();

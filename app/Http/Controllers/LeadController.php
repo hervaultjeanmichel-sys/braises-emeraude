@@ -78,6 +78,7 @@ class LeadController extends Controller
             'postal_code' => ['required', 'regex:/^\d{5}$/'],
             'store_id' => ['nullable', 'integer', 'exists:stores,id'],
             'message' => ['nullable', 'string', 'max:3000'],
+            'promo_code' => ['nullable', 'string', 'max:40'],
             'products' => ['nullable', 'string', 'max:10000'],
             'photos' => ['nullable', 'array', 'max:5'],
             'photos.*' => ['image', 'max:8192'],
@@ -99,6 +100,7 @@ class LeadController extends Controller
             'postal_code' => ['nullable', 'regex:/^\d{5}$/'],
             'store_id' => ['nullable', 'integer', 'exists:stores,id'],
             'message' => ['required', 'string', 'max:3000'],
+            'promo_code' => ['nullable', 'string', 'max:40'],
             'consent' => ['accepted'],
         ], [], $this->attributeNames());
 
@@ -131,6 +133,7 @@ class LeadController extends Controller
             $photos[] = $file->store('demandes/'.now()->format('Y/m'), 'local'); // privé, hors /public
         }
 
+        $data['promo_code'] = filled($data['promo_code'] ?? null) ? mb_strtoupper(trim((string) $data['promo_code'])) : null;
         $utm = array_filter($request->only(['utm_source', 'utm_medium', 'utm_campaign']) + (array) session('utm', []));
         $lead = Lead::create([
             ...collect($data)->except(['products', 'photos', 'consent'])->all(),
@@ -190,6 +193,7 @@ class LeadController extends Controller
             'Téléphone : '.$lead->phone,
             'E-mail : '.$lead->email,
             'Code postal : '.$lead->postal_code,
+            $lead->promo_code ? 'Code promo : '.$lead->promo_code : null,
             $lead->project_type ? 'Projet : '.(FormOption::listFor('project_type')[$lead->project_type] ?? $lead->project_type) : null,
             $lead->energy ? 'Énergie : '.(FormOption::listFor('energy')[$lead->energy] ?? $lead->energy) : null,
             $lead->surface_m2 ? 'Surface : '.$lead->surface_m2.' m²' : null,
@@ -214,7 +218,7 @@ class LeadController extends Controller
     {
         return [
             'name' => 'nom', 'phone' => 'téléphone', 'email' => 'e-mail', 'postal_code' => 'code postal',
-            'surface_m2' => 'surface', 'message' => 'message', 'consent' => 'consentement', 'photos.*' => 'photo',
+            'surface_m2' => 'surface', 'message' => 'message', 'promo_code' => 'code promo', 'consent' => 'consentement', 'photos.*' => 'photo',
         ];
     }
 }

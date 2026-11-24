@@ -691,6 +691,9 @@ input:focus,select:focus,textarea:focus{outline:none;border-color:var(--emerald)
 .promo-text{margin:0;font-size:.95rem;line-height:1.5}
 .promo-cta{justify-self:start;margin-top:.4rem;background:var(--promo-fg);color:var(--promo-bg,#aba396)}
 .promo-cta:hover{filter:brightness(1.15)}
+.promo-code{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem;margin:.3rem 0 0;padding:.55rem .8rem;border:2px dashed var(--promo-fg);border-radius:8px;font-size:.95rem;justify-self:start}
+.promo-code strong{font-size:1.25rem;letter-spacing:.12em}
+.promo-copy{border:0;border-radius:6px;padding:.3rem .7rem;background:var(--promo-fg);color:var(--promo-bg,#aba396);font:inherit;font-size:.8rem;font-weight:600;cursor:pointer}
 .promo-slide :focus-visible{outline:2px solid var(--promo-fg);outline-offset:3px}
 @media(max-width:600px){.promo-slide{width:calc(100vw - 24px);bottom:12px}.promo-title{font-size:1.35rem}}
 @media(prefers-reduced-motion:reduce){.promo-slide{transition:none}}

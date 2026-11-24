@@ -43,6 +43,9 @@ class PromoSlideResource extends Resource
                 Forms\Components\Textarea::make('text')->label('Texte')->rows(3)->columnSpanFull()->placeholder('500 € de remise sur les appareils MCZ pour l\'ouverture.'),
                 Forms\Components\TextInput::make('cta_label')->label('Bouton'),
                 Forms\Components\TextInput::make('cta_url')->label('Lien du bouton')->placeholder('/poele-a-bois-granules-rennes/'),
+                Forms\Components\TextInput::make('promo_code')->label('Code promo')->placeholder('SISKO')->maxLength(40)
+                    ->dehydrateStateUsing(fn ($state) => filled($state) ? mb_strtoupper(trim((string) $state)) : null)
+                    ->helperText('Affiché sur le volet (avec un bouton « Copier »). Le bouton du volet pré-remplit le champ « Code promo » des formulaires.'),
             ]),
             Forms\Components\Section::make('Affichage')->columns(2)->schema([
                 Forms\Components\DateTimePicker::make('starts_at')->label('Début d\'affichage')->seconds(false)->helperText('Vide = tout de suite.'),

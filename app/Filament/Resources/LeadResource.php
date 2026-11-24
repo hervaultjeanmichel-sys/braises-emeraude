@@ -74,6 +74,7 @@ class LeadResource extends Resource
                 Forms\Components\TextInput::make('phone')->label('Téléphone')->tel(),
                 Forms\Components\TextInput::make('email')->email(),
                 Forms\Components\TextInput::make('postal_code')->label('Code postal'),
+                Forms\Components\TextInput::make('promo_code')->label('Code promo'),
                 Forms\Components\Textarea::make('message')->label('Message')->rows(3)->columnSpan(2),
             ]),
             Forms\Components\Section::make('Projet')->columns(3)->collapsible()->schema([
@@ -115,6 +116,7 @@ class LeadResource extends Resource
                 Tables\Columns\TextColumn::make('ai_priority')->label('Priorité')->badge()
                     ->color(fn ($state) => match ($state) { 'haute' => 'danger', 'moyenne' => 'warning', default => 'gray' }),
                 Tables\Columns\SelectColumn::make('status')->label('Statut')->options(Lead::STATUSES),
+                Tables\Columns\TextColumn::make('promo_code')->label('Code promo')->badge()->color('warning')->placeholder('—')->searchable()->toggleable(),
                 Tables\Columns\TextColumn::make('source')->label('Source')->toggleable(),
             ])
             ->filters([
