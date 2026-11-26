@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use Filament\Forms\Components\Toggle;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -19,6 +20,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        // Admin : tous les interrupteurs des formulaires — vert = activé, rouge = désactivé
+        Toggle::configureUsing(fn (Toggle $toggle) => $toggle->onColor('success')->offColor('danger'));
     }
 }
